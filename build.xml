@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="make-war" name="AsoLearning">
+	<echo message="=================================================="/>
+	<echo message="WAR FILE BUILD SYSTEM"/>
+	<echo message="written by n.nishino 2017.02.04"/>
+	<echo message="=================================================="/>
+    <property environment="env"/>
+    <property name="TOMCAT_HOME" value="../../../NAO/apache-tomcat-7.0.61"/>
+    <property name="ECLIPSE_HOME" value="../../../NAO/pleiades-e4.5-java-jre_20151002/pleiades/eclipse/"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="AsoLearning.classpath">
+        <pathelement location="${TOMCAT_HOME}/lib/servlet-api.jar"/>
+        <pathelement location="${TOMCAT_HOME}/lib/jasper.jar"/>
+        <pathelement location="${TOMCAT_HOME}/lib/jsp-api.jar"/>
+        <pathelement location="${TOMCAT_HOME}/lib/el-api.jar"/>
+        <pathelement location="${TOMCAT_HOME}/lib/annotations-api.jar"/>
+        <pathelement location="WEB-INF/classes"/>
+        <pathelement location="work"/>
+    </path>
+  	<path id="build.lib">
+  	   <fileset dir="WEB-INF/lib" includes="*.jar" />
+   	   <fileset dir="${TOMCAT_HOME}/lib" includes="*.jar" />
+  	</path>
+
+
+    <target name="clean">
+        <delete dir="war"/>
+    </target>
+    <target depends="clean" name="build">
+        <mkdir dir="war/build"/>
+        <mkdir dir="war/build/classes"/>
+        <mkdir dir="war/build/view"/>
+    	<echo message="${ant.project.name}: ${ant.file}"/>
+
+    	<javac debug="true" debuglevel="${debuglevel}" destdir="war/build/classes" includeantruntime="false" source="${source}" target="${target}">
+            <src path="WEB-INF/src"/>
+            <classpath refid="build.lib"/>
+        </javac>
+    	<copy todir="war/build/classes">
+    		 <fileset dir="WEB-INF/src/" includes="*.properties"/>
+   		 	 <fileset dir="WEB-INF/src/" includes="*.xml"/>
+    	</copy>
+    	<copy todir="war/build/view">
+    		 <fileset dir="view" includes="**/*.*"/>
+    	</copy>
+
+    </target>
+    <target depends="build"  name="make-war">
+    	<war destfile="war/${ant.project.name}.war" needxmlfile='false' >
+    		<classes dir="war/build/classes" />
+    		<lib dir="WEB-INF/lib" />
+    		<zipfileset dir="view"
+            prefix="view"/>
+    	</war>
+        <delete dir="war/build"/>
+    </target>
+</project>

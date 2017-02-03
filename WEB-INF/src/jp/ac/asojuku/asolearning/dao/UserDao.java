@@ -20,7 +20,7 @@ public class UserDao extends Dao {
 
 	// ユーザーIDとパスワードを指定してユーザー情報を取得する
 	private static final String MEMBER_INFO_BY_UP_SQL =
-			"SELECT * FROM user_tbl u "
+			"SELECT * FROM USER_TBL u "
 			+ "LEFT JOIN COURSE_MASTER c ON(c.COURSE_ID = u.COURSE_ID) "
 			+ "LEFT JOIN ROLE_MASTER r ON(r.ROLE_ID = u.ROLE_ID) "
 			+ "WHERE u.MAILADRESS=? AND u.PASSWORD=?";
@@ -29,7 +29,7 @@ public class UserDao extends Dao {
 
 	// ユーザーIDとパスワードを指定してユーザー情報を取得する
 	private static final String MEMBER_INFO_BY_UP_SQL2 =
-			"SELECT * FROM user_tbl u "
+			"SELECT * FROM USER_TBL u "
 			+ "LEFT JOIN COURSE_MASTER c ON(c.COURSE_ID = u.COURSE_ID) "
 			+ "LEFT JOIN ROLE_MASTER r ON(r.ROLE_ID = u.ROLE_ID) "
 			+ "WHERE u.MAILADRESS=?";
