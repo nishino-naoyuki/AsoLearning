@@ -15,6 +15,7 @@ public class AppSettingProperty extends ConfigBase {
 	//シングルトン
 	private static AppSettingProperty prop = null;
 	private static final String CONFIG_NAME = "app.properties";
+	private static final String JUDGE_CLASS = "judge.class";
 
 	//設定値
 	private final String ASP_PWD_SALT = "pwd.hash.salt";	//パスワードソルト
@@ -48,5 +49,12 @@ public class AppSettingProperty extends ConfigBase {
 	 */
 	public String getPwdHashSalt(){
 		return getProperty(ASP_PWD_SALT);
+	}
+	/**
+	 * 判定クラスの取得
+	 * @return
+	 */
+	public String getJudgeClass(){
+		return getProperty(JUDGE_CLASS);
 	}
 }

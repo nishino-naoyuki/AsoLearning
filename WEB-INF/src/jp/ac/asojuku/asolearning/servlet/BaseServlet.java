@@ -7,13 +7,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
+import jp.ac.asojuku.asolearning.param.SessionConst;
 
-public class BaseServlet extends HttpServlet {
+public abstract class BaseServlet extends HttpServlet {
 
 	/* (非 Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -54,7 +57,7 @@ public class BaseServlet extends HttpServlet {
 		Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 		logger.error("システムエラーが発生しました:",e);
-		RequestDispatcher rd = req.getRequestDispatcher("view/systemerror.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("view/error/systemerror.jsp");
 		rd.forward(req, resp);
 	}
 
@@ -69,4 +72,27 @@ public class BaseServlet extends HttpServlet {
 		//TODO:405エラーチック名画面へ遷移
 
 	}
+
+	/**
+	 * セッションからログイン情報を取得する
+	 * 存在しない場合はNULLが返る
+	 * @param req
+	 * @return
+	 */
+	protected LogonInfoDTO getUserInfoDtoFromSession(HttpServletRequest req){
+
+		//セッションからログイン情報を取得
+		HttpSession session = req.getSession(false);
+
+		if( session == null ){
+			return null;
+		}
+
+		LogonInfoDTO loginInfo =
+				(LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
+
+		return loginInfo;
+	}
+
+	protected abstract String getDisplayNo();
 }

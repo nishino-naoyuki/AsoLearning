@@ -16,6 +16,7 @@ public class TaskDto {
 	private String taskName;		//課題名
 	private Date TerminationDate;	//締め切り
 	private boolean RequiredFlg;	//公開設定
+	private String question;		//問題文
 	private TaskResultDto result;
 	private TaskDetailDto detail;
 	/**
@@ -89,6 +90,12 @@ public class TaskDto {
 	 */
 	public void setDetail(TaskDetailDto detail) {
 		this.detail = detail;
+	}
+	public String getQuestion() {
+		return question;
+	}
+	public void setQuestion(String question) {
+		this.question = question;
 	}
 
 

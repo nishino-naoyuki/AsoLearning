@@ -13,7 +13,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>課題一覧</title>
+    <title>課題画面</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
@@ -67,73 +67,19 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            課題一覧 <small>あなたへの課題の一覧です</small>
+                            課題
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-pencil-square"></i> 課題一覧
+                                <i class="fa fa-pencil-square"></i> 課題一覧 > <i class="fa fa-check-circle-o"></i> 課題X
                             </li>
                         </ol>
                     </div>
                 </div>
-                <!-- /.row -->
-<%
-List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUEST_TASK_LIST);
-%>
                 <div class="row">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover table-striped">
-                                <thead>
-                                    <tr class="info">
-                                        <th>No.</th>
-                                        <th>ソース</th>
-                                        <th>締め切り</th>
-                                        <th>必須</th>
-                                        <th>得点</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <% for( TaskDto taskDto : taskList ){ %>
-                                    <tr>
-
-                                        <td>
-                                        <a href="task?taskid=<%=taskDto.getTaskId()%>">
-                                        <%= taskDto.getTaskName() %>
-                                        </a>
-                                        </td>
-
-                                        <% if( taskDto.getResult() != null ){ %>
-                                        	<td>提出済み</td>
-                                        <% }else{ %>
-                                        	<td>未提出</td>
-                                        <% } %>
-
-                                        <% if( taskDto.getTerminationDate() != null ){ %>
-                                        	<td>あり</td>
-                                        <% }else{ %>
-                                        	<td>なし</td>
-                                        <% } %>
-
-                                        <% if( taskDto.isRequiredFlg() ){ %>
-                                        	<td>必須</td>
-                                        <% }else{ %>
-                                        	<td>任意</td>
-                                        <% } %>
-
-                                        <% if( taskDto.getResult() != null ){ %>
-                                        	<td><%= taskDto.getResult().getTotal() %></td>
-                                        <% }else{ %>
-                                        	<td>&nbsp;</td>
-                                        <% } %>
-                                    </tr>
-                                <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-
+                指定された問題はありません。
                 </div>
                 <!-- /.row -->
-
             </div>
             <!-- /.container-fluid -->
         </div>

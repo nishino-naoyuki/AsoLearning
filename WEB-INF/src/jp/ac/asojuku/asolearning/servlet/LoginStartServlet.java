@@ -18,6 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name="LoginStartServlet",urlPatterns={"/login"})
 public class LoginStartServlet extends BaseServlet {
 
+	private final String DISPNO = "display00001";
+	@Override
+	protected String getDisplayNo() {
+		return DISPNO;
+	}
+
 	@Override
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 

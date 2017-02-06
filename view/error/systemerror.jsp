@@ -29,7 +29,7 @@
 </head>
 
 <body>
-	<jsp:include page="./header/header.jsp"/>
+	<jsp:include page="/view/header/header.jsp"/>
 
 
     <!-- Page Content -->

@@ -33,6 +33,12 @@ import jp.ac.asojuku.asolearning.param.SessionConst;
 @WebServlet(name="LoginServlet",urlPatterns={"/auth"})
 public class LoginServlet extends BaseServlet {
 
+	private final String DISPNO = "display00001";
+	@Override
+	protected String getDisplayNo() {
+		return DISPNO;
+	}
+
 	protected void doPostMain(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException, AsoLearningSystemErrException {
 		Logger logger = LoggerFactory.getLogger(LoginServlet.class);
 		LoginBo loginbo = new LoginBoImpl();
@@ -118,4 +124,5 @@ public class LoginServlet extends BaseServlet {
 		RequestDispatcher rd = req.getRequestDispatcher("view/st_taskList.jsp");
 		rd.forward(req, resp);
 	}
+
 }

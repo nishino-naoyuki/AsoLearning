@@ -10,8 +10,7 @@
 	<echo message="written by n.nishino 2017.02.04"/>
 	<echo message="=================================================="/>
     <property environment="env"/>
-    <property name="TOMCAT_HOME" value="../../../NAO/apache-tomcat-7.0.61"/>
-    <property name="ECLIPSE_HOME" value="../../../NAO/pleiades-e4.5-java-jre_20151002/pleiades/eclipse/"/>
+    <property name="TOMCAT_HOME" value="C:\apache-tomcat-7.0.61"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
