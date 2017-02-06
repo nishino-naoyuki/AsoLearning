@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.bo.TaskBo;
+import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
@@ -15,9 +16,11 @@ import jp.ac.asojuku.asolearning.dto.TaskResultDto;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
+import jp.ac.asojuku.asolearning.err.ErrorCode;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.exception.IllegalJudgeFileException;
+import jp.ac.asojuku.asolearning.json.JudgeResultJson;
 import jp.ac.asojuku.asolearning.judge.Judge;
 import jp.ac.asojuku.asolearning.judge.JudgeFactory;
 import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
@@ -27,18 +30,22 @@ public class TaskBoImpl implements TaskBo {
 	Logger logger = LoggerFactory.getLogger(TaskBoImpl.class);
 
 	@Override
-	public void judgeTask(String dirName, String fileName) throws AsoLearningSystemErrException {
+	public JudgeResultJson judgeTask(String dirName, String fileName) throws AsoLearningSystemErrException {
 
+		JudgeResultJson json = new JudgeResultJson();
 		Judge judge = JudgeFactory.getInstance();
 
 		try {
-			judge.judge(dirName, fileName);
+			json = judge.judge(dirName, fileName);
 
 		} catch (IllegalJudgeFileException e) {
 			//拡張子が不正
 			logger.warn("ファイルの拡張子が不正です：",e);
+			json.errorMsg =
+					MessageProperty.getInstance().getErrorMsgFromErrCode(ErrorCode.ERR_TASK_EXT_ERROR);
 		}
 
+		return json;
 	}
 
 	@Override

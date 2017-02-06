@@ -111,6 +111,10 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                 <!-- /.row -->
 
                 <div class="row">
+                	<div id="error">
+                		<p id="uploadErrorMsg" ></p>
+                	</div>
+
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -133,16 +137,18 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                                         <td>
                                         <input type="file" id="file_select" name="javafile" class="form-control" style="display:none;">
                                         <div class="input-group">
+
 								          <span class="input-group-btn">
 								            <button type="button" id="file_select_icon" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
 								          </span>
 								          <input type="text" id="file_name" class="form-control" placeholder="Select file ..." readonly>
+
 								        </div>
 
                                         </td>
                                         <td>
                                         <% if( taskdto.getResult() != null ){ %>
-                                        	<%= taskdto.getResult().getTotal() %>
+                                        	<p id="score"><%= taskdto.getResult().getTotal() %></p>
                                         <% }else{ %>
                                         	&nbsp;
                                         <% } %>
@@ -220,15 +226,19 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 	            // allow resubmit
 	            $("#judge").attr('disabled', false);
 	            removeLoading();
-		    	alert("終了");
 	        }
 	    }).done(function(json) {
-	    	var len = json.length;
-	    	for( var i=0 ; i < len; i++ ){
-	    		$("#status").text(json[i].test);
-	    	}
+			//エラーメッセージがある場合はエラーを表示する
+    		if( json.errorMsg.length != 0){
+	    		$("#uploadErrorMsg").text(json.errorMsg);
+    		}else if(json.score > 0){
+    			//得点がついた場合は、提出済みにし得点を表示する
+	    		$("#status").text("提出済み");
+	    		$("#score").text(json.score);
+    		}
 
 	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+	    	alert("err:"+textStatus);
 	        console.log( textStatus  + errorThrown);
 	    });
 	};

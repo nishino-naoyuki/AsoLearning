@@ -16,10 +16,14 @@ import javax.servlet.http.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jp.ac.asojuku.asolearning.bo.TaskBo;
 import jp.ac.asojuku.asolearning.bo.impl.TaskBoImpl;
+import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
+import jp.ac.asojuku.asolearning.json.JudgeResultJson;
 import jp.ac.asojuku.asolearning.util.TimestampUtil;
 
 /**
@@ -56,8 +60,9 @@ public class TaskJudgeServlet extends BaseServlet {
 
 		//ファイル名を決定
 		String fname = getJudgeFileName(loginInfo,name);
+		String dir = AppSettingProperty.getInstance().getUploadDirectory();
 
-        part.write(getServletContext().getRealPath("/WEB-INF/uploaded") + "/" + fname);
+        part.write(dir + "/" + fname);
 
         logger.trace("fileuploaded! user={} file={}",loginInfo.getName(),fname);
 
@@ -65,13 +70,16 @@ public class TaskJudgeServlet extends BaseServlet {
         //判定処理を行う
         TaskBo taskBo = new TaskBoImpl();
 
-        taskBo.judgeTask("/WEB-INF/uploaded", fname);
+        JudgeResultJson json = taskBo.judgeTask(dir, fname);
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString = mapper.writeValueAsString(json);
 
+        logger.trace("jsonString:{}",jsonString);
         OutputStream out = null;
 
         resp.setContentType("application/json; charset=utf-8");
         out = resp.getOutputStream();
-        out.write("[{\"test\":\"aaaa\"}]".getBytes());
+        out.write(jsonString.getBytes());
         out.flush();
 
        out.close();

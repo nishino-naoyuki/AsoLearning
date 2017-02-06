@@ -8,6 +8,7 @@ import java.util.List;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
+import jp.ac.asojuku.asolearning.json.JudgeResultJson;
 
 /**
  * 課題インターフェース
@@ -22,7 +23,7 @@ public interface TaskBo {
 	 * @param fileName
 	 * @throws AsoLearningSystemErrException
 	 */
-	public void judgeTask(String dirName,String fileName) throws AsoLearningSystemErrException;
+	public JudgeResultJson judgeTask(String dirName,String fileName) throws AsoLearningSystemErrException;
 
 	/**
 	 * 課題の一覧を取得する
