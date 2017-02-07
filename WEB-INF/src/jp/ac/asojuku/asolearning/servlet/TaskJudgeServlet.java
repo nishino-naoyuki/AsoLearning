@@ -24,6 +24,7 @@ import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.json.JudgeResultJson;
+import jp.ac.asojuku.asolearning.util.FileUtils;
 import jp.ac.asojuku.asolearning.util.TimestampUtil;
 
 /**
@@ -59,18 +60,19 @@ public class TaskJudgeServlet extends BaseServlet {
 		LogonInfoDTO loginInfo = getUserInfoDtoFromSession(req);
 
 		//ファイル名を決定
-		String fname = getJudgeFileName(loginInfo,name);
-		String dir = AppSettingProperty.getInstance().getUploadDirectory();
+		String dir = getJudgeDirName(loginInfo);
+		//フォルダを作成する
+		FileUtils.makeDir(dir);
 
-        part.write(dir + "/" + fname);
+        part.write(dir + "/" + name);
 
-        logger.trace("fileuploaded! user={} file={}",loginInfo.getName(),fname);
+        logger.trace("fileuploaded! user={} file={}",loginInfo.getName(),dir + "/" +name);
 
 		//////////////////////////////////////////////
         //判定処理を行う
         TaskBo taskBo = new TaskBoImpl();
 
-        JudgeResultJson json = taskBo.judgeTask(dir, fname);
+        JudgeResultJson json = taskBo.judgeTask(dir, name);
         ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(json);
 
@@ -110,19 +112,21 @@ public class TaskJudgeServlet extends BaseServlet {
     }
 
 	/**
-	 * アップロードファイル名は以下のフォーマットとする
+	 * アップロードディレクトリ名は以下のフォーマットとする
 	 * ユーザー名+アップロードファイル名+現在時刻（ミリ秒まで）
 	 *
 	 * @param loginInfo
 	 * @param fileName
 	 * @return
+	 * @throws AsoLearningSystemErrException
 	 */
-	private String getJudgeFileName(LogonInfoDTO loginInfo,String fileName){
-		String judgeFileName = "";
+	private String getJudgeDirName(LogonInfoDTO loginInfo) throws AsoLearningSystemErrException{
+		String uploadDir = AppSettingProperty.getInstance().getUploadDirectory();
 
 		String timeStr =
 				TimestampUtil.formattedTimestamp(TimestampUtil.current(), "yyyyMMddHHmmssSSS");
 
-		return loginInfo.getName()+timeStr+"_"+fileName;
+		return uploadDir +"/"+ loginInfo.getName()+"/"+timeStr;
 	}
+
 }

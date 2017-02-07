@@ -18,6 +18,7 @@ public class AppSettingProperty extends ConfigBase {
 	private static final String JUDGE_CLASS = "judge.class";
 	private static final String UPLOAD_DIR = "upload.directory";
 	private static final String SHELL_PATH = "shell.path";
+	private static final String RESULT_DIR = "result.directory";
 
 	//設定値
 	private final String ASP_PWD_SALT = "pwd.hash.salt";	//パスワードソルト
@@ -72,5 +73,12 @@ public class AppSettingProperty extends ConfigBase {
 	 */
 	public String getShellPath(){
 		return getProperty(SHELL_PATH);
+	}
+	/**
+	 * 結果の出力フォルダ
+	 * @return
+	 */
+	public String getResultDirectory(){
+		return getProperty(RESULT_DIR);
 	}
 }

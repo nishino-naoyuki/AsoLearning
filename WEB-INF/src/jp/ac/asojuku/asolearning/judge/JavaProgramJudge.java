@@ -41,7 +41,15 @@ public class JavaProgramJudge implements Judge {
 			///////////////////////////////////////
 			//シェルの実行（コンパイルと実行と品質解析）
 			String shellPath = AppSettingProperty.getInstance().getShellPath();
-			ProcessBuilder pb = new ProcessBuilder(shellPath);
+			String resultDir = dirName+"/result";//AppSettingProperty.getInstance().getResultDirectory();
+			String classDir = dirName+"/classes";
+			//必要なフォルダを作成
+			makeDirs(classDir,resultDir);
+
+			//実行クラス名（＝ファイル名の拡張子を除いたもの）を取得
+			String className = FileUtils.getPreffix(fileName);
+
+			ProcessBuilder pb = new ProcessBuilder(shellPath,dirName,fileName,resultDir,className);
 			Process process = pb.start();
 
 			logger.trace("バッチ実行開始：");
@@ -59,6 +67,14 @@ public class JavaProgramJudge implements Judge {
 		}
 
 		return json;
+	}
+
+	private void makeDirs(String classDir,String resultDir){
+
+		//classとresultのフォルダ名を作成する
+		FileUtils.makeDir(classDir);
+		FileUtils.makeDir(resultDir);
+
 	}
 
 }
