@@ -3,8 +3,12 @@
  */
 package jp.ac.asojuku.asolearning.servlet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -48,43 +52,55 @@ public class TaskJudgeServlet extends BaseServlet {
 	protected void doPostMain(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, AsoLearningSystemErrException {
 
-		//////////////////////////////////////////////
-		//アップロードされたファイルを取得
-		Part part = req.getPart("file");
-        String name = this.getFileName(part);
-
-
-		//////////////////////////////////////////////
-        //ファイル名を決定する
-		//セッションからログイン情報を取得
-		LogonInfoDTO loginInfo = getUserInfoDtoFromSession(req);
-
-		//ファイル名を決定
-		String dir = getJudgeDirName(loginInfo);
-		//フォルダを作成する
-		FileUtils.makeDir(dir);
-
-        part.write(dir + "/" + name);
-
-        logger.trace("fileuploaded! user={} file={}",loginInfo.getName(),dir + "/" +name);
-
-		//////////////////////////////////////////////
-        //判定処理を行う
-        TaskBo taskBo = new TaskBoImpl();
-
-        JudgeResultJson json = taskBo.judgeTask(dir, name);
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(json);
-
-        logger.trace("jsonString:{}",jsonString);
         OutputStream out = null;
+        try{
+			//////////////////////////////////////////////
+			//課題IDを取得
+	        Integer taskId = getTaskId(req);
+			//////////////////////////////////////////////
+			//アップロードされたファイルを取得
+			Part part = req.getPart("file");
+	        String name = this.getFileName(part);
 
-        resp.setContentType("application/json; charset=utf-8");
-        out = resp.getOutputStream();
-        out.write(jsonString.getBytes());
-        out.flush();
+			//////////////////////////////////////////////
+	        //ファイル名を決定する
+			//セッションからログイン情報を取得
+			LogonInfoDTO loginInfo = getUserInfoDtoFromSession(req);
 
-       out.close();
+			//ファイル名を決定
+			String dir = getJudgeDirName(loginInfo);
+			//フォルダを作成する
+			FileUtils.makeDir(dir);
+
+	        part.write(dir + "/" + name);
+
+	        logger.trace("fileuploaded! user={} file={}",loginInfo.getName(),dir + "/" +name);
+
+			//////////////////////////////////////////////
+	        //判定処理を行う
+	        TaskBo taskBo = new TaskBoImpl();
+
+	        JudgeResultJson json = taskBo.judgeTask(taskId,loginInfo,dir, name);
+	        ObjectMapper mapper = new ObjectMapper();
+	        String jsonString = mapper.writeValueAsString(json);
+
+	        logger.trace("jsonString:{}",jsonString);
+
+			//////////////////////////////////////////////
+	        //JSON出力処理を行う
+	        resp.setContentType("application/json; charset=utf-8");
+	        out = resp.getOutputStream();
+	        out.write(jsonString.getBytes());
+	        out.flush();
+		} catch (IllegalStateException e) {
+			logger.error("IllegalStateException：",e);
+		} catch (ServletException e) {
+			logger.error("ServletException：",e);
+        }finally{
+        	if(out != null){
+        		out.close();
+        	}
+        }
 
         //resp.setContentType("application/json; charset=utf-8");
         ///resp.setHeader("Access-Control-Allow-Origin", "http://localhost"); //ここは個人のサーバ環境によって異なる．
@@ -127,6 +143,42 @@ public class TaskJudgeServlet extends BaseServlet {
 				TimestampUtil.formattedTimestamp(TimestampUtil.current(), "yyyyMMddHHmmssSSS");
 
 		return uploadDir +"/"+ loginInfo.getName()+"/"+timeStr;
+	}
+
+	/**
+	 * 課題IDを取得する
+	 * @param req
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 * @throws ServletException
+	 * @throws IOException
+	 * @throws IllegalStateException
+	 */
+	private Integer getTaskId(HttpServletRequest req) throws AsoLearningSystemErrException, IllegalStateException, IOException, ServletException{
+		Integer taskId = null;
+
+		Part part;
+
+		part = req.getPart("taskid");
+		String contentType = part.getContentType();
+
+        if ( contentType == null) {
+            try(InputStream inputStream = part.getInputStream()) {
+                BufferedReader bufReader = new BufferedReader(new InputStreamReader(inputStream));
+                taskId =
+                		Integer.parseInt( bufReader.lines().collect(Collectors.joining()));
+
+    		}catch( NumberFormatException e){
+    			logger.trace("taskIdが指定されていません",e);
+    			taskId = null;
+            } catch (IOException e) {
+            	throw new AsoLearningSystemErrException(e);
+            }
+        }
+
+
+
+		return taskId;
 	}
 
 }

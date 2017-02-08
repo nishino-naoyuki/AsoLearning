@@ -17,13 +17,17 @@ import jp.ac.asojuku.asolearning.json.JudgeResultJson;
  */
 public interface TaskBo {
 
+
 	/**
 	 * 判定処理を行う
+	 * @param taskId
+	 * @param user
 	 * @param dirName
 	 * @param fileName
+	 * @return
 	 * @throws AsoLearningSystemErrException
 	 */
-	public JudgeResultJson judgeTask(String dirName,String fileName) throws AsoLearningSystemErrException;
+	public JudgeResultJson judgeTask(Integer taskId, LogonInfoDTO user,String dirName,String fileName) throws AsoLearningSystemErrException;
 
 	/**
 	 * 課題の一覧を取得する

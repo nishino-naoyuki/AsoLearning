@@ -4,6 +4,13 @@
 package jp.ac.asojuku.asolearning.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ファイルのユーティリティ
@@ -52,6 +59,30 @@ public class FileUtils {
 	        return fileName.substring(0, point);
 	    }
 	    return fileName;
+	}
+
+	/**
+	 * ファイルを比較する
+	 * @param fileA
+	 * @param fileB
+	 * @return
+	 */
+	public static boolean fileCompare(String fileA, String fileB) {
+	    boolean bRet = false;
+		Logger logger = LoggerFactory.getLogger(FileUtils.class);
+
+	    try {
+	        if( new File(fileA).length() != new File(fileA).length() ){
+	            return bRet;
+	        }
+	        byte[] byteA = Files.readAllBytes(Paths.get(fileA));
+	        byte[] byteB = Files.readAllBytes(Paths.get(fileB));
+	        bRet = Arrays.equals(byteA, byteB);
+	    } catch (IOException e) {
+	    	bRet = false;
+	    	logger.warn("ファイル比較中にエラーが発生しました：",e);
+	    }
+	    return bRet;
 	}
 
 }

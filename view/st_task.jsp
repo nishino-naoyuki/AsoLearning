@@ -201,6 +201,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 		var fd = new FormData();
 		  if ($("input[name='javafile']").val()!== '') {
 		    fd.append( "file", $("input[name='javafile']").prop("files")[0] );
+		    fd.append( "taskid", <%=taskdto.getTaskId()%> );
 		 }
 
 		submit_action("judgetask",fd,null);
@@ -238,6 +239,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
     		}
 
 	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+	    	removeLoading();
 	    	alert("err:"+textStatus);
 	        console.log( textStatus  + errorThrown);
 	    });

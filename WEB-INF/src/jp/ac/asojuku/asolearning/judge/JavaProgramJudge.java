@@ -5,11 +5,19 @@ package jp.ac.asojuku.asolearning.judge;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
+import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
+import jp.ac.asojuku.asolearning.entity.ResultTestcaseTblEntity;
+import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
+import jp.ac.asojuku.asolearning.entity.TestcaseTableEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.IllegalJudgeFileException;
 import jp.ac.asojuku.asolearning.json.JudgeResultJson;
@@ -24,9 +32,13 @@ public class JavaProgramJudge implements Judge {
 
 	Logger logger = LoggerFactory.getLogger(JavaProgramJudge.class);
 	private final String CHECK_EXT = "java";
+	private final String RESULT = "/result";
+	private final String CLASSES = "/classes";
+	private final String ERROR_FILENAME = "error.txt";
+	private final String RESULT_FILENAME = "result.txt";
 
 	@Override
-	public JudgeResultJson judge(String dirName, String fileName) throws IllegalJudgeFileException, AsoLearningSystemErrException {
+	public JudgeResultJson judge(TaskTblEntity taskEntity,String dirName, String fileName) throws IllegalJudgeFileException, AsoLearningSystemErrException {
 		JudgeResultJson json = new JudgeResultJson();
 
 		///////////////////////////////////////
@@ -35,32 +47,36 @@ public class JavaProgramJudge implements Judge {
 			throw new IllegalJudgeFileException();
 		}
 
-		int ret;
-
 		try{
-			///////////////////////////////////////
-			//シェルの実行（コンパイルと実行と品質解析）
-			String shellPath = AppSettingProperty.getInstance().getShellPath();
-			String resultDir = dirName+"/result";//AppSettingProperty.getInstance().getResultDirectory();
-			String classDir = dirName+"/classes";
-			//必要なフォルダを作成
-			makeDirs(classDir,resultDir);
+			String resultDir = dirName+RESULT;//AppSettingProperty.getInstance().getResultDirectory();
+			String classDir = dirName+CLASSES;
 
-			//実行クラス名（＝ファイル名の拡張子を除いたもの）を取得
-			String className = FileUtils.getPreffix(fileName);
+			ResultTblEntity restulEntity = new ResultTblEntity();
+			Set<TestcaseTableEntity> testCaseSet = taskEntity.getTestcaseTableSet();
 
-			ProcessBuilder pb = new ProcessBuilder(shellPath,dirName,fileName,resultDir,className);
-			Process process = pb.start();
+			for( TestcaseTableEntity testcase : testCaseSet){
+				///////////////////////////////////////
+				//シェルの実行（コンパイルと実行と品質解析）
+				execShell(testcase,dirName,fileName,resultDir,classDir);
 
-			logger.trace("バッチ実行開始：");
+				///////////////////////////////////////
+				//エラー情報をチェック
+				String erroInfo = getCompileErrorInfo(resultDir);
 
-			ret = process.waitFor();
+				///////////////////////////////////////
+				//正解かどうかのチェック
+				boolean result = checkAnswer(testcase,resultDir);
 
-			logger.trace("バッチ実行終了：" + ret);
+				///////////////////////////////////////
+				//結果をEntityを登録
+				restulEntity.addResultTestcaseTbl(getResultTestcaseTblEntity(testcase,result,erroInfo));
+			}
 
 			///////////////////////////////////////
 			//ソースの品質情報をパース
 
+			///////////////////////////////////////
+			//結果をDBに書き込む
 
 		}catch (InterruptedException | IOException e) {
 
@@ -69,6 +85,65 @@ public class JavaProgramJudge implements Judge {
 		return json;
 	}
 
+	/**
+	 * シェルの実行を行う
+	 * @param testcase
+	 * @param dirName
+	 * @param fileName
+	 * @param resultDir
+	 * @param classDir
+	 * @throws AsoLearningSystemErrException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	private void execShell(TestcaseTableEntity testcase,String dirName, String fileName,String resultDir,String classDir) throws AsoLearningSystemErrException, IOException, InterruptedException{
+
+		int ret;
+
+		String shellPath = AppSettingProperty.getInstance().getShellPath();
+
+		//必要なフォルダを作成
+		makeDirs(classDir,resultDir);
+
+		//実行クラス名（＝ファイル名の拡張子を除いたもの）を取得
+		String className = FileUtils.getPreffix(fileName);
+
+		ProcessBuilder pb = new ProcessBuilder(shellPath,dirName,fileName,resultDir,className,testcase.getInputFileName());
+		Process process = pb.start();
+
+		logger.trace("バッチ実行開始：");
+
+		ret = process.waitFor();
+
+		logger.trace("バッチ実行終了：" + ret);
+
+	}
+
+	/**
+	 *
+	 * @param resultDir
+	 * @return
+	 */
+	private String getCompileErrorInfo(String resultDir){
+		String fileContentStr = "";
+
+		try{
+			// 指定のファイル URL のファイルをバイト列として読み込む
+			byte[] fileContentBytes = Files.readAllBytes(Paths.get(resultDir+"/"+ERROR_FILENAME));
+			// 読み込んだバイト列を UTF-8 でデコードして文字列にする
+			fileContentStr = new String(fileContentBytes, StandardCharsets.UTF_8);
+		}catch(IOException e){
+			logger.error("コンパイルエラーファイルを読めません：",e);
+		}
+
+		return fileContentStr;
+	}
+
+	/**
+	 * ディレクトリを作成する
+	 * @param classDir
+	 * @param resultDir
+	 */
 	private void makeDirs(String classDir,String resultDir){
 
 		//classとresultのフォルダ名を作成する
@@ -77,4 +152,48 @@ public class JavaProgramJudge implements Judge {
 
 	}
 
+	/**
+	 * 答えを確認する
+	 *
+	 * 答えは、実行した結果のresult.txtと問題作成時に登録された
+	 * 結果ファイルが一致するかどうかで判断する
+	 *
+	 * @param testcase
+	 * @param resultDir
+	 * @throws AsoLearningSystemErrException
+	 */
+	private boolean checkAnswer(TestcaseTableEntity testcase,String resultDir) throws AsoLearningSystemErrException{
+
+		//回答があるフォルダを取得
+		String answerDir = AppSettingProperty.getInstance().getAnswerDirectory();
+
+		//正解ファイルのパス
+		String answerPath = answerDir + "/" + testcase.getOutputFileName();
+		//回答ファイルのパス
+		String resultPath = resultDir + "/" + RESULT_FILENAME;
+
+		//ファイルの一致をみる
+		return FileUtils.fileCompare(answerPath, resultPath);
+	}
+
+	/**
+	 * テストケースの結果を作成する
+	 * @param testcase
+	 * @param result
+	 * @param errorMsg
+	 * @return
+	 */
+	private ResultTestcaseTblEntity getResultTestcaseTblEntity(TestcaseTableEntity testcase,boolean result,String errorMsg){
+		ResultTestcaseTblEntity resultTestcaseEntity = new ResultTestcaseTblEntity();
+
+		resultTestcaseEntity.setTestcaseId(testcase.getTestcaseId());
+		if( result ){
+			resultTestcaseEntity.setScore(testcase.getAllmostOfMarks());
+		}else{
+			resultTestcaseEntity.setScore(0);
+		}
+		resultTestcaseEntity.setMessage(errorMsg);
+
+		return resultTestcaseEntity;
+	}
 }

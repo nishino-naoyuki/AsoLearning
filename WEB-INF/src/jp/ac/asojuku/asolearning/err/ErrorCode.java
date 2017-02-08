@@ -27,6 +27,7 @@ public enum ErrorCode {
 	ERR_MEMBER_ENTRY_DUPLICATE_MEIL("0111"),
 	//課題関連(02xx)
 	ERR_TASK_EXT_ERROR("0201"),
+	ERR_TASK_ID_ERROR("0202"),
 
 	//その他のエラー
 	ERR_SESSION_INVLIDATE("9901"),

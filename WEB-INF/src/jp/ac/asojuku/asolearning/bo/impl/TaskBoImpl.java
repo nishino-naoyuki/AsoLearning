@@ -29,20 +29,57 @@ public class TaskBoImpl implements TaskBo {
 
 	Logger logger = LoggerFactory.getLogger(TaskBoImpl.class);
 
+	/* (非 Javadoc)
+	 * 受け取った課題IDが、正常なものかをチェックしてから課題のチェックを行う
+	 * @see jp.ac.asojuku.asolearning.bo.TaskBo#judgeTask(java.lang.Integer, jp.ac.asojuku.asolearning.dto.LogonInfoDTO, java.lang.String, java.lang.String)
+	 */
 	@Override
-	public JudgeResultJson judgeTask(String dirName, String fileName) throws AsoLearningSystemErrException {
+	public JudgeResultJson judgeTask(Integer taskId, LogonInfoDTO user,String dirName, String fileName) throws AsoLearningSystemErrException {
 
 		JudgeResultJson json = new JudgeResultJson();
 		Judge judge = JudgeFactory.getInstance();
 
+		TaskDao dao = new TaskDao();
+
 		try {
-			json = judge.judge(dirName, fileName);
+
+			//DB接続
+			dao.connect();
+
+			//課題リスト情報を取得
+			TaskTblEntity entity =
+					dao.getTaskDetal(user.getUserId(), user.getCourseId(), taskId);
+
+			if( entity == null ){
+				//ここで、EntityがNULLということは、課題IDが改ざんされたか、途中で設定が帰られたか
+				//戻値理にNULLを入れて上位に伝える
+				logger.warn("課題IDが不正です。このユーザー("+user.getUserId()+")がアクセスできない課題です");
+				json.errorMsg =
+						MessageProperty.getInstance().getErrorMsgFromErrCode(ErrorCode.ERR_TASK_ID_ERROR);
+			}else{
+				/////////////////////////////
+				//判定処理呼び出し
+				json = judge.judge(entity,dirName, fileName);
+			}
 
 		} catch (IllegalJudgeFileException e) {
 			//拡張子が不正
 			logger.warn("ファイルの拡張子が不正です：",e);
 			json.errorMsg =
 					MessageProperty.getInstance().getErrorMsgFromErrCode(ErrorCode.ERR_TASK_EXT_ERROR);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
 		}
 
 		return json;
@@ -145,6 +182,9 @@ public class TaskBoImpl implements TaskBo {
 		return dtoList;
 	}
 
+	/* (非 Javadoc)
+	 * @see jp.ac.asojuku.asolearning.bo.TaskBo#getTaskDetailForUser(java.lang.Integer, jp.ac.asojuku.asolearning.dto.LogonInfoDTO)
+	 */
 	@Override
 	public TaskDto getTaskDetailForUser(Integer taskId, LogonInfoDTO user) throws AsoLearningSystemErrException {
 
