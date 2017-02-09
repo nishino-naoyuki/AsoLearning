@@ -10,18 +10,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Set;
 
+import javax.xml.bind.JAXBException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
+import jp.ac.asojuku.asolearning.entity.ResultMetricsTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTestcaseTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.TestcaseTableEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.IllegalJudgeFileException;
+import jp.ac.asojuku.asolearning.jaxb.model.CCCC_ProjectElement;
+import jp.ac.asojuku.asolearning.jaxb.model.MemberFunction;
 import jp.ac.asojuku.asolearning.json.JudgeResultJson;
 import jp.ac.asojuku.asolearning.util.FileUtils;
+import jp.ac.asojuku.asolearning.util.XmlReader;
 
 /**
  * javaのプログラムの判定を行うクラス
@@ -34,6 +40,7 @@ public class JavaProgramJudge implements Judge {
 	private final String CHECK_EXT = "java";
 	private final String RESULT = "/result";
 	private final String CLASSES = "/classes";
+	private final String CCCC = "/cccc";
 	private final String ERROR_FILENAME = "error.txt";
 	private final String RESULT_FILENAME = "result.txt";
 
@@ -54,6 +61,7 @@ public class JavaProgramJudge implements Judge {
 			ResultTblEntity restulEntity = new ResultTblEntity();
 			Set<TestcaseTableEntity> testCaseSet = taskEntity.getTestcaseTableSet();
 
+			//テストケースごとに実行し、点数を集計
 			for( TestcaseTableEntity testcase : testCaseSet){
 				///////////////////////////////////////
 				//シェルの実行（コンパイルと実行と品質解析）
@@ -74,12 +82,15 @@ public class JavaProgramJudge implements Judge {
 
 			///////////////////////////////////////
 			//ソースの品質情報をパース
+			restulEntity.addResultMetricsTbl(getResultMetricsTblEntity(resultDir,fileName));
 
 			///////////////////////////////////////
 			//結果をDBに書き込む
 
 		}catch (InterruptedException | IOException e) {
-
+			logger.warn("判定結果エラー：", e);
+		} catch (JAXBException e) {
+			logger.warn("判定結果エラー：", e);
 		}
 
 		return json;
@@ -195,5 +206,65 @@ public class JavaProgramJudge implements Judge {
 		resultTestcaseEntity.setMessage(errorMsg);
 
 		return resultTestcaseEntity;
+	}
+
+	/**
+	 * 品質計測の結果を設定する
+	 * @param resultDir
+	 * @param fileName
+	 * @return
+	 * @throws JAXBException
+	 * @throws IOException
+	 */
+	private ResultMetricsTblEntity getResultMetricsTblEntity(String resultDir,String fileName) throws JAXBException, IOException{
+		ResultMetricsTblEntity metricsEntity = new ResultMetricsTblEntity();
+
+		//実行クラス名（＝ファイル名の拡張子を除いたもの）を取得
+		String className = FileUtils.getPreffix(fileName);
+
+		String metricsPath = resultDir + CCCC+"/"+className;
+		//XML解析
+		XmlReader<CCCC_ProjectElement> xml =
+				new XmlReader<CCCC_ProjectElement>(metricsPath,CCCC_ProjectElement.class);
+
+		CCCC_ProjectElement element = (CCCC_ProjectElement)xml.readListXml();
+
+		int maxMvg = 0;
+		int maxLoc = 0;
+		int totalMvg = 0;
+		int totalLoc = 0;
+		int count = 0;
+
+		for( MemberFunction memberFunction : element.getProcedural_detail().getMemberFunctionList() ){
+
+			//最大行数を更新
+			if( memberFunction.getLines_of_code().getValue() > maxLoc ){
+				maxLoc = memberFunction.getLines_of_code().getValue();
+			}
+
+			//最大複雑度を更新
+			if( memberFunction.getMcCabes_cyclomatic_complexity().getValue() > maxMvg ){
+				maxMvg = memberFunction.getMcCabes_cyclomatic_complexity().getValue();
+			}
+
+			//合計値を入れていく
+			totalLoc += memberFunction.getLines_of_code().getValue();
+			totalMvg += memberFunction.getMcCabes_cyclomatic_complexity().getValue();
+
+			count++;
+		}
+
+		//Entityにセット
+		metricsEntity.setMaxMvg(maxMvg);
+		metricsEntity.setMaxLoc(maxLoc);
+		metricsEntity.setAvrMvg( divIntForFloat(totalMvg,count) );
+		metricsEntity.setAvrLoc( divIntForFloat(totalLoc,count) );
+		//点数をセット
+
+		return metricsEntity;
+	}
+
+	private Float divIntForFloat(int a,int b){
+		return (float)a/(float)b;
 	}
 }
