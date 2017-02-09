@@ -43,6 +43,11 @@ public class JavaProgramJudge implements Judge {
 	private final String CCCC = "/cccc";
 	private final String ERROR_FILENAME = "error.txt";
 	private final String RESULT_FILENAME = "result.txt";
+	private final int MAX_SCORE = 10;
+	private final int MAX_MVG_SCORE_MAX = 10;
+	private final int MAX_LOC_SCORE_MAX = 100;
+	private final int AVR_MVG_SCORE_MAX = 5;
+	private final int AVR_LOC_SCORE_MAX = 50;
 
 	@Override
 	public JudgeResultJson judge(TaskTblEntity taskEntity,String dirName, String fileName) throws IllegalJudgeFileException, AsoLearningSystemErrException {
@@ -58,7 +63,7 @@ public class JavaProgramJudge implements Judge {
 			String resultDir = dirName+RESULT;//AppSettingProperty.getInstance().getResultDirectory();
 			String classDir = dirName+CLASSES;
 
-			ResultTblEntity restulEntity = new ResultTblEntity();
+			ResultTblEntity resultEntity = new ResultTblEntity();
 			Set<TestcaseTableEntity> testCaseSet = taskEntity.getTestcaseTableSet();
 
 			//テストケースごとに実行し、点数を集計
@@ -77,12 +82,16 @@ public class JavaProgramJudge implements Judge {
 
 				///////////////////////////////////////
 				//結果をEntityを登録
-				restulEntity.addResultTestcaseTbl(getResultTestcaseTblEntity(testcase,result,erroInfo));
+				resultEntity.addResultTestcaseTbl(getResultTestcaseTblEntity(testcase,result,erroInfo));
 			}
 
 			///////////////////////////////////////
 			//ソースの品質情報をパース
-			restulEntity.addResultMetricsTbl(getResultMetricsTblEntity(resultDir,fileName));
+			resultEntity.addResultMetricsTbl(getResultMetricsTblEntity(resultDir,fileName));
+
+			///////////////////////////////////////
+			//総合得点を計算
+			resultEntity.setTotalScore( getTotalScore(resultEntity) );
 
 			///////////////////////////////////////
 			//結果をDBに書き込む
@@ -199,8 +208,10 @@ public class JavaProgramJudge implements Judge {
 
 		resultTestcaseEntity.setTestcaseId(testcase.getTestcaseId());
 		if( result ){
+			//正解だった場合は配点をセット
 			resultTestcaseEntity.setScore(testcase.getAllmostOfMarks());
 		}else{
+			//不正解の場合は０点
 			resultTestcaseEntity.setScore(0);
 		}
 		resultTestcaseEntity.setMessage(errorMsg);
@@ -254,17 +265,138 @@ public class JavaProgramJudge implements Judge {
 			count++;
 		}
 
+		float avrMvg = divIntForFloat(totalMvg,count);
+		float avrLoc = divIntForFloat(totalLoc,count);
 		//Entityにセット
-		metricsEntity.setMaxMvg(maxMvg);
-		metricsEntity.setMaxLoc(maxLoc);
-		metricsEntity.setAvrMvg( divIntForFloat(totalMvg,count) );
-		metricsEntity.setAvrLoc( divIntForFloat(totalLoc,count) );
+		metricsEntity.setMaxMvg( maxMvg );
+		metricsEntity.setMaxLoc( maxLoc );
+		metricsEntity.setAvrMvg( avrMvg );
+		metricsEntity.setAvrLoc( avrLoc );
 		//点数をセット
+		metricsEntity.setMaxMvgScore(getMaxMvgScore(maxMvg));
+		metricsEntity.setMaxLocScore(getMaxLocScore(maxLoc));
+		metricsEntity.setAvrMvgScore(getAvrMvgScore(avrMvg));
+		metricsEntity.setAvrLocScore(getAvrLocScore(avrLoc));
 
 		return metricsEntity;
 	}
 
+	/**
+	 * intの割り算をFloatで返す
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	private Float divIntForFloat(int a,int b){
 		return (float)a/(float)b;
+	}
+
+	/**
+	 * 最高複雑度
+	 * 	10以下で25点。
+	 * １０から１づつ増えるたびに-1.25点
+	 * つまり２０の場合は12.5.点、３０の場合は0点となる
+	 *
+	 * @param MaxMvg
+	 * @return
+	 */
+	private Float getMaxMvgScore(int MaxMvg){
+		float score = 0;
+
+		score = 25.0f - (float)(MaxMvg - MAX_MVG_SCORE_MAX) * 1.25f;
+		if( score > MAX_SCORE){
+			score = 25;
+		}else if( score < 0 ){
+			score = 0;
+		}
+
+		return score;
+	}
+
+	/**
+	 * 平均複雑度
+	 * 	5以下で25点。
+	 * 以降１づつ増えるたびに-1.25点
+	 * つまり１０の場合は18.5点、２０の場合は6.25点となる
+	 *
+	 * @param MaxMvg
+	 * @return
+	 */
+	private Float getAvrMvgScore(float avrMvg){
+		float score = 0;
+
+		score = 25.0f - (float)(avrMvg - AVR_MVG_SCORE_MAX) * 1.25f;
+		if( score > MAX_SCORE){
+			score = 25;
+		}else if( score < 0 ){
+			score = 0;
+		}
+
+		return score;
+	}
+	/**
+	 * 最高行数
+	 * １００以下で25点。　５行づつに-1点
+	 * @param MaxLoc
+	 * @return
+	 */
+	private Float getMaxLocScore(int MaxLoc){
+		float score = 0;
+
+		score = 25.0f - (float)(MaxLoc - MAX_LOC_SCORE_MAX)/5f;
+		if( score > MAX_SCORE){
+			score = 25;
+		}else if( score < 0 ){
+			score = 0;
+		}
+
+		return score;
+	}
+	/**
+	 * 平均行数
+	 * ５０以下で25点。　５行づつに-1点
+	 * @param avrLoc
+	 * @return
+	 */
+	private Float getAvrLocScore(float avrLoc){
+		float score = 0;
+
+		score = 25.0f - (float)(avrLoc - AVR_LOC_SCORE_MAX)/5f;
+		if( score > MAX_SCORE){
+			score = 25;
+		}else if( score < 0 ){
+			score = 0;
+		}
+
+		return score;
+	}
+
+	/**
+	 * 合計得点
+	 * @param testResultCaseSet
+	 * @param metricsSet
+	 * @return
+	 */
+	private Float getTotalScore(ResultTblEntity restulEntity){
+
+		float totalScore= 0;
+		Set<ResultTestcaseTblEntity> testResultCaseSet = restulEntity.getResultTestcaseTblSet();
+		Set<ResultMetricsTblEntity> metricsSet = restulEntity.getResultMetricsTblSet();
+
+		//テストケースでの判定
+		for( ResultTestcaseTblEntity resultCase : testResultCaseSet){
+			totalScore += resultCase.getScore();
+		}
+
+		//品質の特典
+		for( ResultMetricsTblEntity resultCase : metricsSet){
+
+			totalScore += resultCase.getAvrLocScore();
+			totalScore += resultCase.getAvrMvgScore();
+			totalScore += resultCase.getMaxLocScore();
+			totalScore += resultCase.getMaxMvgScore();
+		}
+
+		return totalScore;
 	}
 }

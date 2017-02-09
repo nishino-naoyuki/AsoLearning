@@ -10,19 +10,19 @@ package jp.ac.asojuku.asolearning.dto;
  */
 public class TaskResultDto {
 
-	private Integer total;
+	private Float total;
 
 	/**
 	 * @return total
 	 */
-	public Integer getTotal() {
+	public Float getTotal() {
 		return total;
 	}
 
 	/**
 	 * @param total セットする total
 	 */
-	public void setTotal(Integer total) {
+	public void setTotal(Float total) {
 		this.total = total;
 	}
 

@@ -199,7 +199,8 @@ public class TaskDao extends Dao {
 		if( totalScore != null  ){
 			results = new HashSet<ResultTblEntity>();
 			ResultTblEntity ret = new ResultTblEntity();
-			ret.setTotalScore(rs.getInt("TOTAL_SCORE"));
+			ret.setResultId(rs.getInt("RESULT_ID"));
+			ret.setTotalScore(rs.getFloat("TOTAL_SCORE"));
 			results.add(ret);
 
 		}
@@ -242,5 +243,6 @@ public class TaskDao extends Dao {
 			entity.addTestcaseTable(testcase);
 		}
 	}
+
 
 }

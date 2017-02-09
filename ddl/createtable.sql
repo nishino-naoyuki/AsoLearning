@@ -96,7 +96,7 @@ CREATE TABLE RESULT_TBL
 	-- ユーザーID
 	USER_ID int NOT NULL COMMENT 'ユーザーID',
 	TASK_ID int NOT NULL,
-	TOTAL_SCORE int NOT NULL,
+	TOTAL_SCORE float NOT NULL,
 	PRIMARY KEY (RESULT_ID)
 ) COMMENT = '結果テーブル
 判定を行った結果を格納するテーブル';

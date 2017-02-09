@@ -24,6 +24,9 @@ public abstract class BaseServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+		//////////////////////////
+		//TODO:権限チェック
+
 		try {
 			doGetMain(req,resp);
 		} catch (AsoLearningSystemErrException e) {
@@ -36,6 +39,9 @@ public abstract class BaseServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		//////////////////////////
+		//TODO:権限チェック
 
 		try {
 			doPostMain(req,resp);
