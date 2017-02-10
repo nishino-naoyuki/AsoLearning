@@ -49,7 +49,6 @@ public class ResultDao extends Dao {
 			+ "VALUES(?,?,?,?,?,?,?,?,?) ";
 
 	//更新SQL
-	//挿入SQL
 	private static final String RESULT_UPDATE_SQL =
 			"UPDATE RESULT_TBL SET "
 			+ "USER_ID = ?,"

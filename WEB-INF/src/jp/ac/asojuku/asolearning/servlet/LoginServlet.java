@@ -23,6 +23,7 @@ import jp.ac.asojuku.asolearning.exception.AccountLockedException;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.LoginFailureException;
 import jp.ac.asojuku.asolearning.param.RequestConst;
+import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.param.SessionConst;
 
 /**
@@ -64,8 +65,16 @@ public class LoginServlet extends BaseServlet {
 			setLoginInfoToSession(request,loginInfo);
 			//ログイン成功の場合はトップ画面へ戻る
 
-			//画面転送（リダイレクト）
-			resp.sendRedirect("tasklist");
+			if( RoleId.STUDENT.equals(loginInfo.getRoleId()) ){
+				//画面転送（リダイレクト）
+				resp.sendRedirect("tasklist");
+			}else if( RoleId.TEACHER.equals(loginInfo.getRoleId()) ){
+				//画面転送（リダイレクト）
+				resp.sendRedirect("st_dashboad");
+			}else{
+				//画面転送（リダイレクト）
+				resp.sendRedirect("tasklist");
+			}
 
 		} catch (LoginFailureException | AccountLockedException e) {
 			//ログイン画面へエラーメッセージ通達
