@@ -59,7 +59,7 @@ public class TaskBoImpl implements TaskBo {
 			}else{
 				/////////////////////////////
 				//判定処理呼び出し
-				json = judge.judge(entity,dirName, fileName);
+				json = judge.judge(entity,dirName, fileName,user.getUserId(),dao.getConnection());
 			}
 
 		} catch (IllegalJudgeFileException e) {

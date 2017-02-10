@@ -3,6 +3,7 @@
  */
 package jp.ac.asojuku.asolearning.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,6 +34,12 @@ public class UserDao extends Dao {
 			+ "LEFT JOIN COURSE_MASTER c ON(c.COURSE_ID = u.COURSE_ID) "
 			+ "LEFT JOIN ROLE_MASTER r ON(r.ROLE_ID = u.ROLE_ID) "
 			+ "WHERE u.MAILADRESS=?";
+
+	public UserDao() {
+	}
+	public UserDao(Connection con) {
+		super(con);
+	}
 
 	public UserTblEntity getUserInfoByUserPassword(String userName,String password) throws SQLException{
 
@@ -65,17 +72,7 @@ public class UserDao extends Dao {
 			throw e;
 
 		} finally {
-        	try {
-		        // 接続を閉じる
-	        	if( rs != null ){
-					rs.close();
-	        	}
-	        	if( ps != null ){
-		        	ps.close();
-	        	}
-			} catch (SQLException e) {
-				;	//closeの失敗は無視
-			}
+			safeClose(ps,rs);
 		}
 
 		return entity;
@@ -111,17 +108,7 @@ public class UserDao extends Dao {
 			throw e;
 
 		} finally {
-        	try {
-		        // 接続を閉じる
-	        	if( rs != null ){
-					rs.close();
-	        	}
-	        	if( ps != null ){
-		        	ps.close();
-	        	}
-			} catch (SQLException e) {
-				;	//closeの失敗は無視
-			}
+			safeClose(ps,rs);
 		}
 
 		return entity;

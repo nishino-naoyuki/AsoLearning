@@ -3,6 +3,7 @@
  */
 package jp.ac.asojuku.asolearning.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,6 +47,12 @@ public class TaskDao extends Dao {
 	private static final int TASK_DETAIL_SQL_USER_IDX = 1;
 	private static final int TASK_DETAIL_SQL_COURCE_IDX = 2;
 	private static final int TASK_DETAIL_SQL_TASKID_IDX = 3;
+
+	public TaskDao() {
+	}
+	public TaskDao(Connection con) {
+		super(con);
+	}
 
 	public List<TaskTblEntity> getTaskList(int studentId,int courseId,Integer offset,Integer count) throws SQLException{
 
@@ -101,17 +108,7 @@ public class TaskDao extends Dao {
 			throw e;
 
 		} finally {
-        	try {
-		        // 接続を閉じる
-	        	if( rs != null ){
-					rs.close();
-	        	}
-	        	if( ps != null ){
-		        	ps.close();
-	        	}
-			} catch (SQLException e) {
-				;	//closeの失敗は無視
-			}
+			safeClose(ps,rs);
 		}
 
 
@@ -161,17 +158,7 @@ public class TaskDao extends Dao {
 			throw e;
 
 		} finally {
-        	try {
-		        // 接続を閉じる
-	        	if( rs != null ){
-					rs.close();
-	        	}
-	        	if( ps != null ){
-		        	ps.close();
-	        	}
-			} catch (SQLException e) {
-				;	//closeの失敗は無視
-			}
+			safeClose(ps,rs);
 		}
 
 
@@ -233,9 +220,9 @@ public class TaskDao extends Dao {
 
 		TestcaseTableEntity testcase = new TestcaseTableEntity();
 
-		Integer totalScore = fixInt(rs.getInt("TESTCASE_ID"),rs.wasNull());
-		if(totalScore != null ){
-			testcase.setTestcaseId(totalScore);
+		Integer testCaseId = fixInt(rs.getInt("TESTCASE_ID"),rs.wasNull());
+		if(testCaseId != null ){
+			testcase.setTestcaseId(testCaseId);
 			testcase.setAllmostOfMarks(rs.getInt("ALLMOST_OF_MARKS"));
 			testcase.setOutputFileName(rs.getString("OUTPUT_FILE_NAME"));
 			testcase.setInputFileName(rs.getString("INPUT_FILE_NAME"));

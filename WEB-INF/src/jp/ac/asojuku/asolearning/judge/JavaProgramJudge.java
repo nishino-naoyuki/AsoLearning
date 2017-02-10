@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Set;
 
 import javax.xml.bind.JAXBException;
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
+import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.entity.ResultMetricsTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTestcaseTblEntity;
@@ -50,7 +53,7 @@ public class JavaProgramJudge implements Judge {
 	private final int AVR_LOC_SCORE_MAX = 50;
 
 	@Override
-	public JudgeResultJson judge(TaskTblEntity taskEntity,String dirName, String fileName) throws IllegalJudgeFileException, AsoLearningSystemErrException {
+	public JudgeResultJson judge(TaskTblEntity taskEntity,String dirName, String fileName,int userId,Connection con) throws IllegalJudgeFileException, AsoLearningSystemErrException {
 		JudgeResultJson json = new JudgeResultJson();
 
 		///////////////////////////////////////
@@ -94,16 +97,38 @@ public class JavaProgramJudge implements Judge {
 			resultEntity.setTotalScore( getTotalScore(resultEntity) );
 
 			///////////////////////////////////////
-			//結果をDBに書き込む
+			//DBに書き込み
+			resultEntity.setTaskTbl(taskEntity);
+			setResultToDB(con,userId,resultEntity);
+
+			json.score = resultEntity.getTotalScore();
 
 		}catch (InterruptedException | IOException e) {
 			logger.warn("判定結果エラー：", e);
 		} catch (JAXBException e) {
 			logger.warn("判定結果エラー：", e);
+		} catch (SQLException e) {
+			logger.warn("SQLエラー：", e);
 		}
 
 		return json;
 	}
+
+	/**
+	 * 結果情報をDBへ書き込む
+	 *
+	 * @param con
+	 * @param userId
+	 * @param resultEntity
+	 * @throws SQLException
+	 */
+	private void setResultToDB(Connection con,int userId,ResultTblEntity resultEntity) throws SQLException{
+
+		ResultDao dao = new ResultDao(con);
+
+		dao.insertOrupdateTaskResult(userId, resultEntity);
+	}
+
 
 	/**
 	 * シェルの実行を行う
@@ -127,8 +152,10 @@ public class JavaProgramJudge implements Judge {
 
 		//実行クラス名（＝ファイル名の拡張子を除いたもの）を取得
 		String className = FileUtils.getPreffix(fileName);
+		String inputFileName = (testcase.getInputFileName()==null ? "":testcase.getInputFileName());
 
-		ProcessBuilder pb = new ProcessBuilder(shellPath,dirName,fileName,resultDir,className,testcase.getInputFileName());
+		ProcessBuilder pb =
+				new ProcessBuilder(shellPath,dirName,fileName,resultDir,className,inputFileName);
 		Process process = pb.start();
 
 		logger.trace("バッチ実行開始：");
@@ -233,7 +260,7 @@ public class JavaProgramJudge implements Judge {
 		//実行クラス名（＝ファイル名の拡張子を除いたもの）を取得
 		String className = FileUtils.getPreffix(fileName);
 
-		String metricsPath = resultDir + CCCC+"/"+className;
+		String metricsPath = resultDir + CCCC+"/"+className+".xml";
 		//XML解析
 		XmlReader<CCCC_ProjectElement> xml =
 				new XmlReader<CCCC_ProjectElement>(metricsPath,CCCC_ProjectElement.class);
@@ -246,21 +273,21 @@ public class JavaProgramJudge implements Judge {
 		int totalLoc = 0;
 		int count = 0;
 
-		for( MemberFunction memberFunction : element.getProcedural_detail().getMemberFunctionList() ){
+		for( MemberFunction memberFunction : element.procedural_detail.member_function ){
 
 			//最大行数を更新
-			if( memberFunction.getLines_of_code().getValue() > maxLoc ){
-				maxLoc = memberFunction.getLines_of_code().getValue();
+			if( memberFunction.lines_of_code.value > maxLoc ){
+				maxLoc = memberFunction.lines_of_code.value;
 			}
 
 			//最大複雑度を更新
-			if( memberFunction.getMcCabes_cyclomatic_complexity().getValue() > maxMvg ){
-				maxMvg = memberFunction.getMcCabes_cyclomatic_complexity().getValue();
+			if( memberFunction.McCabes_cyclomatic_complexity.value > maxMvg ){
+				maxMvg = memberFunction.McCabes_cyclomatic_complexity.value;
 			}
 
 			//合計値を入れていく
-			totalLoc += memberFunction.getLines_of_code().getValue();
-			totalMvg += memberFunction.getMcCabes_cyclomatic_complexity().getValue();
+			totalLoc += memberFunction.lines_of_code.value;
+			totalMvg += memberFunction.McCabes_cyclomatic_complexity.value;
 
 			count++;
 		}

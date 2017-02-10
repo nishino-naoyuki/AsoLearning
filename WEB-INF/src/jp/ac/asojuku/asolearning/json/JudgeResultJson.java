@@ -10,7 +10,7 @@ package jp.ac.asojuku.asolearning.json;
 public class JudgeResultJson {
 
 	public String errorMsg = "";
-	public int score = 0;
+	public float score = 0;
 
 	@Override
     public String toString() {

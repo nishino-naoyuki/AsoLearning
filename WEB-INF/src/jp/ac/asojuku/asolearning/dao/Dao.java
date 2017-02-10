@@ -5,11 +5,11 @@ package jp.ac.asojuku.asolearning.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -25,26 +25,38 @@ import jp.ac.asojuku.asolearning.exception.DBConnectException;
 public class Dao {
 
 	Logger logger = LoggerFactory.getLogger(Dao.class);
-	Connection con = null;
+	protected Connection con = null;
+
+
+	public Dao(){
+	}
+
+	public Dao(Connection con){
+		this.con = con;
+	}
+
 	public void connect() throws DBConnectException{
 
-		PreparedStatement ps = null;
-		RequestDispatcher rd = null;
-        	InitialContext ctx;
-			try {
-				ctx = new InitialContext();
+		if( con != null ){
+			//接続済みの場合は何もしない
+			return;
+		}
 
-	        	DataSource ds =
-	        		(DataSource)ctx.lookup("java:comp/env/jdbc/asolearning");
+    	InitialContext ctx;
+		try {
+			ctx = new InitialContext();
 
-				// MySQLに接続
-		        con = ds.getConnection();
+        	DataSource ds =
+        		(DataSource)ctx.lookup("java:comp/env/jdbc/asolearning");
 
-			} catch (NamingException e) {
-				throw new DBConnectException(e);
-			} catch (SQLException e) {
-				throw new DBConnectException(e);
-			}
+			// MySQLに接続
+	        con = ds.getConnection();
+
+		} catch (NamingException e) {
+			throw new DBConnectException(e);
+		} catch (SQLException e) {
+			throw new DBConnectException(e);
+		}
 
 
 	}
@@ -54,13 +66,14 @@ public class Dao {
 		if( con != null ){
 			try {
 				con.close();
+				con = null;
 			} catch (SQLException e) {
 				logger.info("closeに失敗しました：",e);
 			}
 		}
 	}
 
-	protected Connection getConnection(){
+	public Connection getConnection(){
 		return con;
 	}
 
@@ -103,5 +116,56 @@ public class Dao {
 
 	protected Integer fixInt(int value, boolean isNull) {
 	    return isNull ? null : value;
+	}
+
+	/**
+	 * PreparedStatementとResultSetをクローズする
+	 * @param ps
+	 * @param rs
+	 */
+	protected void safeClose(PreparedStatement ps,ResultSet rs){
+
+    	try {
+	        // 接続を閉じる
+        	if( rs != null ){
+				rs.close();
+        	}
+        	if( ps != null ){
+	        	ps.close();
+        	}
+		} catch (SQLException e) {
+			logger.info("closeに失敗しました：",e);
+			;	//closeの失敗は無視
+		}
+	}
+
+	/**
+	 * 直前にINSERTしたAUTOINCREMENTのIDを取得する
+	 * @param tableName
+	 * @return
+	 * @throws SQLException
+	 */
+	protected int getLastInsertid(String tableName) throws SQLException{
+		if( con == null ){
+			return 0;
+		}
+
+		int lastid = 0;
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		// ステートメント生成
+		ps = con.prepareStatement("select last_insert_id() as lastId from "+tableName);
+
+        // SQLを実行
+        rs = ps.executeQuery();
+
+        //値を取り出す
+        while(rs.next()){
+        	lastid = rs.getInt("lastId");
+        }
+
+        return lastid;
 	}
 }
