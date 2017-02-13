@@ -15,4 +15,5 @@ public class RequestConst {
 	public static final String REQUEST_ERRORS = "RequestErrorList";
 	public static final String REQUEST_TASK_LIST = "RequestTaskList";
 	public static final String REQUEST_TASK = "RequestTask";
+	public static final String REQUEST_COURSE_LIST = "CourseList";
 }

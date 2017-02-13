@@ -5,15 +5,17 @@
 
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
+<%@ page import="jp.ac.asojuku.asolearning.param.TaskPublicStateId" %>
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.TaskDto" %>
+<%@ page import="jp.ac.asojuku.asolearning.dto.CourseDto" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>課題一覧</title>
+    <title>課題作成</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
@@ -23,6 +25,7 @@
 
     <!-- Custom CSS -->
     <link href="view/css/sb-admin-2.css" rel="stylesheet">
+    <link href="view/css/form.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="view/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -33,7 +36,9 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+<script>
+var testcase_cnt = 0;	//テストケースの数。初期値は0
+</script>
 </head>
 
 <body>
@@ -67,73 +72,154 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            課題一覧 <small>あなたへの課題の一覧です</small>
+                            課題作成</small>
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-pencil-square"></i> 課題一覧
+                                <i class="fa fa-pencil-square"></i> 課題作成
                             </li>
                         </ol>
                     </div>
                 </div>
                 <!-- /.row -->
-<%
-List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUEST_TASK_LIST);
-%>
+
                 <div class="row">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover table-striped">
-                                <thead>
-                                    <tr class="info">
-                                        <th>No.</th>
-                                        <th>ソース</th>
-                                        <th>締め切り</th>
-                                        <th>必須</th>
-                                        <th>得点</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <% for( TaskDto taskDto : taskList ){ %>
-                                    <tr>
-
-                                        <td>
-                                        <a href="task?taskid=<%=taskDto.getTaskId()%>">
-                                        <%= taskDto.getTaskName() %>
-                                        </a>
-                                        </td>
-
-                                        <% if( taskDto.getResult() != null ){ %>
-                                        	<td>提出済み</td>
-                                        <% }else{ %>
-                                        	<td>未提出</td>
-                                        <% } %>
-
-                                        <% if( taskDto.getTerminationDate() != null ){ %>
-                                        	<td>あり</td>
-                                        <% }else{ %>
-                                        	<td>なし</td>
-                                        <% } %>
-
-                                        <% if( taskDto.isRequiredFlg() ){ %>
-                                        	<td>必須</td>
-                                        <% }else{ %>
-                                        	<td>任意</td>
-                                        <% } %>
-
-                                        <% if( taskDto.getResult() != null ){ %>
-                                        	<td><%= taskDto.getResult().getTotal() %></td>
-                                        <% }else{ %>
-                                        	<td>&nbsp;</td>
-                                        <% } %>
-                                    </tr>
-                                <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-
+                	<div class="panel panel-default">
+                		<div class="panel-heading">
+                			概要
+                		</div>
+	                	<div class="panel-body">
+	                        <div class="table-responsive">
+	                            <table class="table table-bordered table-hover" id="form">
+	                                <tbody>
+	                                	<tr>
+	                                		<th>課題名</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<input type="text" placeholder="課題名を記載してください">
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                	<tr>
+	                                		<th>問題文</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<textarea placeholder="問題文を記載してください"></textarea>
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                </tbody>
+	                            </table>
+	                        </div>
+						</div>
+                	</div>
                 </div>
                 <!-- /.row -->
 
+                <div class="row">
+                	<div class="panel panel-default">
+                		<div class="panel-heading">
+                			テストケース
+                		</div>
+	                	<div class="panel-body">
+	                		<label>テストケースは最大10個までです。</label>
+	                		<input type="button" value="+" id="addForm">
+
+	                        <div class="table-responsive">
+	                            <table class="table table-bordered table-hover" id="form">
+	                                <thead>
+	                                    <tr>
+	                                        <th>No.</th>
+	                                        <th>入力ファイル</th>
+	                                        <th>出力ファイル</th>
+	                                        <th>配点</th>
+	                                    </tr>
+	                                </thead>
+	                                <tbody>
+	                                	<tr id="testcase_table_tr[0]" class="testcase_table_tr">
+
+	                                		<td id="index[0]">
+	                                			<input class="close" type="button" value="-" style="display: none;">
+	                                			No.1
+	                                		</td>
+	                                		<td>
+		                                        <input type="file" id="infile_select[0]" name="javafile" class="form-control" style="display:none;">
+		                                        <div class="input-group">
+
+										          <span class="input-group-btn">
+										            <button type="button" id="infile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
+										          </span>
+										          <input type="text" id="inputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
+
+										        </div>
+	                                		</td>
+	                                		<td>
+		                                        <input type="file" id="outfile_selec[0]" name="javafile" class="form-control" style="display:none;">
+		                                        <div class="input-group">
+
+										          <span class="input-group-btn">
+										            <button type="button" id="outfile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
+										          </span>
+										          <input type="text" id="outputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
+
+										        </div>
+	                                		</td>
+	                                		<td>
+	                                			<input type="text" placeholder="配点を記入してください">
+
+	                                		</td>
+	                                	</tr>
+	                                </tbody>
+	                            </table>
+	                        </div>
+						</div>
+                	</div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                	<div class="panel panel-default">
+                		<div class="panel-heading">
+                			公開設定
+                		</div>
+	                	<div class="panel-body">
+	                        <div class="table-responsive">
+	                            <table class="table table-bordered table-hover" id="form">
+	                                <thead>
+	                                    <tr>
+	                                        <th>学科</th>
+	                                        <th>公開設定</th>
+	                                        <th>公開時間設定</th>
+	                                    </tr>
+	                                </thead>
+	                                <tbody>
+	                                 <% List<CourseDto> list = (List<CourseDto>)request.getAttribute(RequestConst.REQUEST_COURSE_LIST); %>
+	                                 <% for(CourseDto dto : list ){ %>
+	                                	<tr>
+	                                		<td>
+	                                			<%=dto.getName()%>
+	                                		</td>
+	                                		<td>
+	                                            <select class="form-control" name="course">
+	                                                <option value="<%=dto.getId()%>-<%=TaskPublicStateId.PRIVATE.getId()%>"><%=TaskPublicStateId.PRIVATE.getMsg1()%></option>
+	                                                <option value="<%=dto.getId()%>-<%=TaskPublicStateId.PUBLIC_MUST.getId()%>"><%=TaskPublicStateId.PUBLIC_MUST.getMsg1()%></option>
+	                                                <option value="<%=dto.getId()%>-<%=TaskPublicStateId.PUBLIC.getId()%>"><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
+	                                            </select>
+	                                		</td>
+	                                		<td>
+	                                			<div class="form-group">
+	                                			<input type="text" placeholder="">
+	                                			</div>
+	                                		</td>
+	                                	</tr>
+	                                <% }%>
+	                                </tbody>
+	                            </table>
+	                        </div>
+						</div>
+                	</div>
+                </div>
+                <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -154,6 +240,57 @@ List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUES
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
 
+	<script>
+	//アイコンをクリックした場合は、ファイル選択をクリックした挙動とする.
+	$('#infile_select_icon').on('click', function() {
+	  $('#infile_select').click();
+	});
+	$('#outfile_select_icon').on('click', function() {
+		  $('#outfile_select').click();
+	});
+
+	// ファイル選択時に表示用テキストボックスへ値を連動させる.
+	// ファイル選択値のクリア機能の実装により、#file_select がDOMから消されることがあるので親要素からセレクタ指定でイベントを割り当てる.
+	$('#infile_select').parent().on('change', '#infile_select', function() {
+	  // $('#file_name').val($(this).val());
+	  $('#inputfile_name').val($('#infile_select').prop('files')[0].name);
+	});
+	// ファイル選択時に表示用テキストボックスへ値を連動させる.
+	// ファイル選択値のクリア機能の実装により、#file_select がDOMから消されることがあるので親要素からセレクタ指定でイベントを割り当てる.
+	$('#outfile_select').parent().on('change', '#outfile_select', function() {
+	  // $('#file_name').val($(this).val());
+	  $('#outputfile_name').val($('#outfile_select').prop('files')[0].name);
+	});
+
+	$(function(){
+		  $('#addForm').click(function(){
+			  var original = $('#testcase_table_tr\\[' + testcase_cnt + '\\]');
+			  var originCnt = testcase_cnt;
+
+			  if( testcase_cnt < 10 ){
+				  testcase_cnt++;
+				  original
+				  	.clone(original)
+					.insertAfter(original)
+					.attr('id', 'testcase_table_tr[' + testcase_cnt + ']')
+					.end()
+					.find('input, button').each(function(idx, obj) {
+			              $(obj).attr({
+			                  id: $(obj).attr('id').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
+			                  name: $(obj).attr('name').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']')
+			              });
+			          });
+
+				  var clone = $('#testcase_table_tr\\[' + testcase_cnt + '\\]');
+				  //clone.children('td.index['+testcase_cnt+']').text = testcase_cnt;
+			      clone.children('td').children('input.close').show();
+			      clone.slideDown('slow');
+		  		}
+
+		  });
+		});
+
+	</script>
 </body>
 
 </html>

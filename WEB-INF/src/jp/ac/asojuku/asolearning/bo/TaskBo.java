@@ -45,4 +45,5 @@ public interface TaskBo {
 	 * @throws AsoLearningSystemErrException
 	 */
 	public TaskDto getTaskDetailForUser(Integer taskId,LogonInfoDTO user) throws AsoLearningSystemErrException;
+
 }

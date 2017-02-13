@@ -27,7 +27,7 @@ public class StDashBoadServlet extends BaseServlet {
 	@Override
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		// login.jspを表示
+		// tc_dashboad.jspを表示
 		RequestDispatcher rd = req.getRequestDispatcher("view/tc_dashboad.jsp");
 		rd.forward(req, resp);
 	}

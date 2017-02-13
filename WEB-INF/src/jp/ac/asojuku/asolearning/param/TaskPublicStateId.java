@@ -12,7 +12,7 @@ public enum TaskPublicStateId {
 
 	PRIVATE(0,"非公開",""),
 	PUBLIC_MUST(1,"公開（必須）","必須"),
-	PUBLIC(2,"公開（必須）","必須");
+	PUBLIC(2,"公開（任意）","必須");
 
 	//ステータス
 	private int id;

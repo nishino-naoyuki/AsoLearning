@@ -31,7 +31,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
              </li>
 <% }else if( RoleId.TEACHER.equals(loginInfo.getRoleId()) ){ %>
              <li>
-                 <a href="#"><i class="fa fa-graduation-cap fa-fw"></i>課題作成</a>
+                 <a href="tc_createTask"><i class="fa fa-graduation-cap fa-fw"></i>課題作成</a>
              </li>
 <% }else{ %>
              <li>
