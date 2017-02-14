@@ -21,4 +21,7 @@ public class TimestampUtil {
         return new Timestamp(System.currentTimeMillis());
     }
 
+    public static String currentString(){
+        return new Timestamp(System.currentTimeMillis()).toString();
+    }
 }

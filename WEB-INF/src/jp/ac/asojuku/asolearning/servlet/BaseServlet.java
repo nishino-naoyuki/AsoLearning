@@ -1,6 +1,10 @@
 package jp.ac.asojuku.asolearning.servlet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,5 +105,77 @@ public abstract class BaseServlet extends HttpServlet {
 		return loginInfo;
 	}
 
+	/**
+	 * Multipartから文字列パラメータを取得する
+	 * @param req
+	 * @param paramName
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	protected String getStringParamFromPart(HttpServletRequest req,String paramName) throws AsoLearningSystemErrException, IllegalStateException, IOException, ServletException{
+		String sparam = null;
+		Part part;
+
+		part = req.getPart(paramName);
+		String contentType = part.getContentType();
+
+        if ( contentType == null) {
+            try(InputStream inputStream = part.getInputStream()) {
+                BufferedReader bufReader = new BufferedReader(new InputStreamReader(inputStream));
+                sparam = bufReader.lines().collect(Collectors.joining(System.getProperty("line.separator")));
+
+            } catch (IOException e) {
+            	throw new AsoLearningSystemErrException(e);
+            }
+        }
+
+        return sparam;
+
+	}
+
+	/**
+	 * 数値データを取得する
+	 * @param req
+	 * @param paramName
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws AsoLearningSystemErrException
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	protected Integer getIntParamFromPart(HttpServletRequest req,String paramName) throws IllegalStateException, AsoLearningSystemErrException, IOException, ServletException{
+		Integer iparam = null;
+
+		String sparam = getStringParamFromPart(req,paramName);
+		try{
+			iparam = Integer.parseInt(sparam);
+
+		}catch(NumberFormatException e){
+			iparam = null;
+		}
+
+		return iparam;
+	}
+
+
+	/**
+	 * アップロードされたファイル名をヘッダ情報より取得する
+	 * @param part
+	 * @return
+	 */
+	protected String getFileName(Part part) {
+        String name = null;
+        for (String dispotion : part.getHeader("Content-Disposition").split(";")) {
+            if (dispotion.trim().startsWith("filename")) {
+                name = dispotion.substring(dispotion.indexOf("=") + 1).replace("\"", "").trim();
+                name = name.substring(name.lastIndexOf("\\") + 1);
+                break;
+            }
+        }
+        return name;
+    }
 	protected abstract String getDisplayNo();
 }

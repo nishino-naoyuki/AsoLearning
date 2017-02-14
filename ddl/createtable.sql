@@ -140,7 +140,9 @@ CREATE TABLE TASK_PUBLIC_TBL
 1:公開で必須
 2:非公開で必須',
 	-- 公開開始の日時
-	PUBLIC_DATETIME datetime COMMENT '公開開始の日時'
+	PUBLIC_DATETIME datetime COMMENT '公開開始の日時',
+	-- NULLの場合は締め切りなし
+	END_DATETIME datetime COMMENT 'NULLの場合は締め切りなし'
 ) COMMENT = '課題公開設定テーブル';
 
 

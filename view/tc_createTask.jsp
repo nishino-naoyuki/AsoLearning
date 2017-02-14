@@ -36,6 +36,8 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css" >
+
 <script>
 var testcase_cnt = 0;	//テストケースの数。初期値は0
 </script>
@@ -67,7 +69,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
         <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid">
-
+				<form action="tc_confirmTask" enctype="multipart/form-data" method="post" >
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -82,7 +84,6 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
                     </div>
                 </div>
                 <!-- /.row -->
-
                 <div class="row">
                 	<div class="panel panel-default">
                 		<div class="panel-heading">
@@ -96,7 +97,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		<th>課題名</th>
 	                                		<td>
 	                                		<div class="form-group">
-	                                			<input type="text" placeholder="課題名を記載してください">
+	                                			<input type="text" name="taskname" placeholder="課題名を記載してください">
 	                                		</div>
 	                                		</td>
 	                                	</tr>
@@ -104,7 +105,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		<th>問題文</th>
 	                                		<td>
 	                                		<div class="form-group">
-	                                			<textarea placeholder="問題文を記載してください"></textarea>
+	                                			<textarea name="question" placeholder="問題文を記載してください"></textarea>
 	                                		</div>
 	                                		</td>
 	                                	</tr>
@@ -146,29 +147,29 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                			<div id="index[0]">1</div>
 	                                		</td>
 	                                		<td>
-		                                        <input type="file" id="infile_select[0]" name="javafile" class="form-control" style="display:none;">
+		                                        <input type="file" id="infile_select[0]" name="inputfile[0]" class="form-control" style="display:none;">
 		                                        <div class="input-group">
 
 										          <span class="input-group-btn">
 										            <button type="button" id="infile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
 										          </span>
-										          <input type="text" id="inputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
+										          <input type="text" id="inputfile_name[0]" name="inputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
 
 										        </div>
 	                                		</td>
 	                                		<td>
-		                                        <input type="file" id="outfile_selec[0]" name="javafile" class="form-control" style="display:none;">
+		                                        <input type="file" id="outfile_select[0]" name="outputfile[0]" class="form-control" style="display:none;">
 		                                        <div class="input-group">
 
 										          <span class="input-group-btn">
 										            <button type="button" id="outfile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
 										          </span>
-										          <input type="text" id="outputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
+										          <input type="text" id="outputfile_name[0]" name="outputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
 
 										        </div>
 	                                		</td>
 	                                		<td>
-	                                			<input type="text" id="haiten[0]" placeholder="配点を記入してください">
+	                                			<input type="text" id="haiten[0]" name="haiten[0]" placeholder="配点を記入してください">
 
 	                                		</td>
 	                                	</tr>
@@ -193,6 +194,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                        <th>学科</th>
 	                                        <th>公開設定</th>
 	                                        <th>公開時間設定</th>
+	                                        <th>締め切り設定</th>
 	                                    </tr>
 	                                </thead>
 	                                <tbody>
@@ -203,15 +205,20 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                			<%=dto.getName()%>
 	                                		</td>
 	                                		<td>
-	                                            <select class="form-control" name="course">
-	                                                <option value="<%=dto.getId()%>-<%=TaskPublicStateId.PRIVATE.getId()%>"><%=TaskPublicStateId.PRIVATE.getMsg1()%></option>
-	                                                <option value="<%=dto.getId()%>-<%=TaskPublicStateId.PUBLIC_MUST.getId()%>"><%=TaskPublicStateId.PUBLIC_MUST.getMsg1()%></option>
-	                                                <option value="<%=dto.getId()%>-<%=TaskPublicStateId.PUBLIC.getId()%>"><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
+	                                            <select class="form-control" name="<%=dto.getId()%>-course">
+	                                                <option value="<%=TaskPublicStateId.PRIVATE.getId()%>"><%=TaskPublicStateId.PRIVATE.getMsg1()%></option>
+	                                                <option value="<%=TaskPublicStateId.PUBLIC_MUST.getId()%>"><%=TaskPublicStateId.PUBLIC_MUST.getMsg1()%></option>
+	                                                <option value="<%=TaskPublicStateId.PUBLIC.getId()%>"><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
 	                                            </select>
 	                                		</td>
 	                                		<td>
 	                                			<div class="form-group">
-	                                			<input type="text" placeholder="">
+	                                			<input type="text" name="<%=dto.getId()%>-startterm" placeholder="" id="datepicker1">
+	                                			</div>
+	                                		</td>
+	                                		<td>
+	                                			<div class="form-group">
+	                                			<input type="text" name="<%=dto.getId()%>-endterm" placeholder="" id="datepicker2">
 	                                			</div>
 	                                		</td>
 	                                	</tr>
@@ -223,6 +230,10 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
                 	</div>
                 </div>
                 <!-- /.row -->
+                <div class="row">
+                	 <button type="submit" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 確認</button>
+                </div>
+                </form>
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -243,26 +254,46 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
 	<script>
 	//アイコンをクリックした場合は、ファイル選択をクリックした挙動とする.
-	$('#infile_select_icon').on('click', function() {
-	  $('#infile_select').click();
+	$('[id^=infile_select_icon]').on('click', function() {
+		var idx = 0;
+		if( $(this).data("n") != null ){
+			idx = $(this).data("n");
+		}
+	  $('[id=infile_select\\['+idx+'\\]]').click();
 	});
-	$('#outfile_select_icon').on('click', function() {
-		  $('#outfile_select').click();
+
+	$('[id^=outfile_select_icon]').on('click', function() {
+		var idx = 0;
+		if( $(this).data("n") != null ){
+			idx = $(this).data("n");
+		}
+		$('[id=outfile_select\\['+idx+'\\]]').click();
 	});
 
 	// ファイル選択時に表示用テキストボックスへ値を連動させる.
 	// ファイル選択値のクリア機能の実装により、#file_select がDOMから消されることがあるので親要素からセレクタ指定でイベントを割り当てる.
-	$('#infile_select').parent().on('change', '#infile_select', function() {
+	$('[id^=infile_select]').parent().on('change', '[id^=infile_select]', function() {
 	  // $('#file_name').val($(this).val());
-	  $('#inputfile_name').val($('#infile_select').prop('files')[0].name);
+		var idx = 0;
+		if( $(this).data("n") != null ){
+			idx = $(this).data("n");
+		}
+	  $('[id=inputfile_name\\['+idx+'\\]]').val($('[id=infile_select\\['+idx+'\\]]').prop('files')[0].name);
 	});
+
 	// ファイル選択時に表示用テキストボックスへ値を連動させる.
 	// ファイル選択値のクリア機能の実装により、#file_select がDOMから消されることがあるので親要素からセレクタ指定でイベントを割り当てる.
-	$('#outfile_select').parent().on('change', '#outfile_select', function() {
+	$('[id^=outfile_select]').parent().on('change', '[id^=outfile_select]', function() {
 	  // $('#file_name').val($(this).val());
-	  $('#outputfile_name').val($('#outfile_select').prop('files')[0].name);
+		var idx = 0;
+		if( $(this).data("n") != null ){
+			idx = $(this).data("n");
+		}
+	  $('[id=outputfile_name\\['+idx+'\\]]').val($('[id=outfile_select\\['+idx+'\\]]').prop('files')[0].name);
 	});
 
 
@@ -279,14 +310,23 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 					.insertAfter(original)
 					.attr('id', 'testcase_table_tr[' + testcase_cnt + ']')
 					.end()
-					.find('input, button, div').each(function(idx, obj) {
-						if($(obj).attr('id') != null ){
-				              $(obj).attr({
-				                  id: $(obj).attr('id').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
-				                  //name: $(obj).attr('name').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']')
-				              });
-				              $(obj).data("n",testcase_cnt);
-			              }
+					.find('input, button, div, button').each(function(idx, obj) {
+							//id属性変更
+							if($(obj).attr('id') != null ){
+					              $(obj).attr({
+					                  id: $(obj).attr('id').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
+					              });
+					              $(obj).data("n",testcase_cnt);
+				             }
+							//名前属性変更
+							if($(obj).attr('name') != null ){
+	                            $(obj).attr({
+	                                name: $(obj).attr('name').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
+	                            });
+							}
+							if ($(obj).attr('type') == 'text') {
+				                $(obj).val('');
+				            }
 			          });
 
 					  var clone = $('#testcase_table_tr\\[' + testcase_cnt + '\\]');
@@ -300,7 +340,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 		  //削除
 		  $("[id^=close]").on("click",function(){
 		        console.log($(this).data("n"));
-
+				//削除対象を取得
 		        var removeObj = $('#testcase_table_tr\\[' + $(this).data("n") + '\\]');
 		        //var removeObj = $(this).parent();
 		        removeObj.fadeOut('fast', function() {
@@ -313,15 +353,19 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 		                	testcase_cnt++;
 		                    $(formObj)
 		                        .attr('id', 'testcase_table_tr[' + testcase_cnt + ']') // id属性を変更。
-		                        .find('input, button,div').each(function(idx, obj) {
+		                        .find('input, button,div, button').each(function(idx, obj) {
 		    						if($(obj).attr('id') != null ){
 			                            $(obj).attr({
 			                                id: $(obj).attr('id').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
-			                                //name: $(obj).attr('name').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']')
 			                            });
 							              $(obj).data("n",testcase_cnt);
 										  var clone = $('#testcase_table_tr\\[' + testcase_cnt + '\\]');
 										  $('#index\\['+testcase_cnt+'\\]').text( testcase_cnt+1 );
+		    						}
+		    						if($(obj).attr('name') != null ){
+			                            $(obj).attr({
+			                                name: $(obj).attr('name').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
+			                            });
 		    						}
 		                        });
 		                }
@@ -332,6 +376,14 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 
 		});
 
+
+		$(function() {
+			    $("#datepicker1").datepicker();
+		});
+
+		$(function() {
+			    $("#datepicker2").datepicker();
+		});
 	</script>
 </body>
 

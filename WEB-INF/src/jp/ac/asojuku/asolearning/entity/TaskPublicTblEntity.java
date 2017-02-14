@@ -26,6 +26,9 @@ public class TaskPublicTblEntity implements Serializable {
 	/** PUBLIC_DATETIME. */
 	private Date publicDatetime;
 
+	/** 締切日. */
+	private Date endDatetime;
+
 	/**
 	 * コンストラクタ.
 	 */
@@ -106,6 +109,25 @@ public class TaskPublicTblEntity implements Serializable {
 	 */
 	public Date getPublicDatetime() {
 		return this.publicDatetime;
+	}
+
+	/**
+	 * 締切日 を設定します.
+	 * 
+	 * @param endDatetime
+	 *            締切日
+	 */
+	public void setEndDatetime(Date endDatetime) {
+		this.endDatetime = endDatetime;
+	}
+
+	/**
+	 * 締切日 を取得します.
+	 * 
+	 * @return 締切日
+	 */
+	public Date getEndDatetime() {
+		return this.endDatetime;
 	}
 
 

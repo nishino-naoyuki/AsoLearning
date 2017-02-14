@@ -111,23 +111,6 @@ public class TaskJudgeServlet extends BaseServlet {
 	}
 
 	/**
-	 * アップロードされたファイル名をヘッダ情報より取得する
-	 * @param part
-	 * @return
-	 */
-	private String getFileName(Part part) {
-        String name = null;
-        for (String dispotion : part.getHeader("Content-Disposition").split(";")) {
-            if (dispotion.trim().startsWith("filename")) {
-                name = dispotion.substring(dispotion.indexOf("=") + 1).replace("\"", "").trim();
-                name = name.substring(name.lastIndexOf("\\") + 1);
-                break;
-            }
-        }
-        return name;
-    }
-
-	/**
 	 * アップロードディレクトリ名は以下のフォーマットとする
 	 * ユーザー名+アップロードファイル名+現在時刻（ミリ秒まで）
 	 *

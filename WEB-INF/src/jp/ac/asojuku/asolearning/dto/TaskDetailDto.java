@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package jp.ac.asojuku.asolearning.dto;
 
@@ -9,8 +9,9 @@ package jp.ac.asojuku.asolearning.dto;
  */
 public class TaskDetailDto {
 
+
 	/**
-	 * 
+	 *
 	 */
 	public TaskDetailDto() {
 		// TODO 自動生成されたコンストラクター・スタブ

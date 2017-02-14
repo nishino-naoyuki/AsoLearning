@@ -54,4 +54,15 @@ public enum TaskPublicStateId {
 		return (this.id == id);
 	}
 
+	public static TaskPublicStateId valueOf(int id){
+		TaskPublicStateId st = PUBLIC;
+
+		if( PRIVATE.equals(id)){
+			st = PRIVATE;
+		}else if( PUBLIC_MUST.equals(id)){
+			st = PUBLIC_MUST;
+		}
+
+		return st;
+	}
 }
