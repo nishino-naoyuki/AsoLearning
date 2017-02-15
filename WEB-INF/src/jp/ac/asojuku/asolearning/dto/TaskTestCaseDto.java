@@ -10,6 +10,8 @@ package jp.ac.asojuku.asolearning.dto;
  */
 public class TaskTestCaseDto {
 
+	private Integer testcaseId;
+
 	/** 配点. */
 	private Integer allmostOfMarks;
 
@@ -59,5 +61,19 @@ public class TaskTestCaseDto {
 	 */
 	public void setInputFileName(String inputFileName) {
 		this.inputFileName = inputFileName;
+	}
+
+	/**
+	 * @return testcaseId
+	 */
+	public Integer getTestcaseId() {
+		return testcaseId;
+	}
+
+	/**
+	 * @param testcaseId セットする testcaseId
+	 */
+	public void setTestcaseId(Integer testcaseId) {
+		this.testcaseId = testcaseId;
 	}
 }

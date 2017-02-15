@@ -7,13 +7,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +27,14 @@ import jp.ac.asojuku.asolearning.dto.CourseDto;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
 import jp.ac.asojuku.asolearning.dto.TaskPublicDto;
 import jp.ac.asojuku.asolearning.dto.TaskTestCaseDto;
+import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
+import jp.ac.asojuku.asolearning.param.RequestConst;
 import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
 import jp.ac.asojuku.asolearning.util.Digest;
 import jp.ac.asojuku.asolearning.util.FileUtils;
 import jp.ac.asojuku.asolearning.util.TimestampUtil;
+import jp.ac.asojuku.asolearning.validator.TaskValidator;
 
 /**
  * 課題作成確認画面
@@ -48,6 +54,7 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 	}
 
 	private String taskNameHash;
+	private ActionErrors errors;
 
 	/* (非 Javadoc)
 	 * @see jp.ac.asojuku.asolearning.servlet.BaseServlet#doPostMain(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -56,24 +63,79 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 	protected void doPostMain(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, AsoLearningSystemErrException {
 
+		errors = new ActionErrors();
 		try{
+
+			//学科データを取得
+			CourseBo coursBo = new CourseBoImpl();
+
+			List<CourseDto> courselist = coursBo.getCourseAllList();
+
 			//パラメータの取得
 			TaskDto dto = getParams(req);
 			//テストケースの情報をセット
 			taskNameHash = Digest.create(dto.getTaskName()+TimestampUtil.currentString());
 			List<TaskTestCaseDto> testCaseList = getTaskTestCaseDtoList(req);
 			//公開情報をセット
-			List<TaskPublicDto> taskPublicList = getTaskPublicDtoList(req);
+			List<TaskPublicDto> taskPublicList = getTaskPublicDtoList(req,courselist);
 
 			//エラーチェック
+			checkError(dto,testCaseList,taskPublicList);
 
-			//画面遷移
+			RequestDispatcher rd = null;
+			if( errors.isHasErr() ){
+				//エラーがある場合は、リクエストにセット
+				setToRequest(req,dto,testCaseList,taskPublicList,courselist);
+				//画面遷移
+				rd = req.getRequestDispatcher("view/tc_createTask.jsp");
+			}else{
+				//エラーが無い場合はセッションにセット
+				setToSession(req,dto,testCaseList,taskPublicList);
+				rd = req.getRequestDispatcher("view/tc_creatTaskConfirm.jsp");
+			}
+			rd.forward(req, resp);
+
 
 		} catch (IllegalStateException e) {
 			logger.error("IllegalStateException：",e);
 		} catch (ServletException e) {
 			logger.error("ServletException：",e);
 		}
+	}
+
+	private void setToRequest(HttpServletRequest req,TaskDto dto,List<TaskTestCaseDto> testCaseList,List<TaskPublicDto> taskPublicList,List<CourseDto> courselist){
+
+		req.setAttribute(RequestConst.REQUEST_TASK_DTO, dto);
+		req.setAttribute(RequestConst.REQUEST_PUBLICSTATE, taskPublicList);
+		req.setAttribute(RequestConst.REQUEST_TESTCASE, testCaseList);
+		req.setAttribute(RequestConst.REQUEST_ERRORS, errors);
+		req.setAttribute(RequestConst.REQUEST_COURSE_LIST, courselist);
+	}
+
+	private void setToSession(HttpServletRequest req,TaskDto dto,List<TaskTestCaseDto> testCaseList,List<TaskPublicDto> taskPublicList){
+
+		HttpSession session = req.getSession(false);
+
+		if( session != null ){
+			session.setAttribute(RequestConst.REQUEST_TASK_DTO, dto);
+			session.setAttribute(RequestConst.REQUEST_PUBLICSTATE, taskPublicList);
+			session.setAttribute(RequestConst.REQUEST_TESTCASE, testCaseList);
+		}
+	}
+	/**
+	 * エラーチェック
+	 * @param dto
+	 * @param testCaseList
+	 * @param taskPublicList
+	 * @throws AsoLearningSystemErrException
+	 */
+	private void checkError(TaskDto dto,List<TaskTestCaseDto> testCaseList,List<TaskPublicDto> taskPublicList) throws AsoLearningSystemErrException{
+
+		//Validatorでエラーチェック
+		TaskValidator.taskName(dto.getTaskName(), errors);
+		TaskValidator.question(dto.getQuestion(), errors);
+		TaskValidator.publicStateList(taskPublicList, errors);
+		TaskValidator.testcaseList(testCaseList, errors);
 	}
 
 	/**
@@ -105,15 +167,10 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private List<TaskPublicDto> getTaskPublicDtoList(HttpServletRequest req) throws AsoLearningSystemErrException, IllegalStateException, IOException, ServletException{
+	private List<TaskPublicDto> getTaskPublicDtoList(HttpServletRequest req,List<CourseDto> courselist) throws AsoLearningSystemErrException, IllegalStateException, IOException, ServletException{
 		List<TaskPublicDto> taskpublicList = new ArrayList<TaskPublicDto>();
 
-		//学科データを取得
-		CourseBo coursBo = new CourseBoImpl();
-
-		List<CourseDto> list = coursBo.getCourseAllList();
-
-		for(CourseDto course : list ){
+		for(CourseDto course : courselist ){
 			TaskPublicDto dto = new TaskPublicDto();
 
 			int courseId = course.getId();
@@ -122,8 +179,10 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 			dto.setCourseId(courseId);
 			dto.setCourseName(course.getName());
 			dto.setStatus(TaskPublicStateId.valueOf(status));
-			dto.setPublicDatetime(null);
-			dto.setEndDatetime(null);
+			dto.setPublicDatetime(getStringParamFromPart(req,courseId+"-startterm"));
+			dto.setEndDatetime(getStringParamFromPart(req,courseId+"-endterm"));
+
+			taskpublicList.add(dto);
 		}
 
 		return taskpublicList;
@@ -148,31 +207,53 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 		FileUtils.makeDir(tempDir);
 
 		for( int i = 0; i < TESTCASE_MAX; i++ ){
-			TaskTestCaseDto testcase = new TaskTestCaseDto();
-
-			//入力ファイル
-			Part ipart = req.getPart("inputfile["+i+"]");
-			if(ipart != null ){
-		        String name = getFileName(ipart);
-
-		        testcase.setInputFileName(taskNameHash+"/"+name);
-
-		        //テンポラリに一旦書き込み
-		        ipart.write(tempDir+"/"+name);
-			}
-
-			//出力ファイル
-			Part opart = req.getPart("outputfile["+i+"]");
-			if(opart != null ){
-		        String name = getFileName(opart);
-
-		        testcase.setOutputFileName(taskNameHash+"/"+name);
-
-		        //テンポラリに一旦書き込み
-		        ipart.write(tempDir+"/"+name);
-			}
+			testCaseList.add(getTaskTestCaseDto(i,tempDir,req));
 		}
 
 		return testCaseList;
+	}
+
+	/**
+	 * @param index
+	 * @param tempDir
+	 * @param req
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws AsoLearningSystemErrException
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private TaskTestCaseDto getTaskTestCaseDto(int index,String tempDir,HttpServletRequest req) throws IllegalStateException, AsoLearningSystemErrException, IOException, ServletException{
+		TaskTestCaseDto testcase = new TaskTestCaseDto();
+
+		//入力ファイル
+		Part ipart = req.getPart("inputfile["+index+"]");
+		if(ipart != null ){
+	        String name = getFileName(ipart);
+	        if( StringUtils.isNotEmpty(name)){
+		        testcase.setInputFileName(taskNameHash+"/"+name);
+		        //テンポラリに一旦書き込み
+		        ipart.write(tempDir+"/"+name);
+	        }
+		}
+
+		//出力ファイル
+		Part opart = req.getPart("outputfile["+index+"]");
+		if(opart != null ){
+	        String name = getFileName(opart);
+	        if( StringUtils.isNotEmpty(name)){
+		        testcase.setOutputFileName(taskNameHash+"/"+name);
+		        //テンポラリに一旦書き込み
+		        ipart.write(tempDir+"/"+name);
+	        }
+		}
+
+		//配点
+		Part aPart = req.getPart("haiten["+index+"]");
+		if( aPart != null){
+			testcase.setAllmostOfMarks(getIntParamFromPart(req,"haiten["+index+"]"));
+		}
+
+		return testcase;
 	}
 }

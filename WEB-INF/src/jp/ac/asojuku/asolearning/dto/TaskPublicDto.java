@@ -3,8 +3,6 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
-import java.util.Date;
-
 import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
 
 /**
@@ -23,10 +21,10 @@ public class TaskPublicDto {
 	private TaskPublicStateId status;
 
 	/** PUBLIC_DATETIME. */
-	private Date publicDatetime;
+	private String publicDatetime;
 
 	/** 締切日. */
-	private Date endDatetime;
+	private String endDatetime;
 
 	/**
 	 * @return courseId
@@ -73,28 +71,28 @@ public class TaskPublicDto {
 	/**
 	 * @return publicDatetime
 	 */
-	public Date getPublicDatetime() {
+	public String getPublicDatetime() {
 		return publicDatetime;
 	}
 
 	/**
 	 * @param publicDatetime セットする publicDatetime
 	 */
-	public void setPublicDatetime(Date publicDatetime) {
+	public void setPublicDatetime(String publicDatetime) {
 		this.publicDatetime = publicDatetime;
 	}
 
 	/**
 	 * @return endDatetime
 	 */
-	public Date getEndDatetime() {
+	public String getEndDatetime() {
 		return endDatetime;
 	}
 
 	/**
 	 * @param endDatetime セットする endDatetime
 	 */
-	public void setEndDatetime(Date endDatetime) {
+	public void setEndDatetime(String endDatetime) {
 		this.endDatetime = endDatetime;
 	}
 

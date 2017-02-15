@@ -73,10 +73,10 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                             課題
                         </h1>
                         <ol class="breadcrumb">
-                            <li class="active">
+                            <li>
                                 <i class="fa fa-pencil-square"></i> <a href="tasklist">課題一覧</a>
                             </li>
-                            <li>
+                            <li class="active">
                                 <i class="fa fa-check-circle-o"></i> <%=taskdto.getTaskName() %>
                             </li>
                         </ol>

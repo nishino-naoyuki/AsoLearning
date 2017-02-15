@@ -85,4 +85,72 @@ public class FileUtils {
 	    return bRet;
 	}
 
+	/**
+	 * 削除
+	 * @param path
+	 */
+	public static void delete(String path){
+		File file = new File(path);
+
+		delete(file);
+	}
+	public static void delete(File f){
+
+		/*
+         * ファイルまたはディレクトリが存在しない場合は何もしない
+         */
+        if(f.exists() == false) {
+            return;
+        }
+
+        if(f.isFile()) {
+            /*
+             * ファイルの場合は削除する
+             */
+            f.delete();
+
+        } else if(f.isDirectory()){
+            /*
+             * ディレクトリの場合は、すべてのファイルを削除する
+             */
+
+            /*
+             * 対象ディレクトリ内のファイルおよびディレクトリの一覧を取得
+             */
+            File[] files = f.listFiles();
+
+            /*
+             * ファイルおよびディレクトリをすべて削除
+             */
+            for(int i=0; i<files.length; i++) {
+                /*
+                 * 自身をコールし、再帰的に削除する
+                 */
+                delete( files[i] );
+            }
+            /*
+             * 自ディレクトリを削除する
+             */
+            f.delete();
+        }
+
+	}
+
+	/**
+	 * コピーする
+	 *
+	 * @param srcPath
+	 * @param dstPath
+	 * @throws IOException
+	 */
+	public static void copy(String srcPath,String dstPath) throws IOException{
+
+		File f = new File(dstPath);
+
+		f.getParentFile().mkdirs();
+
+		Files.copy(
+				new File(srcPath).toPath(),
+				new File(dstPath).toPath());
+	}
 }

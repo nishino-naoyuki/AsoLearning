@@ -7,8 +7,8 @@
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.TaskPublicStateId" %>
 <%@ page import="java.util.List" %>
-<%@ page import="jp.ac.asojuku.asolearning.dto.TaskDto" %>
-<%@ page import="jp.ac.asojuku.asolearning.dto.CourseDto" %>
+<%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.err.*" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,6 +26,7 @@
     <!-- Custom CSS -->
     <link href="view/css/sb-admin-2.css" rel="stylesheet">
     <link href="view/css/form.css" rel="stylesheet">
+    <link href="view/css/main.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="view/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -41,6 +42,10 @@
 <script>
 var testcase_cnt = 0;	//テストケースの数。初期値は0
 </script>
+<%
+	//エラー情報を取得する
+	ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ERRORS);
+%>
 </head>
 
 <body>
@@ -85,6 +90,11 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
                 </div>
                 <!-- /.row -->
                 <div class="row">
+                <%if( errors != null && errors.isHasErr() ){%>
+                	<% for( ActionError err : errors.getList() ){ %>
+							<div id="error"><%= err.getMessage() %></div>
+                	<% } %>
+                <% } %>
                 	<div class="panel panel-default">
                 		<div class="panel-heading">
                 			概要
@@ -97,7 +107,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		<th>課題名</th>
 	                                		<td>
 	                                		<div class="form-group">
-	                                			<input type="text" name="taskname" placeholder="課題名を記載してください">
+	                                			<input type="text" name="taskname" placeholder="課題名を記載してください" value="" >
 	                                		</div>
 	                                		</td>
 	                                	</tr>
@@ -213,12 +223,12 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		</td>
 	                                		<td>
 	                                			<div class="form-group">
-	                                			<input type="text" name="<%=dto.getId()%>-startterm" placeholder="" id="datepicker1">
+	                                			<input type="text" name="<%=dto.getId()%>-startterm" placeholder="" id="datepicker1-<%=dto.getId()%>">
 	                                			</div>
 	                                		</td>
 	                                		<td>
 	                                			<div class="form-group">
-	                                			<input type="text" name="<%=dto.getId()%>-endterm" placeholder="" id="datepicker2">
+	                                			<input type="text" name="<%=dto.getId()%>-endterm" placeholder="" id="datepicker2-<%=dto.getId()%>">
 	                                			</div>
 	                                		</td>
 	                                	</tr>
@@ -378,7 +388,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 
 
 		$(function() {
-			    $("#datepicker1").datepicker();
+			    $("[id^=datepicker]").datepicker();
 		});
 
 		$(function() {

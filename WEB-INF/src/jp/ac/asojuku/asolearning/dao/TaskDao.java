@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import jp.ac.asojuku.asolearning.entity.PublicStatusMasterEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskPublicTblEntity;
@@ -47,6 +49,22 @@ public class TaskDao extends Dao {
 	private static final int TASK_DETAIL_SQL_USER_IDX = 1;
 	private static final int TASK_DETAIL_SQL_COURCE_IDX = 2;
 	private static final int TASK_DETAIL_SQL_TASKID_IDX = 3;
+	//挿入SQL
+	private static final String TASK_INSERT_SQL =
+			"INSERT INTO TASK_TBL "
+			+ "(TASK_ID,NAME,TASK_QUESTION,CREATE_USER_ID,ENTRY_DATE,UPDATE_TIM) "
+			+ "VALUES(null,?,?,?,CURRENT_DATE,CURRENT_DATE) ";
+	private static final String TASKTESTCASE_INSERT_SQL =
+			"INSERT INTO TESTCASE_TABLE "
+			+ "(TASK_ID,TESTCASE_ID,ALLMOST_OF_MARKS,OUTPUT_FILE_NAME,INPUT_FILE_NAME) "
+			+ "VALUES(?,?,?,?,?) ";
+	private static final String TASKPUBLIC_INSERT_SQL =
+			"INSERT INTO TASK_PUBLIC_TBL "
+			+ "(TASK_ID,COURSE_ID,STATUS_ID,PUBLIC_DATETIME,END_DATETIME) "
+			+ "VALUES(?,?,?,?,?) ";
+
+
+
 
 	public TaskDao() {
 	}
@@ -231,5 +249,100 @@ public class TaskDao extends Dao {
 		}
 	}
 
+	/**
+	 * 課題の挿入
+	 * @param entity
+	 * @throws SQLException
+	 */
+	public void insert(String userId,TaskTblEntity entity) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps1 = null;
+		PreparedStatement ps2 = null;
+		PreparedStatement ps3 = null;
+
+        try {
+        	this.beginTranzaction();
+
+        	////////////////////////////
+        	//TASK_TBL
+        	ps1 = con.prepareStatement(TASK_INSERT_SQL);
+
+        	ps1.setString(1, entity.getName());
+        	ps1.setString(2, entity.getTaskQuestion());
+        	ps1.setString(3, userId);
+
+        	ps1.executeUpdate();
+
+			int taskId = getLastInsertid("TASK_TBL");
+
+        	////////////////////////////
+        	//TASKTESTCASE_INSERT_SQL
+			Set<TestcaseTableEntity> testCaseSet = entity.getTestcaseTableSet();
+
+			int caseId = 1;
+			for(TestcaseTableEntity testCase : testCaseSet){
+
+				ps2 = con.prepareStatement(TASKTESTCASE_INSERT_SQL);
+
+				ps2.setInt(1, taskId);
+				ps2.setInt(2, caseId);
+				ps2.setInt(3, testCase.getAllmostOfMarks());
+				ps2.setString(4, testCase.getOutputFileName());
+				if( StringUtils.isNotEmpty(testCase.getInputFileName())){
+					ps2.setString(5, testCase.getInputFileName());
+				}else{
+					ps2.setNull(5, java.sql.Types.DATE);
+				}
+
+				ps2.addBatch();
+				caseId++;
+			}
+
+			ps2.executeBatch();
+
+        	////////////////////////////
+        	//TASK_PUBLIC_TBL
+			Set<TaskPublicTblEntity> taskPublicSet = entity.getTaskPublicTblSet();
+
+			for(TaskPublicTblEntity pub : taskPublicSet){
+
+				ps3 = con.prepareStatement(TASKPUBLIC_INSERT_SQL);
+
+				ps3.setInt(1, taskId);
+				ps3.setInt(2, pub.getCourseMaster().getCourseId());
+				ps3.setInt(3, pub.getPublicStatusMaster().getStatusId());
+				if( pub.getPublicDatetime() != null){
+					ps3.setDate(4, parseSQLLDateFromUtilData(pub.getPublicDatetime()) );
+				}else{
+					ps3.setNull(4, java.sql.Types.DATE);
+				}
+				if( pub.getEndDatetime() != null){
+					ps3.setDate(5, parseSQLLDateFromUtilData(pub.getEndDatetime()) );
+				}else{
+					ps3.setNull(5, java.sql.Types.DATE);
+				}
+
+
+				ps3.addBatch();
+			}
+			ps3.executeBatch();
+
+	        //コミット
+	        this.commit();
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			this.rollback();
+			throw e;
+		} finally {
+			safeClose(ps1,null);
+			safeClose(ps2,null);
+			safeClose(ps3,null);
+		}
+	}
 
 }

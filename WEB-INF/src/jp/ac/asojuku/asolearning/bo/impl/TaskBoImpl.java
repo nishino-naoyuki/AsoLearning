@@ -1,6 +1,7 @@
 package jp.ac.asojuku.asolearning.bo.impl;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +13,15 @@ import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
+import jp.ac.asojuku.asolearning.dto.TaskPublicDto;
 import jp.ac.asojuku.asolearning.dto.TaskResultDto;
+import jp.ac.asojuku.asolearning.dto.TaskTestCaseDto;
+import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
+import jp.ac.asojuku.asolearning.entity.PublicStatusMasterEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
+import jp.ac.asojuku.asolearning.entity.TestcaseTableEntity;
 import jp.ac.asojuku.asolearning.err.ErrorCode;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
@@ -24,6 +30,7 @@ import jp.ac.asojuku.asolearning.json.JudgeResultJson;
 import jp.ac.asojuku.asolearning.judge.Judge;
 import jp.ac.asojuku.asolearning.judge.JudgeFactory;
 import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
+import jp.ac.asojuku.asolearning.util.SqlDateUtil;
 
 public class TaskBoImpl implements TaskBo {
 
@@ -224,4 +231,98 @@ public class TaskBoImpl implements TaskBo {
 		return dto;
 	}
 
+	@Override
+	public void insert(LogonInfoDTO user, TaskDto dto, List<TaskTestCaseDto> testCaseList,
+			List<TaskPublicDto> taskPublicList) throws AsoLearningSystemErrException {
+
+
+		if( user == null || dto == null ||
+				testCaseList == null || taskPublicList == null ){
+			return;
+		}
+
+		TaskDao dao = new TaskDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			TaskTblEntity entity = getTaskTblEntity(dto,testCaseList,taskPublicList);
+			//課題リスト情報を取得
+			dao.insert(user.getName(), entity);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (ParseException e) {
+			logger.warn("パースエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+	}
+
+	/**
+	 * 課題エンティティを作成
+	 *
+	 *
+	 * @param dto
+	 * @param testCaseList
+	 * @param taskPublicList
+	 * @return
+	 * @throws ParseException
+	 */
+	private TaskTblEntity getTaskTblEntity(
+			TaskDto dto,
+			List<TaskTestCaseDto> testCaseList,
+			List<TaskPublicDto> taskPublicList) throws ParseException{
+		TaskTblEntity entity = new TaskTblEntity();
+
+		//基本情報
+		entity.setName(dto.getTaskName());
+		entity.setTaskQuestion(dto.getQuestion());
+		entity.setTaskId(dto.getTaskId());
+
+		//テストケース情報
+		for( TaskTestCaseDto testcaseDto : testCaseList){
+			TestcaseTableEntity testcase = new TestcaseTableEntity();
+
+			if( testcaseDto.getAllmostOfMarks() != null ){
+				testcase.setTestcaseId(testcaseDto.getTestcaseId());
+				testcase.setInputFileName(testcaseDto.getInputFileName());
+				testcase.setOutputFileName(testcaseDto.getOutputFileName());
+				testcase.setAllmostOfMarks(testcaseDto.getAllmostOfMarks());
+
+				entity.addTestcaseTable(testcase);
+			}
+		}
+
+		//公開情報
+		for( TaskPublicDto publicDto : taskPublicList){
+			TaskPublicTblEntity testPublic = new TaskPublicTblEntity();
+			CourseMasterEntity courseMaster = new CourseMasterEntity();
+			PublicStatusMasterEntity publicStatus = new PublicStatusMasterEntity();
+
+			courseMaster.setCourseId(publicDto.getCourseId());
+			courseMaster.setCourseName(publicDto.getCourseName());
+			publicStatus.setStatusId(publicDto.getStatus().getId());
+
+			testPublic.setCourseMaster(courseMaster);
+			testPublic.setPublicStatusMaster(publicStatus);
+			testPublic.setPublicDatetime(SqlDateUtil.getDateFrom(publicDto.getPublicDatetime(), "yyyy/MM/dd"));
+			testPublic.setEndDatetime(SqlDateUtil.getDateFrom(publicDto.getEndDatetime(), "yyyy/MM/dd"));
+
+			entity.addTaskPublicTbl(testPublic);
+		}
+		return entity;
+	}
 }
