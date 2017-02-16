@@ -153,4 +153,16 @@ public class FileUtils {
 				new File(srcPath).toPath(),
 				new File(dstPath).toPath());
 	}
+
+	/**
+	 * パスからファイル名を取得する
+	 * @param path
+	 * @return
+	 */
+	public static String getFileNameFromPath(String path){
+
+		File f = new File(path);
+
+		return f.getName();
+	}
 }

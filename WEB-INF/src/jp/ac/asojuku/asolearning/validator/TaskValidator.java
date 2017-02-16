@@ -9,6 +9,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
+import jp.ac.asojuku.asolearning.bo.TaskBo;
+import jp.ac.asojuku.asolearning.bo.impl.TaskBoImpl;
 import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dto.TaskPublicDto;
 import jp.ac.asojuku.asolearning.dto.TaskTestCaseDto;
@@ -38,6 +40,11 @@ public class TaskValidator {
 		//最大文字数
 		if( StringUtils.length(name) > 200){
 			errors.add(ErrorCode.ERR_TASK_NAME_LENGTH);
+		}
+		//名前のダブりチェック
+		TaskBo taskBo = new TaskBoImpl();
+		if( taskBo.getTaskDetailForName(name) != null ){
+			errors.add(ErrorCode.ERR_TASK_DUPLICATE_ERR);
 		}
 	}
 

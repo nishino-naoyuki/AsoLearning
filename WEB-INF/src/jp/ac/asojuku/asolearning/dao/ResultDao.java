@@ -5,12 +5,14 @@ package jp.ac.asojuku.asolearning.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 
 import jp.ac.asojuku.asolearning.entity.ResultMetricsTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTestcaseTblEntity;
+import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 
 /**
  * @author nishino
@@ -29,8 +31,10 @@ public class ResultDao extends Dao {
 			"SELECT * FROM RESULT_TBL r "
 			+ "LEFT JOIN RESULT_TESTCASE_TBL rt ON(rt.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN RESULT_METRICS_TBL rm ON(rm.RESULT_ID = r.RESULT_ID) "
-			+ "WHERE r.USER_ID=? AND r.RESULT_ID=?";
-	private static final int RESULT_SEARCH_IDX = 1;
+			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID = t.TASK_ID) "
+			+ "WHERE r.USER_ID=? AND r.TASK_ID=?";
+	private static final int RESULT_SEARCH_USR_ID = 1;
+	private static final int RESULT_SEARCH_TASK_ID = 2;
 
 	//挿入SQL
 	private static final String RESULT_INSERT_SQL =
@@ -73,6 +77,130 @@ public class ResultDao extends Dao {
 			+ "AVR_MVG_SCORE = ?,"
 			+ "AVR_LOC_SCORE = ? "
 			+ "WHERE RESULT_ID = ?";
+
+	/**
+	 * 結果情報を取得する
+	 *
+	 * @param taskId
+	 * @param userId
+	 * @return
+	 * @throws SQLException
+	 */
+	public ResultTblEntity getResult(int taskId,int userId) throws SQLException{
+
+		ResultTblEntity resultEntity = null;
+
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+        try {
+    		// ステートメント生成
+			ps = con.prepareStatement(RESULT_SEARCH_SQL);
+
+	        ps.setInt(RESULT_SEARCH_USR_ID, taskId);
+	        ps.setInt(RESULT_SEARCH_TASK_ID, userId);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        //値を取り出す
+	        while(rs.next()){
+
+	        	//合計、複雑度は1回だけ
+	        	if( resultEntity == null ){
+	        		resultEntity = createResultTblEntity(rs);
+	        	}
+	        	//テストケースは複数アル
+	        	resultEntity.addResultTestcaseTbl(createResultTestcaseTblEntity(rs));
+
+	        }
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+		return resultEntity;
+	}
+
+	/**
+	 * 結果情報の設定
+	 *
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	private ResultTblEntity createResultTblEntity(ResultSet rs) throws SQLException{
+		ResultTblEntity resultEntity = new ResultTblEntity();
+		TaskTblEntity taskEntity = new TaskTblEntity();
+
+    	resultEntity.setResultId(rs.getInt("RESULT_ID"));
+    	resultEntity.setTotalScore(rs.getFloat("TOTAL_SCORE"));
+
+    	//taskEntity
+    	taskEntity.setTaskId(rs.getInt("TASK_ID"));
+    	taskEntity.setName(rs.getString("NAME"));
+    	taskEntity.setTaskQuestion(rs.getString("TASK_QUESTION"));
+    	taskEntity.setCreateUserId(rs.getInt("CREATE_USER_ID"));
+    	taskEntity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
+    	taskEntity.setUpdateTim(rs.getTimestamp("UPDATE_TIM"));
+    	taskEntity.setTerminationDate(rs.getDate("termination_date"));
+
+    	resultEntity.setTaskTbl(taskEntity);
+
+    	//複雑殿解析結果
+    	resultEntity.addResultMetricsTbl(createResultMetricsTblEntity(rs));
+
+
+		return resultEntity;
+	}
+
+	/**
+	 * テストケース結果のセット
+	 *
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	private ResultTestcaseTblEntity createResultTestcaseTblEntity(ResultSet rs) throws SQLException{
+
+		ResultTestcaseTblEntity rt = new ResultTestcaseTblEntity();
+
+		rt.setScore(rs.getInt("SCORE"));
+		rt.setMessage(rs.getString("MESSAGE"));
+		rt.setTestcaseId(rs.getInt("TESTCASE_ID"));
+
+		return rt;
+	}
+
+	/**
+	 * 複雑度結果のセット
+	 *
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	private ResultMetricsTblEntity createResultMetricsTblEntity(ResultSet rs) throws SQLException{
+
+		ResultMetricsTblEntity rm = new ResultMetricsTblEntity();
+
+		rm.setAvrLoc(rs.getFloat("AVR_LOC"));
+		rm.setAvrLocScore(rs.getFloat("AVR_LOC_SCORE"));
+		rm.setAvrMvg(rs.getFloat("AVR_MVG"));
+		rm.setAvrMvgScore(rs.getFloat("AVR_MVG_SCORE"));
+
+		rm.setMaxLoc(rs.getInt("MAX_LOC"));
+		rm.setMaxLocScore(rs.getFloat("MAX_LOC_SCORE"));
+		rm.setMaxMvg(rs.getInt("MAX_MVG"));
+		rm.setMaxMvgScore(rs.getFloat("MAX_MVG_SCORE"));
+
+		return rm;
+	}
+
 
 	/**
 	 * 結果情報を更新、または追加する
@@ -127,9 +255,9 @@ public class ResultDao extends Dao {
         	//RESULT_TESTCASE_TBL
 			Set<ResultTestcaseTblEntity> testcaseSet = resultEntity.getResultTestcaseTblSet();
 
-			for(ResultTestcaseTblEntity rtt : testcaseSet){
+			ps2 = con.prepareStatement(TESTCASE_INSERT_SQL);
 
-				ps2 = con.prepareStatement(TESTCASE_INSERT_SQL);
+			for(ResultTestcaseTblEntity rtt : testcaseSet){
 
 				ps2.setInt(1, result_id);
 				ps2.setInt(2, rtt.getTestcaseId());
@@ -145,9 +273,9 @@ public class ResultDao extends Dao {
         	//RESULT_TESTCASE_TBL
 			Set<ResultMetricsTblEntity> metricsList = resultEntity.getResultMetricsTblSet();
 
-			for(ResultMetricsTblEntity rmt : metricsList){
+			ps3 = con.prepareStatement(METRICS_INSERT_SQL);
 
-				ps3 = con.prepareStatement(METRICS_INSERT_SQL);
+			for(ResultMetricsTblEntity rmt : metricsList){
 
 				ps3.setInt(1, result_id);
 				ps3.setInt(2, rmt.getMaxMvg());

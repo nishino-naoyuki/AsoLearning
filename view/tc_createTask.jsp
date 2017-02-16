@@ -45,6 +45,9 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 <%
 	//エラー情報を取得する
 	ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ERRORS);
+	TaskDto taskDto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK_DTO);
+	List<TaskPublicDto> taskPublicList = (List<TaskPublicDto>)request.getAttribute(RequestConst.REQUEST_PUBLICSTATE);
+	List<TaskTestCaseDto> testCaseList = (List<TaskTestCaseDto>)request.getAttribute(RequestConst.REQUEST_TESTCASE);
 %>
 </head>
 
@@ -104,18 +107,18 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                            <table class="table table-bordered table-hover" id="form">
 	                                <tbody>
 	                                	<tr>
-	                                		<th>課題名</th>
+	                                		<th>課題名[必須]</th>
 	                                		<td>
 	                                		<div class="form-group">
-	                                			<input type="text" name="taskname" placeholder="課題名を記載してください" value="" >
+	                                			<input type="text" name="taskname" placeholder="課題名を記載してください" value="<%= (taskDto!=null ? taskDto.getTaskName():"") %>" >
 	                                		</div>
 	                                		</td>
 	                                	</tr>
 	                                	<tr>
-	                                		<th>問題文</th>
+	                                		<th>問題文[必須]</th>
 	                                		<td>
 	                                		<div class="form-group">
-	                                			<textarea name="question" placeholder="問題文を記載してください"></textarea>
+	                                			<textarea name="question" placeholder="問題文を記載してください" ><%= (taskDto!=null ? taskDto.getQuestion():"") %></textarea>
 	                                		</div>
 	                                		</td>
 	                                	</tr>
@@ -133,8 +136,8 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
                 			テストケース
                 		</div>
 	                	<div class="panel-body">
-	                		<label>テストケースは最大10個までです。</label>
-	                		<input type="button" value="+" id="addForm">
+	                		<label>テストケースは最大10個までです。配点は合計50点になるようにしてください。</label>
+	                		<input type="button" value="行追加" id="addForm">
 
 	                        <div class="table-responsive">
 	                            <table class="table table-bordered table-hover" id="form">
@@ -143,15 +146,15 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                        <th>&nbsp;</th>
 	                                        <th>No.</th>
 	                                        <th>入力ファイル</th>
-	                                        <th>出力ファイル</th>
-	                                        <th>配点</th>
+	                                        <th>出力ファイル[必須]</th>
+	                                        <th>配点[必須]</th>
 	                                    </tr>
 	                                </thead>
 	                                <tbody>
 	                                	<tr id="testcase_table_tr[0]" class="testcase_table_tr">
 
 	                                		<td>
-	                                			<input class="close" type="button" value="－" id="close[0]" style="display: none;">
+	                                			<input class="close" type="button" value="削除" id="close[0]" style="display: none;">
 	                                		</td>
 	                                		<td>
 	                                			<div id="index[0]">1</div>
@@ -210,25 +213,37 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                <tbody>
 	                                 <% List<CourseDto> list = (List<CourseDto>)request.getAttribute(RequestConst.REQUEST_COURSE_LIST); %>
 	                                 <% for(CourseDto dto : list ){ %>
+	                                 <%
+	                                 	//検索して一致するデータを採ってくる
+	                                 	TaskPublicDto pubDto = null;
+	                                 	if( taskPublicList != null ){
+	                                 		for( TaskPublicDto pubDtoWk : taskPublicList){
+		                                 		if( dto.getId() == pubDtoWk.getCourseId()){
+		                                 			pubDto = pubDtoWk;
+		                                 			break;
+		                                 		}
+	                                 		}
+	                                 	}
+	                                 %>
 	                                	<tr>
 	                                		<td>
 	                                			<%=dto.getName()%>
 	                                		</td>
 	                                		<td>
 	                                            <select class="form-control" name="<%=dto.getId()%>-course">
-	                                                <option value="<%=TaskPublicStateId.PRIVATE.getId()%>"><%=TaskPublicStateId.PRIVATE.getMsg1()%></option>
-	                                                <option value="<%=TaskPublicStateId.PUBLIC_MUST.getId()%>"><%=TaskPublicStateId.PUBLIC_MUST.getMsg1()%></option>
-	                                                <option value="<%=TaskPublicStateId.PUBLIC.getId()%>"><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
+	                                                <option value="<%=TaskPublicStateId.PRIVATE.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PRIVATE? "selected":""))%>><%=TaskPublicStateId.PRIVATE.getMsg1()%></option>
+	                                                <option value="<%=TaskPublicStateId.PUBLIC_MUST.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC_MUST? "selected":""))%>><%=TaskPublicStateId.PUBLIC_MUST.getMsg1()%></option>
+	                                                <option value="<%=TaskPublicStateId.PUBLIC.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC? "selected":""))%>><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
 	                                            </select>
 	                                		</td>
 	                                		<td>
 	                                			<div class="form-group">
-	                                			<input type="text" name="<%=dto.getId()%>-startterm" placeholder="" id="datepicker1-<%=dto.getId()%>">
+	                                			<input type="text" name="<%=dto.getId()%>-startterm" placeholder="" id="datepicker1-<%=dto.getId()%>" value="<%= (pubDto==null? "":pubDto.getPublicDatetime()) %>">
 	                                			</div>
 	                                		</td>
 	                                		<td>
 	                                			<div class="form-group">
-	                                			<input type="text" name="<%=dto.getId()%>-endterm" placeholder="" id="datepicker2-<%=dto.getId()%>">
+	                                			<input type="text" name="<%=dto.getId()%>-endterm" placeholder="" id="datepicker2-<%=dto.getId()%>" value="<%= (pubDto==null? "":pubDto.getEndDatetime()) %>">
 	                                			</div>
 	                                		</td>
 	                                	</tr>

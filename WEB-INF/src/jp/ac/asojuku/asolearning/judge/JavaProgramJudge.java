@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
+import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.entity.ResultMetricsTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
@@ -66,7 +67,8 @@ public class JavaProgramJudge implements Judge {
 			String resultDir = dirName+RESULT;//AppSettingProperty.getInstance().getResultDirectory();
 			String classDir = dirName+CLASSES;
 
-			ResultTblEntity resultEntity = new ResultTblEntity();
+			ResultTblEntity resultEntity = getResultTblEntity(taskEntity,userId);
+
 			Set<TestcaseTableEntity> testCaseSet = taskEntity.getTestcaseTableSet();
 
 			//テストケースごとに実行し、点数を集計
@@ -112,6 +114,23 @@ public class JavaProgramJudge implements Judge {
 		}
 
 		return json;
+	}
+
+	private ResultTblEntity getResultTblEntity(TaskTblEntity taskEntity,int userId){
+
+		ResultTblEntity resultEntity = new ResultTblEntity();
+
+		if( taskEntity.getResultTblSet() != null ){
+			for( ResultTblEntity wkResult : taskEntity.getResultTblSet() ){
+
+				if(wkResult.getUserTbl().getUserId() == userId){
+					resultEntity = wkResult;
+					break;
+				}
+			}
+		}
+
+		return resultEntity;
 	}
 
 	/**
@@ -229,8 +248,9 @@ public class JavaProgramJudge implements Judge {
 	 * @param result
 	 * @param errorMsg
 	 * @return
+	 * @throws AsoLearningSystemErrException
 	 */
-	private ResultTestcaseTblEntity getResultTestcaseTblEntity(TestcaseTableEntity testcase,boolean result,String errorMsg){
+	private ResultTestcaseTblEntity getResultTestcaseTblEntity(TestcaseTableEntity testcase,boolean result,String errorMsg) throws AsoLearningSystemErrException{
 		ResultTestcaseTblEntity resultTestcaseEntity = new ResultTestcaseTblEntity();
 
 		resultTestcaseEntity.setTestcaseId(testcase.getTestcaseId());
@@ -240,6 +260,7 @@ public class JavaProgramJudge implements Judge {
 		}else{
 			//不正解の場合は０点
 			resultTestcaseEntity.setScore(0);
+			errorMsg = MessageProperty.getInstance().getProperty(MessageProperty.JUDGE_RET_NOTMATCH);
 		}
 		resultTestcaseEntity.setMessage(errorMsg);
 
@@ -330,9 +351,9 @@ public class JavaProgramJudge implements Judge {
 	private Float getMaxMvgScore(int MaxMvg){
 		float score = 0;
 
-		score = 25.0f - (float)(MaxMvg - MAX_MVG_SCORE_MAX) * 1.25f;
+		score = 12.5f - (float)(MaxMvg - MAX_MVG_SCORE_MAX) * 1.25f;
 		if( score > MAX_SCORE){
-			score = 25;
+			score = 12.5f;
 		}else if( score < 0 ){
 			score = 0;
 		}
@@ -352,9 +373,9 @@ public class JavaProgramJudge implements Judge {
 	private Float getAvrMvgScore(float avrMvg){
 		float score = 0;
 
-		score = 25.0f - (float)(avrMvg - AVR_MVG_SCORE_MAX) * 1.25f;
+		score = 12.5f - (float)(avrMvg - AVR_MVG_SCORE_MAX) * 1.25f;
 		if( score > MAX_SCORE){
-			score = 25;
+			score = 12.5f;
 		}else if( score < 0 ){
 			score = 0;
 		}
@@ -370,9 +391,9 @@ public class JavaProgramJudge implements Judge {
 	private Float getMaxLocScore(int MaxLoc){
 		float score = 0;
 
-		score = 25.0f - (float)(MaxLoc - MAX_LOC_SCORE_MAX)/5f;
+		score = 12.5f - (float)(MaxLoc - MAX_LOC_SCORE_MAX)/5f;
 		if( score > MAX_SCORE){
-			score = 25;
+			score = 12.5f;
 		}else if( score < 0 ){
 			score = 0;
 		}
@@ -388,9 +409,9 @@ public class JavaProgramJudge implements Judge {
 	private Float getAvrLocScore(float avrLoc){
 		float score = 0;
 
-		score = 25.0f - (float)(avrLoc - AVR_LOC_SCORE_MAX)/5f;
+		score = 12.5f - (float)(avrLoc - AVR_LOC_SCORE_MAX)/5f;
 		if( score > MAX_SCORE){
-			score = 25;
+			score = 12.5f;
 		}else if( score < 0 ){
 			score = 0;
 		}

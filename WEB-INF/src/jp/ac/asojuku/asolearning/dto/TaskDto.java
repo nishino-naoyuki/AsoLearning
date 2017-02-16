@@ -3,8 +3,6 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
-import java.util.Date;
-
 /**
  * 課題情報
  * @author nishino
@@ -14,7 +12,7 @@ public class TaskDto {
 
 	private int taskId;
 	private String taskName;		//課題名
-	private Date TerminationDate;	//締め切り
+	private String TerminationDate;	//締め切り
 	private boolean RequiredFlg;	//公開設定
 	private String question;		//問題文
 	private TaskResultDto result;
@@ -46,13 +44,13 @@ public class TaskDto {
 	/**
 	 * @return terminationDate
 	 */
-	public Date getTerminationDate() {
+	public String getTerminationDate() {
 		return TerminationDate;
 	}
 	/**
 	 * @param terminationDate セットする terminationDate
 	 */
-	public void setTerminationDate(Date terminationDate) {
+	public void setTerminationDate(String terminationDate) {
 		TerminationDate = terminationDate;
 	}
 	/**

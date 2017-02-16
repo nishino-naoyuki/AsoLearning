@@ -66,7 +66,7 @@ public class CreateTaskCompleteServlet extends BaseServlet {
 
 		/////////////////////////////////////
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_createTask.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("view/tc_createTaskFin.jsp");
 		rd.forward(req, resp);
 	}
 

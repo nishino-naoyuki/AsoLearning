@@ -19,6 +19,7 @@ import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.TestcaseTableEntity;
+import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 
 /**
  * 課題DAO
@@ -63,6 +64,14 @@ public class TaskDao extends Dao {
 			+ "(TASK_ID,COURSE_ID,STATUS_ID,PUBLIC_DATETIME,END_DATETIME) "
 			+ "VALUES(?,?,?,?,?) ";
 
+	private static final String TASK_NAME_SQL =
+			"SELECT * FROM TASK_TBL t "
+			+ "LEFT JOIN TASK_PUBLIC_TBL tp ON(t.TASK_ID = tp.TASK_ID) "
+			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
+			+ "LEFT JOIN TESTCASE_TABLE tc ON(tc.TASK_ID = tc.TASK_ID) "
+			+ "LEFT JOIN RESULT_TBL r ON(t.TASK_ID = r.TASK_ID) "
+			+ "WHERE t.NAME=?  ";
+	private static final int TASK_NAME_SQL_NAMEIDX = 1;
 
 
 
@@ -70,6 +79,49 @@ public class TaskDao extends Dao {
 	}
 	public TaskDao(Connection con) {
 		super(con);
+	}
+
+	/**
+	 * 課題を
+	 *
+	 * @param name
+	 * @return
+	 * @throws SQLException
+	 */
+	public TaskTblEntity getTaskDetal(String name) throws SQLException{
+
+		if( con == null ){
+			return null;
+		}
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		TaskTblEntity entity = null;
+        try {
+    		// ステートメント生成
+			ps = con.prepareStatement(TASK_NAME_SQL);
+
+	        ps.setString(TASK_NAME_SQL_NAMEIDX, name);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+
+	        //値を取り出す
+	        while(rs.next()){
+	        	entity = createTaskTblEntityFromResultSet(rs);
+	        	//テストケースを追加
+	        	addTestCaseEntity(entity,rs);
+	        }
+
+	        return entity;
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
 	}
 
 	public List<TaskTblEntity> getTaskList(int studentId,int courseId,Integer offset,Integer count) throws SQLException{
@@ -163,7 +215,6 @@ public class TaskDao extends Dao {
 	        // SQLを実行
 	        rs = ps.executeQuery();
 
-
 	        //値を取り出す
 	        while(rs.next()){
 	        	taskDetail = createTaskTblEntityFromResultSet(rs);
@@ -204,8 +255,11 @@ public class TaskDao extends Dao {
 		if( totalScore != null  ){
 			results = new HashSet<ResultTblEntity>();
 			ResultTblEntity ret = new ResultTblEntity();
+			UserTblEntity user = new UserTblEntity();
 			ret.setResultId(rs.getInt("RESULT_ID"));
 			ret.setTotalScore(rs.getFloat("TOTAL_SCORE"));
+			user.setUserId(rs.getInt("USER_ID"));
+			ret.setUserTbl(user);
 			results.add(ret);
 
 		}
@@ -283,10 +337,10 @@ public class TaskDao extends Dao {
         	//TASKTESTCASE_INSERT_SQL
 			Set<TestcaseTableEntity> testCaseSet = entity.getTestcaseTableSet();
 
+			ps2 = con.prepareStatement(TASKTESTCASE_INSERT_SQL);
+
 			int caseId = 1;
 			for(TestcaseTableEntity testCase : testCaseSet){
-
-				ps2 = con.prepareStatement(TASKTESTCASE_INSERT_SQL);
 
 				ps2.setInt(1, taskId);
 				ps2.setInt(2, caseId);
@@ -303,14 +357,15 @@ public class TaskDao extends Dao {
 			}
 
 			ps2.executeBatch();
+			//System.out.println("ret2"+ret2.length);
 
         	////////////////////////////
         	//TASK_PUBLIC_TBL
 			Set<TaskPublicTblEntity> taskPublicSet = entity.getTaskPublicTblSet();
 
-			for(TaskPublicTblEntity pub : taskPublicSet){
+			ps3 = con.prepareStatement(TASKPUBLIC_INSERT_SQL);
 
-				ps3 = con.prepareStatement(TASKPUBLIC_INSERT_SQL);
+			for(TaskPublicTblEntity pub : taskPublicSet){
 
 				ps3.setInt(1, taskId);
 				ps3.setInt(2, pub.getCourseMaster().getCourseId());
@@ -326,10 +381,10 @@ public class TaskDao extends Dao {
 					ps3.setNull(5, java.sql.Types.DATE);
 				}
 
-
 				ps3.addBatch();
 			}
 			ps3.executeBatch();
+			//System.out.println("ret3"+ret3.length);
 
 	        //コミット
 	        this.commit();

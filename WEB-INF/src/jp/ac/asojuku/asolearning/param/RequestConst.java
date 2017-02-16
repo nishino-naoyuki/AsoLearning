@@ -19,4 +19,8 @@ public class RequestConst {
 	public static final String REQUEST_TASK_DTO = "TaskDto";
 	public static final String REQUEST_TESTCASE = "TestCase";
 	public static final String REQUEST_PUBLICSTATE = "PublicState";
+	public static final String REQUEST_SCORE_DETAIL = "ScoreDetail";
+	public static final String REQUEST_DISP_NO = "DispNo";
+	public static final String REQUEST_TASK_ID = "taskId";
+	public static final String REQUEST_TASK_RESULT = "taskResult";
 }

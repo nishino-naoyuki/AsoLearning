@@ -6,7 +6,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
 <%@ page import="java.util.List" %>
-<%@ page import="jp.ac.asojuku.asolearning.dto.TaskDto" %>
+<%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.util.*" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -62,6 +62,7 @@
 
 <%
 TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
+String dispName = (String)request.getAttribute(RequestConst.REQUEST_DISP_NO);
 %>
         <!-- Page Content -->
         <div id="page-wrapper">
@@ -71,101 +72,83 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            課題
+                            <%=taskdto.getTaskName() %>-得点詳細
                         </h1>
                         <ol class="breadcrumb">
                             <li>
                                 <i class="fa fa-pencil-square"></i> <a href="tasklist">課題一覧</a>
                             </li>
-                            <li class="active">
+                            <li>
                                 <i class="fa fa-check-circle-o"></i> <%=taskdto.getTaskName() %>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-check-circle-o"></i> 得点詳細
                             </li>
                         </ol>
                     </div>
                 </div>
                 <!-- /.row -->
-
+<%
+TaskResultDto result = taskdto.getResult();
+%>
+<% if( result == null ){ %>
                 <div class="row">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr class="info">
-                                        <th>
-                                        問題
-                                        <% if( taskdto.isRequiredFlg() ){ %>
-                                        	（必須）
-                                        <% }else{ %>
-                                        	（任意）
-                                        <% } %>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><%=HtmlUtil.nl2be( taskdto.getQuestion() )%></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                	得点結果がありません。
+                </div>
+<% }else{ %>
+                <div class="row">
+                	<div class="panel panel-default">
+                		<div class="panel-heading">
+                			総合得点
+                		</div>
+	                	<div class="panel-body">
+	                        <div class="table-responsive">
+	                            <table class="table table-bordered table-hover" id="form">
+	                                <tbody>
+	                                	<tr>
+	                                		<th>得点</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%=result.getTotal() %>
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                </tbody>
+	                            </table>
+	                        </div>
+						</div>
+                	</div>
                 </div>
                 <!-- /.row -->
 
+
                 <div class="row">
-                	<div id="error">
-                		<p id="uploadErrorMsg" ></p>
+                	<div class="panel panel-default">
+                		<div class="panel-heading">
+                			テストケース
+                		</div>
+	                	<div class="panel-body">
+	                        <div class="table-responsive">
+	                            <table class="table table-bordered table-hover" id="form">
+	                                <tbody>
+	                                	<tr>
+	                                		<th>得点</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%=taskdto.getResult().getTotal() %>
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                </tbody>
+	                            </table>
+	                        </div>
+						</div>
                 	</div>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr class="info">
-                                        <th>状態</th>
-                                        <th>ファイル</th>
-                                        <th>得点</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                        <% if( taskdto.getResult() != null ){ %>
-                                        	<p id="status">提出済み</p>
-                                        <% }else{ %>
-                                        	<p id="status">未提出</p>
-                                        <% } %>
-								            <button type="submit" id="judge" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 判定</button>
-                                        </td>
-                                        <td>
-                                        <input type="file" id="file_select" name="javafile" class="form-control" style="display:none;">
-                                        <div class="input-group">
-
-								          <span class="input-group-btn">
-								            <button type="button" id="file_select_icon" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
-								          </span>
-								          <input type="text" id="file_name" class="form-control" placeholder="Select file ..." readonly>
-
-								        </div>
-
-                                        </td>
-                                        <td>
-                                        <% if( taskdto.getResult() != null ){ %>
-                                        	<p id="score"><%= taskdto.getResult().getTotal() %></p>
-                                        <% }else{ %>
-                                        	&nbsp;
-                                        <% } %>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                        この問題のあなたのランキングはXX位
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                 </div>
                 <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
+<% } %>
         </div>
         <!-- /#page-wrapper -->
 

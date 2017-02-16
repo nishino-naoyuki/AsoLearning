@@ -244,7 +244,7 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 	        if( StringUtils.isNotEmpty(name)){
 		        testcase.setOutputFileName(taskNameHash+"/"+name);
 		        //テンポラリに一旦書き込み
-		        ipart.write(tempDir+"/"+name);
+		        opart.write(tempDir+"/"+name);
 	        }
 		}
 

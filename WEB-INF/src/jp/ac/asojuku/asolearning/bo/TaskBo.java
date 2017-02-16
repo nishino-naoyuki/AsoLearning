@@ -61,4 +61,12 @@ public interface TaskBo {
 	 */
 	public TaskDto getTaskDetailForUser(Integer taskId,LogonInfoDTO user) throws AsoLearningSystemErrException;
 
+	/**
+	 * 課題の詳細情報を表示する
+	 * @param String name
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	public TaskDto getTaskDetailForName(String name) throws AsoLearningSystemErrException;
+
 }

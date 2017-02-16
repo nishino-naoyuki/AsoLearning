@@ -6,7 +6,8 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
 <%@ page import="java.util.List" %>
-<%@ page import="jp.ac.asojuku.asolearning.dto.TaskDto" %>
+<%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.param.*" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -79,6 +80,7 @@
                 <!-- /.row -->
 <%
 List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUEST_TASK_LIST);
+LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 %>
                 <div class="row">
                         <div class="table-responsive">
@@ -121,7 +123,9 @@ List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUES
                                         <% } %>
 
                                         <% if( taskDto.getResult() != null ){ %>
-                                        	<td><%= taskDto.getResult().getTotal() %></td>
+                                        	<td>
+                                        	<a href="scoredetail?<%=RequestConst.REQUEST_DISP_NO%>=list&<%=RequestConst.REQUEST_TASK_ID%>=<%=taskDto.getTaskId()%>"><%= taskDto.getResult().getTotal() %></a>
+                                        	</td>
                                         <% }else{ %>
                                         	<td>&nbsp;</td>
                                         <% } %>

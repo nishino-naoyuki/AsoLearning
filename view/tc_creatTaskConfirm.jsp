@@ -9,6 +9,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.err.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.util.*" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -115,7 +116,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		<th>問題文</th>
 	                                		<td>
 	                                		<div class="form-group">
-	                                			<%= dto.getQuestion() %>
+	                                			<%= HtmlUtil.nl2be(dto.getQuestion()) %>
 	                                		</div>
 	                                		</td>
 	                                	</tr>
@@ -140,7 +141,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                        <th>No.</th>
 	                                        <th>入力ファイル</th>
 	                                        <th>出力ファイル</th>
-	                                        <th>配点</th>
+	                                        <th>配点[必須]</th>
 	                                    </tr>
 	                                </thead>
 	                                <tbody>
@@ -155,8 +156,8 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		</td>
 	                                		<td>
 		                                        <div class="input-group">
-		                                        <% if( testcasse.getInputFileName()==null ){%>
-													<%= testcasse.getInputFileName() %>
+		                                        <% if( testcasse.getInputFileName()!=null ){%>
+													<%= FileUtils.getFileNameFromPath( testcasse.getInputFileName()) %>
 												<% }else{ %>
 													&nbsp;
 												<% } %>
@@ -164,7 +165,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		</td>
 	                                		<td>
 		                                        <div class="input-group">
-												<%= testcasse.getOutputFileName() %>
+												<%= FileUtils.getFileNameFromPath( testcasse.getOutputFileName()) %>
 										        </div>
 	                                		</td>
 	                                		<td>
@@ -249,7 +250,6 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
-
 
 </body>
 

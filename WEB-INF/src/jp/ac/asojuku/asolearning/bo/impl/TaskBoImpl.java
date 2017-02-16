@@ -2,6 +2,7 @@ package jp.ac.asojuku.asolearning.bo.impl;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,6 +155,13 @@ public class TaskBoImpl implements TaskBo {
 			}else{
 				dto.setRequiredFlg(false);
 			}
+
+			if( tpe.getEndDatetime() != null ){
+				dto.setTerminationDate(new SimpleDateFormat("yyyy/MM/dd").format(tpe.getEndDatetime()));
+			}else{
+				dto.setTerminationDate(null);
+			}
+
 		}
 		//点数
 		TaskResultDto result = null;
@@ -324,5 +332,41 @@ public class TaskBoImpl implements TaskBo {
 			entity.addTaskPublicTbl(testPublic);
 		}
 		return entity;
+	}
+
+	@Override
+	public TaskDto getTaskDetailForName(String name) throws AsoLearningSystemErrException {
+
+		TaskDto dto = new TaskDto();
+		TaskDao dao = new TaskDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//課題リスト情報を取得
+			TaskTblEntity entity =
+					dao.getTaskDetal(name);
+
+
+			//会員テーブル→ログイン情報
+			dto = getEntityToDto(entity);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return dto;
 	}
 }
