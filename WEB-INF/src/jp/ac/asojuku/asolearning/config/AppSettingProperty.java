@@ -22,6 +22,7 @@ public class AppSettingProperty extends ConfigBase {
 	private static final String ANSWER_DIR = "answer.directory";
 	private static final String INPUT_DIR = "input.directory";
 	private static final String TEMP_DIR = "temp.directory";
+	private static final String DISPLAY_PREFIX = "display";
 
 	//設定値
 	private final String ASP_PWD_SALT = "pwd.hash.salt";	//パスワードソルト
@@ -104,5 +105,9 @@ public class AppSettingProperty extends ConfigBase {
 	 */
 	public String getTempDirectory(){
 		return getProperty(TEMP_DIR);
+	}
+	public String getDisplayPermit(String dispId){
+		return getProperty(DISPLAY_PREFIX+dispId);
+
 	}
 }

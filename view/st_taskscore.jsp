@@ -29,6 +29,8 @@
     <!-- Custom Fonts -->
     <link href="view/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+    <link href="view/css/main.css" rel="stylesheet">
+    <link href="view/css/form.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -61,7 +63,7 @@
         </nav>
 
 <%
-TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
+TaskResultDetailDto resultDto = (TaskResultDetailDto)request.getAttribute(RequestConst.REQUEST_TASK_RESULT);
 String dispName = (String)request.getAttribute(RequestConst.REQUEST_DISP_NO);
 %>
         <!-- Page Content -->
@@ -72,15 +74,19 @@ String dispName = (String)request.getAttribute(RequestConst.REQUEST_DISP_NO);
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            <%=taskdto.getTaskName() %>-得点詳細
+                            <%=resultDto.getTaskName() %>-得点詳細
                         </h1>
                         <ol class="breadcrumb">
                             <li>
                                 <i class="fa fa-pencil-square"></i> <a href="tasklist">課題一覧</a>
                             </li>
+                            <% if( "detail".equals(dispName) ){ %>
                             <li>
-                                <i class="fa fa-check-circle-o"></i> <%=taskdto.getTaskName() %>
+                                <i class="fa fa-check-circle-o"></i>
+                                <a href="task?taskid=<%=resultDto.getTaskId()%>">
+                                        <%= resultDto.getTaskName() %></a>
                             </li>
+                            <%} %>
                             <li class="active">
                                 <i class="fa fa-check-circle-o"></i> 得点詳細
                             </li>
@@ -88,10 +94,8 @@ String dispName = (String)request.getAttribute(RequestConst.REQUEST_DISP_NO);
                     </div>
                 </div>
                 <!-- /.row -->
-<%
-TaskResultDto result = taskdto.getResult();
-%>
-<% if( result == null ){ %>
+
+<% if( resultDto == null ){ %>
                 <div class="row">
                 	得点結果がありません。
                 </div>
@@ -109,7 +113,7 @@ TaskResultDto result = taskdto.getResult();
 	                                		<th>得点</th>
 	                                		<td>
 	                                		<div class="form-group">
-	                                			<%=result.getTotal() %>
+	                                			<%=resultDto.getTotalScore() %>
 	                                		</div>
 	                                		</td>
 	                                	</tr>
@@ -131,11 +135,110 @@ TaskResultDto result = taskdto.getResult();
 	                        <div class="table-responsive">
 	                            <table class="table table-bordered table-hover" id="form">
 	                                <tbody>
+	                                <%
+	                                int cnt = 1;
+	                                int total = 0;
+	                                for(TaskResultTestCaseDto testCase : resultDto.getTestcase()){
+	                                %>
 	                                	<tr>
-	                                		<th>得点</th>
+	                                		<th>パターン<%=cnt %></th>
 	                                		<td>
 	                                		<div class="form-group">
-	                                			<%=taskdto.getResult().getTotal() %>
+	                                			<%= (testCase.getScore() != 0 ? "正解":testCase.getMessage()) %>
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                <%
+	                                	total += testCase.getScore();
+	                                	cnt++;
+	                                }
+	                                %>
+	                                	<tr>
+	                                		<th>点数</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= total %>点
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                </tbody>
+	                            </table>
+	                        </div>
+						</div>
+                	</div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                	<div class="panel panel-default">
+                		<div class="panel-heading">
+                			コード品質
+                		</div>
+	                	<div class="panel-body">
+	                        <div class="table-responsive">
+	                        <% TaskResultMetricsDto metricsDto = resultDto.getMetrics(); %>
+	                            <table class="table table-bordered table-hover" id="form">
+	                                <tbody>
+	                                	<tr>
+	                                		<th>最高複雑度</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= metricsDto.getMaxMvg() %>
+	                                		</div>
+	                                		</td>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= metricsDto.getMaxMvgScore() %>点
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+
+	                                	<tr>
+	                                		<th>平均複雑度</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= metricsDto.getAvrMvg() %>
+	                                		</div>
+	                                		</td>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= metricsDto.getAvrMvgScore() %>点
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+
+	                                	<tr>
+	                                		<th>最高行数</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= metricsDto.getMaxLoc() %>
+	                                		</div>
+	                                		</td>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= metricsDto.getMaxLocScore() %>点
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+
+	                                	<tr>
+	                                		<th>平均行数</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= metricsDto.getAvrLoc() %>
+	                                		</div>
+	                                		</td>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= metricsDto.getAvrLocScore() %>点
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                	<tr>
+	                                		<th>点数</th>
+	                                		<td colspan="2">
+	                                		<div class="form-group">
+	                                			<%= (metricsDto.getMaxMvgScore()+metricsDto.getAvrMvgScore()+metricsDto.getMaxLocScore()+metricsDto.getAvrLocScore()) %>点
 	                                		</div>
 	                                		</td>
 	                                	</tr>
@@ -167,88 +270,6 @@ TaskResultDto result = taskdto.getResult();
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
 
-	<script>
-	//アイコンをクリックした場合は、ファイル選択をクリックした挙動とする.
-	$('#file_select_icon').on('click', function() {
-	  $('#file_select').click();
-	});
-
-	// ファイル選択時に表示用テキストボックスへ値を連動させる.
-	// ファイル選択値のクリア機能の実装により、#file_select がDOMから消されることがあるので親要素からセレクタ指定でイベントを割り当てる.
-	$('#file_select').parent().on('change', '#file_select', function() {
-	  // $('#file_name').val($(this).val());
-	  $('#file_name').val($('#file_select').prop('files')[0].name);
-	});
-
-	$('#judge').on('click', function() {
-		var fd = new FormData();
-		  if ($("input[name='javafile']").val()!== '') {
-		    fd.append( "file", $("input[name='javafile']").prop("files")[0] );
-		    fd.append( "taskid", <%=taskdto.getTaskId()%> );
-		 }
-
-		submit_action("judgetask",fd,null);
-	});
-	function submit_action(url, input_data, mode) {
-
-
-	    $.ajax({
-	        type : 'POST',
-	        url : url,
-	        data : input_data,
-	        dataType : 'json',
-	        processData : false,
-	        contentType : false,
-	        timeout : 360000, // milliseconds
-
-	        beforeSend : function(xhr, settings) {
-	            // disturb double submit
-	            $("#judge").attr('disabled', true);
-	    		dispLoading("判定処理中...");
-	        },
-	        complete : function(xhr, textStatus) {
-	            // allow resubmit
-	            $("#judge").attr('disabled', false);
-	            removeLoading();
-	        }
-	    }).done(function(json) {
-			//エラーメッセージがある場合はエラーを表示する
-    		if( json.errorMsg.length != 0){
-	    		$("#uploadErrorMsg").text(json.errorMsg);
-    		}else if(json.score > 0){
-    			//得点がついた場合は、提出済みにし得点を表示する
-	    		$("#status").text("提出済み");
-	    		$("#score").text(json.score+"点");
-    		}
-
-	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
-	    	removeLoading();
-	    	alert("err:"+textStatus);
-	        console.log( textStatus  + errorThrown);
-	    });
-	};
-
-	// Loadingイメージ表示関数
-	function dispLoading(msg){
-	    // 画面表示メッセージ
-	    var dispMsg = "";
-
-	    // 引数が空の場合は画像のみ
-	    if( msg != "" ){
-	        dispMsg = "<div class='loadingMsg'>" + msg + "</div>";
-	    }
-	    // ローディング画像が表示されていない場合のみ表示
-	    //if($("#loading").size() == 0){
-	        $("body").append("<div id='loading'>" + dispMsg + "</div>");
-	    //}
-	}
-
-	// Loadingイメージ削除関数
-	function removeLoading(){
-	 $("#loading").remove();
-	}
-
-	</script>
 
 </body>
 

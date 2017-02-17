@@ -32,7 +32,8 @@ public class ResultDao extends Dao {
 			+ "LEFT JOIN RESULT_TESTCASE_TBL rt ON(rt.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN RESULT_METRICS_TBL rm ON(rm.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID = t.TASK_ID) "
-			+ "WHERE r.USER_ID=? AND r.TASK_ID=?";
+			+ "WHERE r.USER_ID=? AND r.TASK_ID=? "
+			+ "ORDER BY r.RESULT_ID";
 	private static final int RESULT_SEARCH_USR_ID = 1;
 	private static final int RESULT_SEARCH_TASK_ID = 2;
 
@@ -98,8 +99,8 @@ public class ResultDao extends Dao {
     		// ステートメント生成
 			ps = con.prepareStatement(RESULT_SEARCH_SQL);
 
-	        ps.setInt(RESULT_SEARCH_USR_ID, taskId);
-	        ps.setInt(RESULT_SEARCH_TASK_ID, userId);
+	        ps.setInt(RESULT_SEARCH_USR_ID, userId);
+	        ps.setInt(RESULT_SEARCH_TASK_ID, taskId);
 
 	        // SQLを実行
 	        rs = ps.executeQuery();
@@ -335,19 +336,18 @@ public class ResultDao extends Dao {
 
         	ps1.executeUpdate();
 
-			int result_id = getLastInsertid("RESULT_TBL");
 
         	////////////////////////////
         	//RESULT_TESTCASE_TBL
 			Set<ResultTestcaseTblEntity> testcaseSet = resultEntity.getResultTestcaseTblSet();
 
-			for(ResultTestcaseTblEntity rtt : testcaseSet){
+			ps2 = con.prepareStatement(TESTCASE_UPDATE_SQL);
 
-				ps2 = con.prepareStatement(TESTCASE_UPDATE_SQL);
+			for(ResultTestcaseTblEntity rtt : testcaseSet){
 
 				ps2.setInt(1, rtt.getScore());
 				ps2.setString(2, rtt.getMessage());
-				ps2.setInt(3, result_id);
+				ps2.setInt(3, resultEntity.getResultId());
 				ps2.setInt(4, rtt.getTestcaseId());
 
 				ps2.addBatch();
@@ -359,9 +359,9 @@ public class ResultDao extends Dao {
         	//RESULT_TESTCASE_TBL
 			Set<ResultMetricsTblEntity> metricsList = resultEntity.getResultMetricsTblSet();
 
-			for(ResultMetricsTblEntity rmt : metricsList){
+			ps3 = con.prepareStatement(METRICS_UPDATE_SQL);
 
-				ps3 = con.prepareStatement(METRICS_UPDATE_SQL);
+			for(ResultMetricsTblEntity rmt : metricsList){
 
 				ps3.setInt(1, rmt.getMaxMvg());
 				ps3.setFloat(2, rmt.getAvrMvg());
@@ -371,7 +371,7 @@ public class ResultDao extends Dao {
 				ps3.setFloat(6, rmt.getMaxLocScore());
 				ps3.setFloat(7, rmt.getAvrMvgScore());
 				ps3.setFloat(8, rmt.getAvrLocScore());
-				ps3.setInt(9, result_id);
+				ps3.setInt(9, resultEntity.getResultId());
 
 				ps3.addBatch();
 			}

@@ -35,7 +35,8 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "LEFT JOIN TESTCASE_TABLE tc ON(tc.TASK_ID = tc.TASK_ID) "
 			+ "LEFT JOIN RESULT_TBL r ON(t.TASK_ID = r.TASK_ID AND r.user_ID=?) "
-			+ "WHERE tp.COURSE_ID=? AND tp.STATUS_ID IN(1,2) ";
+			+ "WHERE tp.COURSE_ID=? AND tp.STATUS_ID IN(1,2) "
+			+ "ORDER BY t.TASK_ID";
 	private static final int TASK_LIST_SQL_USER_IDX = 1;
 	private static final int TASK_LIST_SQL_COURCE_IDX = 2;
 

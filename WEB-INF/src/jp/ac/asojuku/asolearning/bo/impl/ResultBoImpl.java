@@ -75,6 +75,10 @@ public class ResultBoImpl implements ResultBo {
 	private TaskResultDetailDto getTaskResultDetail(ResultTblEntity entity ){
 		TaskResultDetailDto dto = new TaskResultDetailDto();
 
+		if( entity == null ){
+			return null;
+		}
+
 		TaskTblEntity taskEntity = entity.getTaskTbl();
 		if( taskEntity == null ){
 			return null;
@@ -104,9 +108,9 @@ public class ResultBoImpl implements ResultBo {
 		for( ResultTestcaseTblEntity rtt : retTestcaseSet ){
 			TaskResultTestCaseDto retTestCase = new TaskResultTestCaseDto();
 
-			retTestCase.setTestcaseId(retTestCase.getTestcaseId());
-			retTestCase.setScore(retTestCase.getScore());
-			retTestCase.setMessage(retTestCase.getMessage());
+			retTestCase.setTestcaseId(rtt.getTestcaseId());
+			retTestCase.setScore(rtt.getScore());
+			retTestCase.setMessage(rtt.getMessage());
 
 			dto.addTaskResultTestCaseDto(retTestCase);
 		}

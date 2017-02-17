@@ -148,7 +148,9 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                                         </td>
                                         <td>
                                         <% if( taskdto.getResult() != null ){ %>
-                                        	<p id="score"><%= taskdto.getResult().getTotal() %></p>
+                                        	<p id="score">
+                                        	<a href="scoredetail?<%=RequestConst.REQUEST_DISP_NO%>=detail&<%=RequestConst.REQUEST_TASK_ID%>=<%=taskdto.getTaskId()%>"><%= taskdto.getResult().getTotal() %></a>
+                                        	</p>
                                         <% }else{ %>
                                         	&nbsp;
                                         <% } %>
