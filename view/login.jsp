@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Shop Homepage - Start Bootstrap Template</title>
+    <title>ASO LEARNING</title>
 
     <link href="view/css/main.css" rel="stylesheet">
     <!-- Bootstrap Core CSS -->

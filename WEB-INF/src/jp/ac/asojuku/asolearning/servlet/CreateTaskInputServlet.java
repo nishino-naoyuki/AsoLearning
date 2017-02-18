@@ -26,7 +26,7 @@ import jp.ac.asojuku.asolearning.param.RequestConst;
 @WebServlet(name="CreateTaskInputServlet",urlPatterns={"/tc_createTask"})
 public class CreateTaskInputServlet extends BaseServlet {
 
-	private final String DISPNO = "display00501";
+	private final String DISPNO = "00501";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;

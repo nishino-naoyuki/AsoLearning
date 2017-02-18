@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name="LoginStartServlet",urlPatterns={"/login"})
 public class LoginStartServlet extends BaseServlet {
 
-	private final String DISPNO = "display00001";
+	private final String DISPNO = "00001";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;

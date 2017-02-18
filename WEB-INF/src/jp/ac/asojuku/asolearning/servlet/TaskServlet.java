@@ -31,7 +31,7 @@ import jp.ac.asojuku.asolearning.param.RequestConst;
 public class TaskServlet extends BaseServlet {
 	Logger logger = LoggerFactory.getLogger(TaskServlet.class);
 
-	private final String DISPNO = "display00102";
+	private final String DISPNO = "00102";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;

@@ -16,7 +16,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
             <li><a href="#"><i class="fa fa-gear fa-fw"></i> ニックネーム変更</a>
             </li>
             <li class="divider"></li>
-            <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> ログアウト</a>
+            <li><a href="logout"><i class="fa fa-sign-out fa-fw"></i> ログアウト</a>
             </li>
         </ul>
         <!-- /.dropdown-user -->

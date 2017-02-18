@@ -42,7 +42,7 @@ public class TaskJudgeServlet extends BaseServlet {
 
 	Logger logger = LoggerFactory.getLogger(LoginServlet.class);
 
-	private final String DISPNO = "display00102";
+	private final String DISPNO = "00102";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;

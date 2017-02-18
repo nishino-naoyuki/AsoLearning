@@ -24,7 +24,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 if( PermissionChecker.check("00201", loginInfo.getRoleId())){
 %>
              <li>
-                 <a href="#"><i class="fa fa-graduation-cap fa-fw"></i>ランキング</a>
+                 <a href="ranking"><i class="fa fa-graduation-cap fa-fw"></i>ランキング</a>
              </li>
 <% }
   if( PermissionChecker.check("00501", loginInfo.getRoleId()) ){ %>

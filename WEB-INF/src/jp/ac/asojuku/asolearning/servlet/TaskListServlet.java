@@ -27,7 +27,7 @@ import jp.ac.asojuku.asolearning.param.RequestConst;
 @WebServlet(name="TaskListServlet",urlPatterns={"/tasklist"})
 public class TaskListServlet extends BaseServlet {
 
-	private final String DISPNO = "display00101";
+	private final String DISPNO = "00101";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;

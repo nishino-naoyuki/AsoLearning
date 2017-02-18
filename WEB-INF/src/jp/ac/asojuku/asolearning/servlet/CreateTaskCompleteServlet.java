@@ -27,7 +27,7 @@ import jp.ac.asojuku.asolearning.param.RequestConst;
 @WebServlet(name="CreateTaskCompleteServlet",urlPatterns={"/tc_insertTaskComplete"})
 public class CreateTaskCompleteServlet extends BaseServlet {
 
-	private final String DISPNO = "display00503";
+	private final String DISPNO = "00503";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;

@@ -47,7 +47,7 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 	private final int TESTCASE_MAX = 10;
 	Logger logger = LoggerFactory.getLogger(CreateTaskConfirmServlet.class);
 
-	private final String DISPNO = "display00502";
+	private final String DISPNO = "00502";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;

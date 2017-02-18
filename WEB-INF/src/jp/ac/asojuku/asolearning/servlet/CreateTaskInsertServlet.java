@@ -33,7 +33,7 @@ import jp.ac.asojuku.asolearning.util.FileUtils;
 @WebServlet(name="CreateTaskInsertServlet",urlPatterns={"/tc_insertTask"})
 public class CreateTaskInsertServlet extends BaseServlet {
 
-	private final String DISPNO = "display00503";
+	private final String DISPNO = "00503";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;

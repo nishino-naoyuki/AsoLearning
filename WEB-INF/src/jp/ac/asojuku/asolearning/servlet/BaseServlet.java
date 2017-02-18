@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.SessionConst;
+import jp.ac.asojuku.asolearning.permit.PermissionChecker;
 
 public abstract class BaseServlet extends HttpServlet {
 
@@ -30,7 +31,11 @@ public abstract class BaseServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		//////////////////////////
-		//TODO:権限チェック
+		//権限チェック
+		if(!checkPermit(req)){
+			fowardPermitError(req,resp);
+			return;
+		}
 
 		try {
 			doGetMain(req,resp);
@@ -46,7 +51,11 @@ public abstract class BaseServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		//////////////////////////
-		//TODO:権限チェック
+		//権限チェック
+		if(!checkPermit(req)){
+			fowardPermitError(req,resp);
+			return;
+		}
 
 		try {
 			doPostMain(req,resp);
@@ -72,6 +81,20 @@ public abstract class BaseServlet extends HttpServlet {
 		rd.forward(req, resp);
 	}
 
+
+	/**
+	 * 権限エラー画面を表示する
+	 * @param req
+	 * @param resp
+	 * @param e
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void fowardPermitError(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException{
+
+		RequestDispatcher rd = req.getRequestDispatcher("view/error/permision_err.jsp");
+		rd.forward(req, resp);
+	}
 
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException,AsoLearningSystemErrException
 	{
@@ -177,5 +200,29 @@ public abstract class BaseServlet extends HttpServlet {
         }
         return name;
     }
+
+	/**
+	 * 権限チェック
+	 * @param req
+	 * @return
+	 */
+	private boolean checkPermit(HttpServletRequest req){
+		boolean isPermitOK = true;
+		String dispNo = getDisplayNo();
+		LogonInfoDTO loginInfo = getUserInfoDtoFromSession(req);
+
+		if( loginInfo == null ){
+			return true;
+		}
+
+		if( !PermissionChecker.check(dispNo, loginInfo.getRoleId())){
+			//権限なし
+			Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+			logger.error("権限エラーが発生しました:"+dispNo+" "+loginInfo.getRoleId());
+			isPermitOK = false;
+		}
+
+		return isPermitOK;
+	}
 	protected abstract String getDisplayNo();
 }

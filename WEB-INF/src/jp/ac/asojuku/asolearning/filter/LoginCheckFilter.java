@@ -31,7 +31,7 @@ public class LoginCheckFilter implements Filter{
 	//チェック除外画面
 	private String excludeDispList[] =
 		{
-			"/login","/auth"
+			"/login","/auth","/logout"
 		};
 
 	@Override

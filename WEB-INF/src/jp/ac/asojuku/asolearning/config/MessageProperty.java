@@ -25,6 +25,7 @@ public class MessageProperty extends ConfigBase{
 	/** 設定パラメータ */
 	public static final String JUDGE_RET_NOTMATCH = "judge.result.not.match";
 	public static final String LOGIN_ERR_LOGINERR = "login.err.loginerr";
+	public static final String LOGOUT_MSG = "logout.msg";
 	public static final String ERR_PROP_PREFIX = "errmsg";
 
 	/**

@@ -34,7 +34,7 @@ import jp.ac.asojuku.asolearning.param.SessionConst;
 @WebServlet(name="LoginServlet",urlPatterns={"/auth"})
 public class LoginServlet extends BaseServlet {
 
-	private final String DISPNO = "display00001";
+	private final String DISPNO = "00001";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;

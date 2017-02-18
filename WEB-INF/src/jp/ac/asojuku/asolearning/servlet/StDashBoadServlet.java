@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name="StDashBoadServlet",urlPatterns={"/st_dashboad"})
 public class StDashBoadServlet extends BaseServlet {
 
-	private final String DISPNO = "display00001";
+	private final String DISPNO = "00001";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;
