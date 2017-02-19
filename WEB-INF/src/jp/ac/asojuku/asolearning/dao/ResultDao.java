@@ -7,12 +7,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.ResultMetricsTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTestcaseTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
+import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 
 /**
  * @author nishino
@@ -37,6 +41,27 @@ public class ResultDao extends Dao {
 	private static final int RESULT_SEARCH_USR_ID = 1;
 	private static final int RESULT_SEARCH_TASK_ID = 2;
 
+	//ランキングを求めるSQL
+	private static final String RESULT_RANKING_SQL_SELECT =
+			"SELECT "
+			+ "SUM(r.TOTAL_SCORE) as total,"
+			+ "u.USER_ID,"
+			+ "u.NAME,"
+			+ "u.NICK_NAME,"
+			+ "t.NAME taskname,"
+			+ "COURSE_NAME "
+			+ "FROM RESULT_TBL r "
+			+ "LEFT JOIN USER_TBL u ON( r.USER_ID = u.USER_ID) "
+			+ "LEFT JOIN TASK_TBL t ON( t.TASK_ID = r.TASK_ID) "
+			+ "LEFT JOINT COURSE_MASTER cm ON(u.COURSE_ID = cm.COURSE_ID)";
+	private static final String RESULT_RANKING_SQL_WHERE_COURSE =
+			" u.COURSE_ID=?";
+	private static final String RESULT_RANKING_SQL_WHERE_TASK =
+			" u.TASK_ID=?";
+	private static final String RESULT_RANKING_SQL_GROUPBY =
+			" GROUP BY r.USER_ID ";
+	private static final String RESULT_RANKING_SQL_ORDERBY =
+			" ORDER BY total DESC";
 	//挿入SQL
 	private static final String RESULT_INSERT_SQL =
 			"INSERT INTO RESULT_TBL "
@@ -78,6 +103,131 @@ public class ResultDao extends Dao {
 			+ "AVR_MVG_SCORE = ?,"
 			+ "AVR_LOC_SCORE = ? "
 			+ "WHERE RESULT_ID = ?";
+
+	/**
+	 * ランキングの取得
+	 *
+	 * @param courseId
+	 * @param taskId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<ResultTblEntity> getRanking(Integer courseId,Integer taskId) throws SQLException{
+		List<ResultTblEntity> list = new ArrayList<ResultTblEntity>();
+
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+        try {
+    		// ステートメント生成
+        	StringBuffer sql = new StringBuffer(RESULT_RANKING_SQL_SELECT);
+
+        	sql.append(getRankingWhereString(courseId,taskId));
+        	sql.append(RESULT_RANKING_SQL_GROUPBY);
+        	sql.append(RESULT_RANKING_SQL_ORDERBY);
+
+			ps = con.prepareStatement(sql.toString());
+
+			ps = setRankingPram(ps,courseId,taskId);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        //値を取り出す
+	        while(rs.next()){
+
+	        	list.add( getResultTblEntityForRanking(rs) );
+	        }
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+
+		return list;
+	}
+
+	/**
+	 * ランキング用のWHERE句を作成
+	 * @param courseId
+	 * @param taskId
+	 * @return
+	 */
+	private String getRankingWhereString(Integer courseId,Integer taskId){
+		StringBuffer sb = new StringBuffer();
+
+		if( courseId != null ){
+			sb.append(RESULT_RANKING_SQL_WHERE_COURSE);
+		}
+		if( taskId != null ){
+			sb.append(RESULT_RANKING_SQL_WHERE_TASK);
+		}
+
+		if( sb.length() > 0 ){
+			sb.insert(0, " WHERE ");
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * ランキング用のパラメータをセットする
+	 * @param ps
+	 * @param courseId
+	 * @param taskId
+	 * @return
+	 * @throws SQLException
+	 */
+	private PreparedStatement setRankingPram(PreparedStatement ps,Integer courseId,Integer taskId) throws SQLException{
+		int index = 1;
+
+		if( courseId != null ){
+			ps.setInt(index, courseId);
+			index++;
+		}
+		if( taskId != null ){
+			ps.setInt(index, taskId);
+		}
+
+		return ps;
+	}
+
+	private ResultTblEntity getResultTblEntityForRanking(ResultSet rs) throws SQLException{
+		ResultTblEntity entity = new ResultTblEntity();
+
+		//////////////////////////////////
+		// RESULT_TBL
+		entity.setTotalScore(rs.getFloat("total"));
+
+		//////////////////////////////////
+		// USER_TBL
+		UserTblEntity userEntity = new UserTblEntity();
+		userEntity.setUserId(rs.getInt("USER_ID"));
+		userEntity.setName(rs.getString("NAME"));
+		userEntity.setNickName(rs.getString("NICK_NAME"));
+
+
+		//////////////////////////////////
+		// COURSE_TD
+		CourseMasterEntity courseEntity = new CourseMasterEntity();
+		courseEntity.setCourseName(rs.getString("COURSE_NAME"));
+		userEntity.setCourseMaster(courseEntity);
+
+		//////////////////////////////////
+		// TASK_TBL
+		TaskTblEntity taskEntity = new TaskTblEntity();
+		taskEntity.setName(rs.getString("taskname"));
+
+		entity.setUserTbl(userEntity);
+		entity.setTaskTbl(taskEntity);
+
+		return entity;
+	}
 
 	/**
 	 * 結果情報を取得する
