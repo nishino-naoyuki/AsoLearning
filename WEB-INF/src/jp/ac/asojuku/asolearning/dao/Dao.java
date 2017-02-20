@@ -168,4 +168,20 @@ public class Dao {
 
         return lastid;
 	}
+
+	/**
+	 * WHEREの条件文をつなぐ
+	 * @param sb
+	 * @param whereCond
+	 * @return
+	 */
+	protected void appendWhereWithAnd(StringBuffer sb,String whereCond){
+
+		if( sb.length() > 0 ){
+			sb.append(" AND ");
+		}
+
+		sb.append(whereCond);
+
+	}
 }

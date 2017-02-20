@@ -369,4 +369,42 @@ public class TaskBoImpl implements TaskBo {
 
 		return dto;
 	}
+
+
+	@Override
+	public List<TaskDto> getTaskListByCouseId(Integer couseId) throws AsoLearningSystemErrException {
+
+		List<TaskDto> dtoList = new ArrayList<TaskDto>();
+
+		TaskDao dao = new TaskDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//課題リスト情報を取得
+			List<TaskTblEntity> entityList =
+					dao.getTaskListByCouseId(couseId);
+
+
+			//会員テーブル→ログイン情報
+			dtoList = getEntityListToDtoList(entityList);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return dtoList;
+	}
 }

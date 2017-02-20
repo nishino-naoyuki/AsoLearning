@@ -23,4 +23,6 @@ public class RequestConst {
 	public static final String REQUEST_DISP_NO = "DispNo";
 	public static final String REQUEST_TASK_ID = "taskId";
 	public static final String REQUEST_TASK_RESULT = "taskResult";
+	public static final String REQUEST_COURSE_ID = "courseId";
+	public static final String REQUEST_RANKING_LIST = "RankingList";
 }

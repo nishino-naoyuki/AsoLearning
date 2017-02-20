@@ -6,7 +6,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
 <%@ page import="java.util.List" %>
-<%@ page import="jp.ac.asojuku.asolearning.dto.TaskDto" %>
+<%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.util.*" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -61,7 +61,18 @@
         </nav>
 
 <%
-TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
+List<CourseDto> courseList = (List<CourseDto>)request.getAttribute(RequestConst.REQUEST_COURSE_LIST);
+List<RankingDto> rankingList = (List<RankingDto>)request.getAttribute(RequestConst.REQUEST_RANKING_LIST);
+List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUEST_TASK_LIST);
+Integer courseId = (Integer)request.getAttribute(RequestConst.REQUEST_COURSE_ID);
+Integer taskId = (Integer)request.getAttribute(RequestConst.REQUEST_TASK_ID);
+
+if( courseId == null){
+	courseId = -1;
+}
+if( taskId == null){
+	taskId = -1;
+}
 %>
         <!-- Page Content -->
         <div id="page-wrapper">
@@ -75,40 +86,53 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                         </h1>
                         <ol class="breadcrumb">
                             <li>
-                                <i class="fa fa-pencil-square"></i> <a href="tasklist">ランキング</a>
+                                <i class="fa fa-graduation-cap"></i> ランキング
                             </li>
                         </ol>
                     </div>
                 </div>
                 <!-- /.row -->
 
+				<form action="ranking" method="GET">
                 <div class="row">
                     <div class="col-lg-4">
                     	学科
-	                     <select class="form-control" name="course">
+	                     <select id="couse" class="form-control" name="<%=RequestConst.REQUEST_COURSE_ID%>">
 	                         <option value="" >すべて</option>
-	                         <option value="" ></option>
-	                         <option value="" ></option>
+	                     <% for(CourseDto course :courseList){ %>
+	                         <option value="<%=course.getId() %>" <%= (courseId == course.getId() ? "selected":"" ) %>><%=course.getName() %></option>
+	                     <%} %>
 	                     </select>
                      </div>
                     <div class="col-lg-4">
                     課題
-                     <select class="form-control" name="task">
-                         <option value="" >総合</option>
-                         <option value="" ></option>
-                         <option value="" ></option>
+                     <select id="task" class="form-control" name="<%=RequestConst.REQUEST_TASK_ID%>">
+                         <option value="" >全て</option>
+                         <% for(TaskDto taskDto : taskList ){ %>
+                         <option value="<%=taskDto.getTaskId() %>" <%= (taskId == taskDto.getTaskId() ? "selected":"" ) %> ><%=taskDto.getTaskName() %></option>
+                         <%} %>
                      </select>
                      </div>
+                     <div class="col-lg-4">
+                     	<button type="submit"  class="btn btn-default">表示</button>
+                     </div>
                 </div>
-
+                </form>
                 <div class="row">
                     <div class="col-lg-4">
                     <h1></h1>
                     </div>
                 </div>
+<% if( rankingList==null || rankingList.size()==0){ %>
+                <div class="row">
+                    <div class="col-lg-4">
+                    <h1>検索結果０件です</h1>
+                    </div>
+                </div>
+<% }else{ %>
                 <div class="row">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 <thead>
                                     <tr class="info">
                                         <th>
@@ -129,19 +153,23 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                                     </tr>
                                 </thead>
                                 <tbody>
+                                <% int rank = 1; %>
+                                <% for(RankingDto ranking : rankingList){ %>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td><%=rank %></td>
+                                        <td><%=ranking.getCourseName() %></td>
+                                        <td><%=ranking.getName() %></td>
+                                        <td><%=ranking.getNickName() %></td>
+                                        <td><%=ranking.getScore() %></td>
                                     </tr>
+                                    <% rank++; %>
+                                <% } %>
                                 </tbody>
                             </table>
                         </div>
                 </div>
                 <!-- /.row -->
-
+<% } %>
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -162,7 +190,48 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
 
+<script>
+$(function(){
+    $("#couse").change(function(){
+        var value = $("#couse option:selected").val();
+		var params = "<%=RequestConst.REQUEST_COURSE_ID%>="+value;
 
+	    $.ajax({
+	        type : 'GET',
+	        url : "rankingcousechange",
+	        data : params,
+	        dataType : 'json',
+	        processData : false,
+	        contentType : false,
+	        timeout : 360000, // milliseconds
+
+	    }).done(function(json) {
+	    	//var obj = $.parseJSON(json);
+            $("#task").html("");
+            $("#task").append("<option value=>全て</option>");
+            for(var i=0;i<json.length;i++){
+                $("#task").append("<option value="+json[i].itemValue+">"+json[i].itemLabel+"</option>");
+            }
+
+
+	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+
+	    	alert("err:"+textStatus);
+	        console.log( textStatus  + errorThrown);
+	    });
+
+       // $.get("rankingcousechange/" + value ,function(data){
+       // 	alert(data);
+       //     var obj = $.parseJSON(data);
+       //     $("#task").html("");
+       //     for(var i=0;i<obj.length;i++){
+       //         $("#task").append("<option value="+obj[i].itemValue+">"+obj[i].itemLabel+"</option>");
+       //     }
+       // })
+    })
+})
+
+</script>
 </body>
 
 </html>

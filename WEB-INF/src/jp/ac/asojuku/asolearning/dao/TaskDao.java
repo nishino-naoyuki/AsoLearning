@@ -29,6 +29,16 @@ import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 public class TaskDao extends Dao {
 
 	//ユーザーを指定して、課題一覧を取得するSQL
+	private static final String TASK_COURSE_LIST_SQL =
+			"SELECT * FROM TASK_TBL t "
+			+ "LEFT JOIN TASK_PUBLIC_TBL tp ON(t.TASK_ID = tp.TASK_ID) "
+			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
+			+ "WHERE tp.STATUS_ID IN(1,2) ";
+	private static final String TASK_COURSE_LIST_WHERE = " tp.COURSE_ID=? ";
+	private static final String TASK_COURSE_LIST_ORDERBY =  " ORDER BY t.TASK_ID";
+	private static final int TASK_COURSE_LIST_SQL_USER_IDX = 1;
+
+	//ユーザーを指定して、課題一覧を取得するSQL
 	private static final String TASK_LIST_SQL =
 			"SELECT * FROM TASK_TBL t "
 			+ "LEFT JOIN TASK_PUBLIC_TBL tp ON(t.TASK_ID = tp.TASK_ID) "
@@ -83,6 +93,81 @@ public class TaskDao extends Dao {
 	}
 
 	/**
+	 * 学科を指定して、課題の一覧を取得する
+	 * 指定が無い場合は全部の課題を取得する
+	 *
+	 * @param courseId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<TaskTblEntity> getTaskListByCouseId(Integer courseId) throws SQLException{
+
+		if( con == null ){
+			return null;
+		}
+		List<TaskTblEntity> list = new ArrayList<TaskTblEntity>();
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		TaskTblEntity entity = null;
+
+        try {
+    		// ステートメント生成
+        	StringBuffer sb = new StringBuffer(TASK_COURSE_LIST_SQL);
+
+        	if( courseId != null ){
+        		sb.append(" AND ");
+        		sb.append(TASK_COURSE_LIST_WHERE);
+        	}
+        	sb.append(TASK_COURSE_LIST_ORDERBY);
+
+			ps = con.prepareStatement(sb.toString());
+
+        	if( courseId != null ){
+        		ps.setInt(TASK_COURSE_LIST_SQL_USER_IDX, courseId);
+        	}
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+
+	        //値を取り出す
+	        int taskId = -1;
+	        int wkTaskId = 0;
+	        boolean bufferFlg = false;
+
+	        while(rs.next()){
+	        	wkTaskId = rs.getInt("TASK_ID");
+
+	        	//同じテストIDの間はテストケースのみため込む
+	        	if( taskId == wkTaskId ){
+	        		bufferFlg = true;
+	        	}else{
+	        		//テストケースが変わったら、テスト情報をセットする
+	        		if( bufferFlg == true ){
+	        			list.add(entity);
+	        			bufferFlg = false;
+	        		}
+	        		entity = createTaskTblEntityFromResultSet(rs,false);
+	        		taskId = wkTaskId;
+	        	}
+	        }
+
+	        //最後の１件はループの外で登録する
+    		list.add(entity);
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+
+		return list;
+	}
+	/**
 	 * 課題を
 	 *
 	 * @param name
@@ -110,7 +195,7 @@ public class TaskDao extends Dao {
 
 	        //値を取り出す
 	        while(rs.next()){
-	        	entity = createTaskTblEntityFromResultSet(rs);
+	        	entity = createTaskTblEntityFromResultSet(rs,true);
 	        	//テストケースを追加
 	        	addTestCaseEntity(entity,rs);
 	        }
@@ -164,7 +249,7 @@ public class TaskDao extends Dao {
 	        			list.add(entity);
 	        			bufferFlg = false;
 	        		}
-	        		entity = createTaskTblEntityFromResultSet(rs);
+	        		entity = createTaskTblEntityFromResultSet(rs,true);
 	        		taskId = wkTaskId;
 	        	}
 	        	//テストケースを追加
@@ -218,7 +303,7 @@ public class TaskDao extends Dao {
 
 	        //値を取り出す
 	        while(rs.next()){
-	        	taskDetail = createTaskTblEntityFromResultSet(rs);
+	        	taskDetail = createTaskTblEntityFromResultSet(rs,true);
 	        	//テストケースを追加
 	        	addTestCaseEntity(taskDetail,rs);
 	        }
@@ -239,7 +324,7 @@ public class TaskDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	private TaskTblEntity createTaskTblEntityFromResultSet(ResultSet rs) throws SQLException{
+	private TaskTblEntity createTaskTblEntityFromResultSet(ResultSet rs,boolean isNeedResult) throws SQLException{
 		TaskTblEntity entity = new TaskTblEntity();
 
 		entity.setTaskId(rs.getInt("TASK_ID"));
@@ -250,19 +335,21 @@ public class TaskDao extends Dao {
 		entity.setUpdateTim(rs.getTimestamp("UPDATE_TIM"));
 		entity.setTerminationDate(rs.getDate("termination_date"));
 
-		//結果情報
 		Set<ResultTblEntity> results = null;
-		Integer totalScore = fixInt(rs.getInt("TOTAL_SCORE"),rs.wasNull());
-		if( totalScore != null  ){
-			results = new HashSet<ResultTblEntity>();
-			ResultTblEntity ret = new ResultTblEntity();
-			UserTblEntity user = new UserTblEntity();
-			ret.setResultId(rs.getInt("RESULT_ID"));
-			ret.setTotalScore(rs.getFloat("TOTAL_SCORE"));
-			user.setUserId(rs.getInt("USER_ID"));
-			ret.setUserTbl(user);
-			results.add(ret);
+		if( isNeedResult ){
+			//結果情報
+			Integer totalScore = fixInt(rs.getInt("TOTAL_SCORE"),rs.wasNull());
+			if( totalScore != null  ){
+				results = new HashSet<ResultTblEntity>();
+				ResultTblEntity ret = new ResultTblEntity();
+				UserTblEntity user = new UserTblEntity();
+				ret.setResultId(rs.getInt("RESULT_ID"));
+				ret.setTotalScore(rs.getFloat("TOTAL_SCORE"));
+				user.setUserId(rs.getInt("USER_ID"));
+				ret.setUserTbl(user);
+				results.add(ret);
 
+			}
 		}
 		entity.setResultTblSet(results);
 

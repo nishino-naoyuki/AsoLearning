@@ -84,7 +84,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 %>
                 <div class="row">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover table-striped">
+                            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 <thead>
                                     <tr class="info">
                                         <th>No.</th>

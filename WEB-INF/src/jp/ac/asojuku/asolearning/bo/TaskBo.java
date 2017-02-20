@@ -69,4 +69,13 @@ public interface TaskBo {
 	 */
 	public TaskDto getTaskDetailForName(String name) throws AsoLearningSystemErrException;
 
+	/**
+	 * 学科を指定して課題一覧を取得する
+	 *
+	 * @param couseId
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	public List<TaskDto> getTaskListByCouseId(Integer couseId) throws AsoLearningSystemErrException;
+
 }

@@ -49,15 +49,16 @@ public class ResultDao extends Dao {
 			+ "u.NAME,"
 			+ "u.NICK_NAME,"
 			+ "t.NAME taskname,"
+			+ "cm.COURSE_ID, "
 			+ "COURSE_NAME "
 			+ "FROM RESULT_TBL r "
 			+ "LEFT JOIN USER_TBL u ON( r.USER_ID = u.USER_ID) "
 			+ "LEFT JOIN TASK_TBL t ON( t.TASK_ID = r.TASK_ID) "
-			+ "LEFT JOINT COURSE_MASTER cm ON(u.COURSE_ID = cm.COURSE_ID)";
+			+ "LEFT JOIN COURSE_MASTER cm ON(u.COURSE_ID = cm.COURSE_ID)";
 	private static final String RESULT_RANKING_SQL_WHERE_COURSE =
 			" u.COURSE_ID=?";
 	private static final String RESULT_RANKING_SQL_WHERE_TASK =
-			" u.TASK_ID=?";
+			" t.TASK_ID=?";
 	private static final String RESULT_RANKING_SQL_GROUPBY =
 			" GROUP BY r.USER_ID ";
 	private static final String RESULT_RANKING_SQL_ORDERBY =
@@ -165,7 +166,7 @@ public class ResultDao extends Dao {
 			sb.append(RESULT_RANKING_SQL_WHERE_COURSE);
 		}
 		if( taskId != null ){
-			sb.append(RESULT_RANKING_SQL_WHERE_TASK);
+			appendWhereWithAnd(sb,RESULT_RANKING_SQL_WHERE_TASK);
 		}
 
 		if( sb.length() > 0 ){
@@ -215,6 +216,7 @@ public class ResultDao extends Dao {
 		//////////////////////////////////
 		// COURSE_TD
 		CourseMasterEntity courseEntity = new CourseMasterEntity();
+		courseEntity.setCourseId(rs.getInt("COURSE_ID"));
 		courseEntity.setCourseName(rs.getString("COURSE_NAME"));
 		userEntity.setCourseMaster(courseEntity);
 

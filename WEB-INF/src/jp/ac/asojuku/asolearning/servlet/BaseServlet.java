@@ -224,5 +224,28 @@ public abstract class BaseServlet extends HttpServlet {
 
 		return isPermitOK;
 	}
+
+
+	/**
+	 * 数値型の情報をリクエストパラメータより取得する
+	 * @param pramName
+	 * @param req
+	 * @return
+	 */
+	protected Integer getIntParam(String pramName,HttpServletRequest req){
+		Integer intParam = null;
+
+		String intString = req.getParameter(pramName);
+
+		try{
+			intParam = Integer.parseInt(intString);
+		}catch(NumberFormatException e){
+			Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+			logger.error("数値パラメータの取得に失敗:name"+pramName+" value:"+intString);
+			intParam = null;
+		}
+
+		return intParam;
+	}
 	protected abstract String getDisplayNo();
 }

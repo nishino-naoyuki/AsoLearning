@@ -3,6 +3,9 @@
  */
 package jp.ac.asojuku.asolearning.bo;
 
+import java.util.List;
+
+import jp.ac.asojuku.asolearning.dto.RankingDto;
 import jp.ac.asojuku.asolearning.dto.TaskResultDetailDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 
@@ -14,5 +17,23 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public interface ResultBo {
 
+	/**
+	 * 結果の詳細情報の取得
+	 *
+	 * @param taskId
+	 * @param userId
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
 	TaskResultDetailDto getResultDetail(int taskId,int userId) throws AsoLearningSystemErrException;
+
+	/**
+	 * ランキング情報を取得する
+	 *
+	 * @param courseId 指定しない場合はNULL
+	 * @param taskId 指定しない場合はNULL
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	List<RankingDto> getRanking(Integer courseId,Integer taskId) throws AsoLearningSystemErrException;
 }
