@@ -110,7 +110,7 @@ public class LoginBoImpl implements LoginBo {
 		String hashPwd = Digest.createPassword(mailadress,password);
 
 		if( !hashPwd.equals(entity.getPassword())){
-			//パスワード認証失敗かうんとアップ
+			//パスワード認証失敗かうんとアップ:TODO
 			throw new LoginFailureException();
 
 		}

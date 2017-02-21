@@ -16,6 +16,7 @@ public class RankingDto {
 	private int courseId;
 	private String nickName;
 	private Float score;
+	private int grade;
 	/**
 	 * @return name
 	 */
@@ -75,6 +76,18 @@ public class RankingDto {
 	 */
 	public void setCourseId(int courseId) {
 		this.courseId = courseId;
+	}
+	/**
+	 * @return grade
+	 */
+	public int getGrade() {
+		return grade;
+	}
+	/**
+	 * @param grade セットする grade
+	 */
+	public void setGrade(int grade) {
+		this.grade = grade;
 	}
 
 

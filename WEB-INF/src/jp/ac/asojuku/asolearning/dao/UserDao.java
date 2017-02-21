@@ -8,6 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.RoleMasterEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
@@ -18,6 +21,7 @@ import jp.ac.asojuku.asolearning.entity.UserTblEntity;
  *
  */
 public class UserDao extends Dao {
+	Logger logger = LoggerFactory.getLogger(UserDao.class);
 
 	// ユーザーIDとパスワードを指定してユーザー情報を取得する
 	private static final String MEMBER_INFO_BY_UP_SQL =
@@ -35,10 +39,84 @@ public class UserDao extends Dao {
 			+ "LEFT JOIN ROLE_MASTER r ON(r.ROLE_ID = u.ROLE_ID) "
 			+ "WHERE u.MAILADRESS=?";
 
+	// ユーザーの登録
+	private static final String MEMBER_ENTR_SQL =
+			 "INSERT INTO USER_TBL "
+			+ "(USER_ID,MAILADRESS,PASSWORD,NAME,NICK_NAME,ACCOUNT_EXPRY_DATE,PASSWORD_EXPIRYDATE,COURSE_ID,ROLE_ID,IS_FIRST_FLG"
+			+ ",CERTIFY_ERR_CNT,IS_LOCK_FLG,ADMISSION_YEAR,GRADUATE_YEAR,REPEAT_YEAR_COUNT,ENTRY_DATE,UPDATE_DATE) "
+			+ "VALUES(null,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_DATE,CURRENT_DATE)";
+
+
 	public UserDao() {
 	}
 	public UserDao(Connection con) {
 		super(con);
+	}
+
+	/**
+	 * ユーザー情報一見挿入
+	 * @param userEntity
+	 * @param hashedPass
+	 * @throws SQLException
+	 */
+	public void insert(UserTblEntity userEntity,String hashedPass) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+        	ps = con.prepareStatement(MEMBER_ENTR_SQL);
+
+        	//パラメータセット
+        	ps.setString(1, userEntity.getMailadress());
+        	ps.setString(2, hashedPass);
+        	ps.setString(3, userEntity.getName());
+        	ps.setString(4, userEntity.getNickName());
+			if( userEntity.getAccountExpryDate() != null){
+				ps.setDate(5, parseSQLLDateFromUtilData(userEntity.getAccountExpryDate()) );
+			}else{
+				ps.setNull(5, java.sql.Types.DATE);
+			}
+			if( userEntity.getPasswordExpirydate() != null){
+				ps.setDate(6, parseSQLLDateFromUtilData(userEntity.getPasswordExpirydate()) );
+			}else{
+				ps.setNull(6, java.sql.Types.DATE);
+			}
+			ps.setInt(7, userEntity.getCourseMaster().getCourseId());
+			ps.setInt(8, userEntity.getRoleMaster().getRoleId());
+			ps.setInt(9, 1);
+			ps.setInt(10, 0);	//CERTIFY_ERR_CNT
+			ps.setInt(11, 0);	//IS_LOCK_FLG
+			if( userEntity.getAdmissionYear() != null){
+				ps.setInt(12, userEntity.getAdmissionYear());	//ADMISSION_YEAR
+			}else{
+				ps.setNull(12, java.sql.Types.INTEGER);	//ADMISSION_YEAR
+
+			}
+			if( userEntity.getGraduateYear() != null){
+				ps.setInt(13, userEntity.getGraduateYear());	//GRADUATE_YEAR
+			}else{
+				ps.setNull(13, java.sql.Types.INTEGER);	//GRADUATE_YEAR
+			}
+			if( userEntity.getRepeatYearCount() != null){
+				ps.setInt(14, userEntity.getRepeatYearCount());	//GRADUATE_YEAR
+			}else{
+				ps.setInt(14, 0);	//REPEAT_YEAR_COUNT
+
+			}
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			logger.warn("SQLException:",e);
+			throw e;
+		} finally {
+			safeClose(ps,null);
+		}
 	}
 
 	public UserTblEntity getUserInfoByUserPassword(String userName,String password) throws SQLException{

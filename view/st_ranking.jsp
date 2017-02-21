@@ -8,6 +8,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.util.*" %>
+<%@ page import="org.apache.commons.collections4.*" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -108,9 +109,11 @@ if( taskId == null){
                     課題
                      <select id="task" class="form-control" name="<%=RequestConst.REQUEST_TASK_ID%>">
                          <option value="" >全て</option>
-                         <% for(TaskDto taskDto : taskList ){ %>
-                         <option value="<%=taskDto.getTaskId() %>" <%= (taskId == taskDto.getTaskId() ? "selected":"" ) %> ><%=taskDto.getTaskName() %></option>
-                         <%} %>
+	                     <% for(TaskDto taskDto : taskList ){ %>
+                         	 <% if( taskDto != null){ %>
+	                         <option value="<%=taskDto.getTaskId() %>" <%= (taskId == taskDto.getTaskId() ? "selected":"" ) %> ><%=taskDto.getTaskName() %></option>
+	                         <%} %>
+	                     <%} %>
                      </select>
                      </div>
                      <div class="col-lg-4">
@@ -123,7 +126,7 @@ if( taskId == null){
                     <h1></h1>
                     </div>
                 </div>
-<% if( rankingList==null || rankingList.size()==0){ %>
+<% if( CollectionUtils.isEmpty(rankingList) ){ %>
                 <div class="row">
                     <div class="col-lg-4">
                     <h1>検索結果０件です</h1>
@@ -142,6 +145,9 @@ if( taskId == null){
                                         学科
                                         </th>
                                         <th>
+                                        学年
+                                        </th>
+                                        <th>
                                         学籍番号
                                         </th>
                                         <th>
@@ -158,6 +164,7 @@ if( taskId == null){
                                     <tr>
                                         <td><%=rank %></td>
                                         <td><%=ranking.getCourseName() %></td>
+                                        <td>&nbsp;</td>
                                         <td><%=ranking.getName() %></td>
                                         <td><%=ranking.getNickName() %></td>
                                         <td><%=ranking.getScore() %></td>

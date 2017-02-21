@@ -8,6 +8,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.*" %>
+<%@ page import="org.apache.commons.collections4.*" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -83,6 +84,13 @@ List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUES
 LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 %>
                 <div class="row">
+ <%
+ if( CollectionUtils.isEmpty(taskList) ){
+ %>
+	 課題はありません
+ <%
+ }else{
+ %>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 <thead>
@@ -135,6 +143,9 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
                             </table>
                         </div>
 
+ <%
+ }
+ %>
                 </div>
                 <!-- /.row -->
 

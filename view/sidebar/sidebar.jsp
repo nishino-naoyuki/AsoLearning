@@ -31,6 +31,11 @@ if( PermissionChecker.check("00201", loginInfo.getRoleId())){
              <li>
                  <a href="tc_createTask"><i class="fa fa-graduation-cap fa-fw"></i>課題作成</a>
              </li>
+<% }
+  if( PermissionChecker.check("00802", loginInfo.getRoleId()) ){ %>
+             <li>
+                 <a href="tc_createUser"><i class="fa fa-user fa-fw"></i>ユーザー作成</a>
+             </li>
 <% }%>
 
          </ul>

@@ -257,7 +257,9 @@ public class TaskDao extends Dao {
 	        }
 
 	        //最後の１件はループの外で登録する
-    		list.add(entity);
+	        if(entity != null){
+	        	list.add(entity);
+	        }
 
 		} catch (SQLException e) {
 			//例外発生時はログを出力し、上位へそのままスロー

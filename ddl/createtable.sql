@@ -191,9 +191,9 @@ CREATE TABLE USER_TBL
 	-- ユーザーID
 	USER_ID int NOT NULL AUTO_INCREMENT COMMENT 'ユーザーID',
 	-- メールアドレス（ログインID）
-	MAILADRESS varchar(256) NOT NULL COMMENT 'メールアドレス（ログインID）',
+	MAILADRESS varchar(255) NOT NULL COMMENT 'メールアドレス（ログインID）',
 	-- パスワードのハッシュ値
-	PASSWORD varchar(256) NOT NULL COMMENT 'パスワードのハッシュ値',
+	PASSWORD varchar(255) NOT NULL COMMENT 'パスワードのハッシュ値',
 	-- 学生は学籍番号
 	-- 職員は職員ID
 	NAME varchar(100) NOT NULL COMMENT '学生は学籍番号
@@ -225,9 +225,26 @@ ROLEが「先生」の場合も必要
 	CERTIFY_ERR_CNT int DEFAULT 0 NOT NULL COMMENT '認証失敗時カウントアップされる
 何度失敗してもアカウントをロックしない場合は、カウントアップしない',
 	IS_LOCK_FLG int DEFAULT 0 NOT NULL,
+	-- 入学年度
+	-- ロールが学生の場合のみ
+	-- そのほかはNULL
+	ADMISSION_YEAR int COMMENT '入学年度
+ロールが学生の場合のみ
+そのほかはNULL',
+	-- 在校生や現役の教務はNULL
+	GRADUATE_YEAR int COMMENT '在校生や現役の教務はNULL',
+	-- 留年するたびに１プラスする
+	-- 学年は
+	-- 現在の年度-入学年度-留年回数+1
+	-- で求める
+	REPEAT_YEAR_COUNT int DEFAULT 0 NOT NULL COMMENT '留年するたびに１プラスする
+学年は
+現在の年度-入学年度-留年回数+1
+で求める',
 	ENTRY_DATE datetime NOT NULL,
 	UPDATE_DATE datetime NOT NULL,
-	PRIMARY KEY (USER_ID)
+	PRIMARY KEY (USER_ID),
+	UNIQUE (MAILADRESS)
 ) COMMENT = '利用者テーブル
 ログイン可能な利用者は全てこのテーブルに登録される';
 

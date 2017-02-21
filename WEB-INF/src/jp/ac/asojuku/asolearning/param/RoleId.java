@@ -37,4 +37,14 @@ public enum RoleId {
 
 		return (this.id == id);
 	}
+
+	public static RoleId search(int id){
+		if( STUDENT.equals(id)){
+			return STUDENT;
+		}else if( TEACHER.equals(id)){
+			return TEACHER;
+		}
+
+		return MANAGER;
+	}
 }
