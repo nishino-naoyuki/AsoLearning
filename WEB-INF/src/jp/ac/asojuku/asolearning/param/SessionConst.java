@@ -15,4 +15,5 @@ public class SessionConst {
 	public static final String SESSION_TASK_DTO = "TaskDto";
 	public static final String SESSION_TESTCASE = "TestCase";
 	public static final String SESSION_PUBLICSTATE = "PublicState";
+	public static final String SESSION_CSV_PROGRESS = "CsvProgress";
 }

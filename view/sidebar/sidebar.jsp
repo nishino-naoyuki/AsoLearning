@@ -36,6 +36,11 @@ if( PermissionChecker.check("00201", loginInfo.getRoleId())){
              <li>
                  <a href="tc_createUser"><i class="fa fa-user fa-fw"></i>ユーザー作成</a>
              </li>
+<% }
+  if( PermissionChecker.check("01001", loginInfo.getRoleId()) ){ %>
+             <li>
+                 <a href="csvEntry"><i class="fa fa-file fa-fw"></i>CSV処理</a>
+             </li>
 <% }%>
 
          </ul>

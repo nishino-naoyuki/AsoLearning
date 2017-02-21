@@ -1,23 +1,36 @@
 package jp.ac.asojuku.asolearning.bo.impl;
 
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.opencsv.CSVReader;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.bean.CsvToBean;
+
 import jp.ac.asojuku.asolearning.bo.UserBo;
+import jp.ac.asojuku.asolearning.csv.model.UserCSV;
 import jp.ac.asojuku.asolearning.dao.UserDao;
+import jp.ac.asojuku.asolearning.dto.CSVProgressDto;
 import jp.ac.asojuku.asolearning.dto.UserDto;
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.RoleMasterEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
+import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
+import jp.ac.asojuku.asolearning.param.SessionConst;
 import jp.ac.asojuku.asolearning.util.Digest;
 
 public class UserBoImpl implements UserBo {
 	Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
-
+	private static final String[] HEADER = new String[] { "roleId", "name", "mailAddress", "nickName", "courseId", "password","admissionYear" };
 	@Override
 	public void insert(UserDto userDto) throws AsoLearningSystemErrException {
 
@@ -58,8 +71,18 @@ public class UserBoImpl implements UserBo {
 	}
 
 	@Override
-	public void insertByCSV(String csvPath) throws AsoLearningSystemErrException {
-		// TODO 自動生成されたメソッド・スタブ
+	public void insertByCSV(List<UserCSV> userList,String uuid,HttpSession session,String type) throws AsoLearningSystemErrException {
+
+		CSVProgressDto progress = new CSVProgressDto(userList.size(),0);
+		///////////////////////////////////////
+		//初期情報をセッションにセット
+		session.setAttribute(SessionConst.SESSION_CSV_PROGRESS, progress);
+
+		///////////////////////////////////////
+		//処理を行う
+		for( UserCSV user : userList){
+
+		}
 
 	}
 
@@ -88,5 +111,31 @@ public class UserBoImpl implements UserBo {
 		roleMasterEntity.setRoleId(dto.getRoleId());
 		entity.setRoleMaster(roleMasterEntity);
 		return entity;
+	}
+
+	@Override
+	public List<UserCSV> checkForCSV(String csvPath, ActionErrors errors,String type) throws AsoLearningSystemErrException {
+
+		List<UserCSV> list = null;
+		try {
+			///////////////////////////////
+			//CSVを読み込みマッピング
+            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(csvPath), "SJIS"), ',', '"', 1);
+            ColumnPositionMappingStrategy<UserCSV> strat = new ColumnPositionMappingStrategy<UserCSV>();
+            strat.setType(UserCSV.class);
+            strat.setColumnMapping(HEADER);
+            CsvToBean<UserCSV> csv = new CsvToBean<UserCSV>();
+            list = csv.parse(strat, reader);
+
+            // エラーチェック
+            for(UserCSV userCsv : list){
+            	//TODOエラーチェック
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+		return list;
 	}
 }

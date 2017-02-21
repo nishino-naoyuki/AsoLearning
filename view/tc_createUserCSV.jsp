@@ -86,9 +86,6 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-user"></i> 学生作成
-                            </li>
-                            <li class="active">
                                 <i class="glyphicon glyphicon-file"></i> CSV登録
                             </li>
                         </ol>
@@ -124,6 +121,34 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
 
 										        </div>
 	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                	<tr>
+	                                		<td colspan="2">
+	                                        <div class="form-group">
+	                                            <label>種類</label>
+	                                            <div class="radio">
+	                                                <label>
+	                                                    <input type="radio" name="rdoType" id="rdoInsertUpdate" value="rdoInsertUpdate" checked>追加・更新
+	                                                </label>
+	                                            </div>
+	                                            <div class="radio">
+	                                                <label>
+	                                                    <input type="radio" name="rdoType" id="rdoDelete" value="rdoDelete">削除
+	                                                </label>
+	                                            </div>
+	                                            <div class="radio">
+	                                                <label>
+	                                                    <input type="radio" name="rdoType" id="rdoGraduate" value="rdoGraduate">卒業処理
+	                                                </label>
+	                                            </div>
+	                                            <div class="radio">
+	                                                <label>
+	                                                    <input type="radio" name="rdoType" id="rdoBye" value="rdoBye">退学処理
+	                                                </label>
+	                                            </div>
+	                                        </div>
+
 	                                		</td>
 	                                	</tr>
 	                                </tbody>
@@ -183,15 +208,19 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
 	$('#startCSV').on('click', function() {
 
 		var fd = new FormData();
-		  if ($("input[name='javafile']").val()!== '') {
-		    fd.append( "file", $("input[name='javafile']").prop("files")[0] );
+		  if ($("input[name='csvfile']").val()!== '') {
+		    fd.append( "file", $("input[name='csvfile']").prop("files")[0] );
 		    fd.append( "uuid", uuid );
+		    fd.append( "rdoType", $("input[name='rdoType']").val() );
 		 }
 
 		submit_action("userCSVProcess",fd,null);
 	});
 	function submit_action(url, input_data, mode) {
 
+		if( !confirm("処理を開始します。途中で中断はできません。\nよろしいですか？")){
+			return;
+		}
 
 	    $.ajax({
 	        type : 'POST',

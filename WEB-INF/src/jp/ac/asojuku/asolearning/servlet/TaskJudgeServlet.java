@@ -40,7 +40,7 @@ import jp.ac.asojuku.asolearning.util.TimestampUtil;
 @MultipartConfig(location="/tmp", maxFileSize=1048576)
 public class TaskJudgeServlet extends BaseServlet {
 
-	Logger logger = LoggerFactory.getLogger(LoginServlet.class);
+	Logger logger = LoggerFactory.getLogger(TaskJudgeServlet.class);
 
 	private final String DISPNO = "00102";
 	@Override

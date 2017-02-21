@@ -114,9 +114,7 @@ if( userDto != null){
                 			ユーザー情報
                 		</div>
 	                	<div class="panel-body">
-	                		<p>
-	                		<button type="button" onClick="location.href='csvEntry'" class="btn btn-default"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> CSV登録 </button>
-	                        </p>
+
 	                        <div class="table-responsive">
 	                            <table class="table table-bordered table-hover" id="form">
 	                                <tbody>

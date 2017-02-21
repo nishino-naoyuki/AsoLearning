@@ -11,6 +11,8 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/jackson-annotations-2.8.0.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jackson-core-2.8.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jackson-databind-2.8.5.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/opencsv-3.9.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-collections4-4.1.jar"/>
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/servlet-api.jar"/>
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/jasper.jar"/>
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/jsp-api.jar"/>
