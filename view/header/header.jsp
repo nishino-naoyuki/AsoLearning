@@ -8,7 +8,11 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 <ul class="nav navbar-top-links navbar-right">
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="fa fa-user fa-fw"></i> <%=loginInfo.getNickName()%><b class="caret"></b>
+        	<%if( loginInfo.getGrade() == null ){ %>
+        	<i class="fa fa-user fa-fw"></i><%=loginInfo.getNickName()%>（<%=loginInfo.getRoleName()%>）<b class="caret"></b>
+        	<%}else{ %>
+            <i class="fa fa-user fa-fw"></i><%=loginInfo.getCourseName()%> <%=loginInfo.getGrade()%>年 <%=loginInfo.getNickName()%>（<%=loginInfo.getRoleName()%>）<b class="caret"></b>
+        	<%} %>
         </a>
         <ul class="dropdown-menu dropdown-user">
             <li><a href="#"><i class="fa fa-user fa-fw"></i> パスワード変更</a>

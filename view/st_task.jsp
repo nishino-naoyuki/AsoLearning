@@ -232,7 +232,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 	        }
 	    }).done(function(json) {
 			//エラーメッセージがある場合はエラーを表示する
-    		if( json.errorMsg.length != 0){
+    		if( json.errorMsg != null){
 	    		$("#uploadErrorMsg").text(json.errorMsg);
     		}else if(json.score > 0){
     			//得点がついた場合は、提出済みにし得点を表示する

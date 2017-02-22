@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +72,7 @@ public class JavaProgramJudge implements Judge {
 
 			Set<TestcaseTableEntity> testCaseSet = taskEntity.getTestcaseTableSet();
 
+			boolean compileError = false;
 			//テストケースごとに実行し、点数を集計
 			for( TestcaseTableEntity testcase : testCaseSet){
 				///////////////////////////////////////
@@ -80,6 +82,7 @@ public class JavaProgramJudge implements Judge {
 				///////////////////////////////////////
 				//エラー情報をチェック
 				String erroInfo = getCompileErrorInfo(resultDir);
+				compileError = StringUtils.isNoneEmpty(erroInfo);
 
 				///////////////////////////////////////
 				//正解かどうかのチェック
@@ -87,7 +90,7 @@ public class JavaProgramJudge implements Judge {
 
 				///////////////////////////////////////
 				//結果をEntityを登録
-				resultEntity.addResultTestcaseTbl(getResultTestcaseTblEntity(testcase,result,erroInfo));
+				resultEntity.addResultTestcaseTbl(getResultTestcaseTblEntity(testcase,result,compileError,erroInfo));
 			}
 
 			///////////////////////////////////////
@@ -250,10 +253,22 @@ public class JavaProgramJudge implements Judge {
 	 * @return
 	 * @throws AsoLearningSystemErrException
 	 */
-	private ResultTestcaseTblEntity getResultTestcaseTblEntity(TestcaseTableEntity testcase,boolean result,String errorMsg) throws AsoLearningSystemErrException{
+	private ResultTestcaseTblEntity getResultTestcaseTblEntity(TestcaseTableEntity testcase,boolean result,boolean compileError,String errorMsg) throws AsoLearningSystemErrException{
 		ResultTestcaseTblEntity resultTestcaseEntity = new ResultTestcaseTblEntity();
 
+		//テストIDをセット
 		resultTestcaseEntity.setTestcaseId(testcase.getTestcaseId());
+
+		///////////////////////////////////////////
+		//コンパイルエラーの場合はコンパイルエラーのメッセージを入れる
+		if( compileError ){
+			resultTestcaseEntity.setScore(0);
+			resultTestcaseEntity.setMessage("コンパイルエラー："+errorMsg);
+			return resultTestcaseEntity;
+		}
+
+		///////////////////////////////////////////
+		//実行できた場合は結果を元にメッセージを入れる
 		if( result ){
 			//正解だった場合は配点をセット
 			resultTestcaseEntity.setScore(testcase.getAllmostOfMarks());

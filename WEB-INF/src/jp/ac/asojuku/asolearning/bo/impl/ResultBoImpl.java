@@ -24,6 +24,7 @@ import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
+import jp.ac.asojuku.asolearning.util.UserUtils;
 
 /**
  * @author nishino
@@ -123,6 +124,9 @@ public class ResultBoImpl implements ResultBo {
 
 	}
 
+	/* (非 Javadoc)
+	 * @see jp.ac.asojuku.asolearning.bo.ResultBo#getRanking(java.lang.Integer, java.lang.Integer)
+	 */
 	@Override
 	public List<RankingDto> getRanking(Integer courseId, Integer taskId) throws AsoLearningSystemErrException {
 
@@ -137,9 +141,16 @@ public class ResultBoImpl implements ResultBo {
 			//ランキングを取得
 			List<ResultTblEntity> retEntityList = dao.getRanking(courseId,taskId);
 
+			int rank = 1;
+			float wkScore = Float.MAX_VALUE;
 			for( ResultTblEntity retEntity : retEntityList){
-				RankingDto ranking = createRankingDto(retEntity);
+				RankingDto ranking = createRankingDto(retEntity,rank);
 				list.add(ranking);
+				//ランクはここでセット
+				if( wkScore > ranking.getScore()){
+					wkScore = ranking.getScore();
+					rank++;
+				}
 			}
 
 		} catch (DBConnectException e) {
@@ -167,7 +178,7 @@ public class ResultBoImpl implements ResultBo {
 	 * @return
 	 * @throws AsoLearningSystemErrException
 	 */
-	private RankingDto createRankingDto(ResultTblEntity retEntity) throws AsoLearningSystemErrException{
+	private RankingDto createRankingDto(ResultTblEntity retEntity,int rank) throws AsoLearningSystemErrException{
 
 		RankingDto rankingDto = new RankingDto();
 		UserTblEntity userEntity = retEntity.getUserTbl();
@@ -176,11 +187,13 @@ public class ResultBoImpl implements ResultBo {
 			throw new AsoLearningSystemErrException("ユーザー情報が存在しません");
 		}
 
+		rankingDto.setRank(rank);
 		rankingDto.setName(userEntity.getName());
 		rankingDto.setCourseName(userEntity.getCourseMaster().getCourseName());
 		rankingDto.setNickName(userEntity.getNickName());
 		rankingDto.setScore(retEntity.getTotalScore());
 		rankingDto.setCourseId(userEntity.getCourseMaster().getCourseId());
+		rankingDto.setGrade(UserUtils.getGrade(userEntity));
 
 		return rankingDto;
 	}

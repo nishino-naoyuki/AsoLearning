@@ -15,6 +15,9 @@ public class LogonInfoDTO {
 	private int userId;			//ユーザーID
 	private int courseId;
 	private int roleId;
+	private String courseName;
+	private String roleName;
+	private Integer grade;
 
 
 	/**
@@ -76,6 +79,42 @@ public class LogonInfoDTO {
 	 */
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+	/**
+	 * @return courseName
+	 */
+	public String getCourseName() {
+		return courseName;
+	}
+	/**
+	 * @param courseName セットする courseName
+	 */
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+	/**
+	 * @return roleName
+	 */
+	public String getRoleName() {
+		return roleName;
+	}
+	/**
+	 * @param roleName セットする roleName
+	 */
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+	/**
+	 * @return grade
+	 */
+	public Integer getGrade() {
+		return grade;
+	}
+	/**
+	 * @param grade セットする grade
+	 */
+	public void setGrade(Integer grade) {
+		this.grade = grade;
 	}
 
 

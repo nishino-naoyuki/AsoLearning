@@ -4,6 +4,7 @@
 package jp.ac.asojuku.asolearning.servlet;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,12 +18,17 @@ import javax.servlet.http.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jp.ac.asojuku.asolearning.bo.UserBo;
 import jp.ac.asojuku.asolearning.bo.impl.UserBoImpl;
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.csv.model.UserCSV;
+import jp.ac.asojuku.asolearning.dto.CSVProgressDto;
+import jp.ac.asojuku.asolearning.err.ActionError;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
+import jp.ac.asojuku.asolearning.param.SessionConst;
 import jp.ac.asojuku.asolearning.util.FileUtils;
 
 /**
@@ -50,36 +56,94 @@ public class CreateUserCSVServlet extends BaseServlet {
 	protected void doPostMain(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, AsoLearningSystemErrException {
 
-		errors = new ActionErrors();
-		////////////////////////////////////
-		//パラメータ取得
-		String type = getStringParamFromPart(req,"rdoType");
-		String uuid = getStringParamFromPart(req,"uuid");
 
-		//////////////////////////////////////////////
-		//アップロードされたファイルを取得
-		Part part = req.getPart("file");
-        String name = this.getFileName(part);
+        OutputStream out = null;
+        try{
+        	out = resp.getOutputStream();
+			errors = new ActionErrors();
+			////////////////////////////////////
+			//パラメータ取得
+			String type = getStringParamFromPart(req,"rdoType");
+			String uuid = getStringParamFromPart(req,"uuid");
 
-        //アップロードフォルダを作成
-        String dir = getUploadDir(uuid);
-		FileUtils.makeDir(dir);
-		String path = dir + "/" + name;
+			//////////////////////////////////////////////
+			//アップロードされたファイルを取得
+			Part part = req.getPart("file");
+	        String name = this.getFileName(part);
 
-        part.write(path);
+	        //アップロードフォルダを作成
+	        String dir = getUploadDir(uuid);
+			FileUtils.makeDir(dir);
+			String path = dir + "/" + name;
 
-        logger.trace("CSV fileuploaded! file={} type={}",path,type);
+	        part.write(path);
 
-		//////////////////////////////////////////////
-		//エラーチェック＆リスト取得
-        UserBo userBo = new UserBoImpl();
+	        logger.trace("CSV fileuploaded! file={} type={}",path,type);
 
-        List<UserCSV> userList = userBo.checkForCSV(path, errors, type);
-		HttpSession session = req.getSession(false);
+			//////////////////////////////////////////////
+			//エラーチェック＆リスト取得
+	        UserBo userBo = new UserBoImpl();
 
-		//////////////////////////////////////////////
-		//登録処理
+	        List<UserCSV> userList = userBo.checkForCSV(path, errors, type);
+			HttpSession session = req.getSession(false);
 
+			if( errors.isHasErr() ){
+				outputErrorResult(out,resp);
+				return;
+			}
+
+			//////////////////////////////////////////////
+			//登録処理
+			userBo.insertByCSV(userList, uuid, session, type);
+
+			//////////////////////////////////////////////
+	        //JSON出力処理を行う
+			outputResult(out,session,resp,uuid);
+
+			//セッションは不要になったので削除
+			session.removeAttribute(uuid+SessionConst.SESSION_CSV_PROGRESS);
+
+        }finally{
+        	if(out != null){
+        		out.close();
+        	}
+        }
+
+	}
+
+	private void outputResult(OutputStream out,HttpSession session,HttpServletResponse resp,String uuid) throws IOException{
+
+		CSVProgressDto progress = (CSVProgressDto)session.getAttribute(uuid+SessionConst.SESSION_CSV_PROGRESS);
+
+		ObjectMapper mapper = new ObjectMapper();
+        String jsonString = mapper.writeValueAsString(progress);
+
+        logger.trace("jsonString:{}",jsonString);
+
+        resp.setContentType("application/json; charset=utf-8");
+        out.write(jsonString.getBytes());
+        out.flush();
+
+	}
+
+	private void outputErrorResult(OutputStream out,HttpServletResponse resp) throws IOException{
+		CSVProgressDto progress = new CSVProgressDto();
+		StringBuffer sb = new StringBuffer();
+
+		for( ActionError error : errors.getList() ){
+			sb.append( error.getMessage() );
+			sb.append("\n");
+		}
+		progress.setErrorMsg(sb.toString());
+
+		ObjectMapper mapper = new ObjectMapper();
+        String jsonString = mapper.writeValueAsString(progress);
+
+        logger.trace("jsonString:{}",jsonString);
+
+        resp.setContentType("application/json; charset=utf-8");
+        out.write(jsonString.getBytes());
+        out.flush();
 	}
 
 	private String getUploadDir(String uuid) throws AsoLearningSystemErrException{

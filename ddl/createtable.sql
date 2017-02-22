@@ -241,6 +241,7 @@ ROLEが「先生」の場合も必要
 学年は
 現在の年度-入学年度-留年回数+1
 で求める',
+	GIVE_UP_YEAR int,
 	ENTRY_DATE datetime NOT NULL,
 	UPDATE_DATE datetime NOT NULL,
 	PRIMARY KEY (USER_ID),

@@ -11,12 +11,28 @@ package jp.ac.asojuku.asolearning.dto;
  */
 public class RankingDto {
 
+	private int rank;
 	private String name;
 	private String courseName;
 	private int courseId;
 	private String nickName;
 	private Float score;
 	private int grade;
+
+
+
+	/**
+	 * @return rank
+	 */
+	public int getRank() {
+		return rank;
+	}
+	/**
+	 * @param rank セットする rank
+	 */
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
 	/**
 	 * @return name
 	 */

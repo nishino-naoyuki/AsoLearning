@@ -94,12 +94,18 @@ public class Dao {
 
 	}
 
-	public void rollback() throws SQLException{
+	public void rollback(){
 		if( con != null ){
 			try {
 				con.rollback();
+			}catch(SQLException e){
+				logger.info("rollebackに失敗しました：",e);
 			} finally{
-				con.setAutoCommit(true);
+				try{
+					con.setAutoCommit(true);
+				}catch(SQLException e){
+					logger.info("setAutoCommitに失敗しました：",e);
+				}
 			}
 		}
 

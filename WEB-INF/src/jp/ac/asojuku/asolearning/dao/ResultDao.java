@@ -36,7 +36,9 @@ public class ResultDao extends Dao {
 			+ "LEFT JOIN RESULT_TESTCASE_TBL rt ON(rt.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN RESULT_METRICS_TBL rm ON(rm.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID = t.TASK_ID) "
-			+ "WHERE r.USER_ID=? AND r.TASK_ID=? "
+			+ "LEFT JOIN USER_TBL u ON(r.USER_ID = u.USER_ID) "
+			+ "WHERE r.USER_ID=? AND r.TASK_ID=? AND "
+			+ "u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null "
 			+ "ORDER BY r.RESULT_ID";
 	private static final int RESULT_SEARCH_USR_ID = 1;
 	private static final int RESULT_SEARCH_TASK_ID = 2;
@@ -48,11 +50,13 @@ public class ResultDao extends Dao {
 			+ "u.USER_ID,"
 			+ "u.NAME,"
 			+ "u.NICK_NAME,"
+			+ "u.ADMISSION_YEAR,"
+			+ "u.REPEAT_YEAR_COUNT,"
 			+ "t.NAME taskname,"
 			+ "cm.COURSE_ID, "
 			+ "COURSE_NAME "
 			+ "FROM RESULT_TBL r "
-			+ "LEFT JOIN USER_TBL u ON( r.USER_ID = u.USER_ID) "
+			+ "LEFT JOIN USER_TBL u ON( r.USER_ID = u.USER_ID AND u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null) "
 			+ "LEFT JOIN TASK_TBL t ON( t.TASK_ID = r.TASK_ID) "
 			+ "LEFT JOIN COURSE_MASTER cm ON(u.COURSE_ID = cm.COURSE_ID)";
 	private static final String RESULT_RANKING_SQL_WHERE_COURSE =
@@ -211,6 +215,8 @@ public class ResultDao extends Dao {
 		userEntity.setUserId(rs.getInt("USER_ID"));
 		userEntity.setName(rs.getString("NAME"));
 		userEntity.setNickName(rs.getString("NICK_NAME"));
+		userEntity.setAdmissionYear(rs.getInt("ADMISSION_YEAR"));
+		userEntity.setRepeatYearCount(rs.getInt("REPEAT_YEAR_COUNT"));
 
 
 		//////////////////////////////////

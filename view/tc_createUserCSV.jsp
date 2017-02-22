@@ -42,6 +42,7 @@
 
 <script>
 var testcase_cnt = 0;	//テストケースの数。初期値は0
+var finishFlg = false;
 </script>
 <%
 //エラー情報を取得する
@@ -93,17 +94,14 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
                 </div>
                 <!-- /.row -->
                 <div class="row">
-                <%if( errors != null && errors.isHasErr() ){%>
-                	<% for( ActionError err : errors.getList() ){ %>
-							<div id="error"><%= err.getMessage() %></div>
-                	<% } %>
-                <% } %>
-
                 	<div class="panel panel-default">
                 		<div class="panel-heading">
                 			CSV登録
                 		</div>
 	                	<div class="panel-body">
+		                	<div id="error">
+		                		<p id="errorMsg" ></p>
+		                	</div>
 	                        <div class="table-responsive">
 	                            <table class="table table-bordered table-hover" id="form">
 	                                <tbody>
@@ -235,6 +233,7 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
 	            // disturb double submit
 	            $("#startCSV").attr('disabled', true);
 	    		dispLoading("CSV登録処理中...");
+	    		refresh();
 	        },
 	        complete : function(xhr, textStatus) {
 	            // allow resubmit
@@ -242,16 +241,17 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
 	            removeLoading();
 	        }
 	    }).done(function(json) {
+	    	finishFlg = true;
+            $("#startCSV").attr('disabled', false);
 			//エラーメッセージがある場合はエラーを表示する
-    		if( json.errorMsg.length != 0){
-	    		$("#uploadErrorMsg").text(json.errorMsg);
-    		}else if(json.score > 0){
-    			//得点がついた場合は、提出済みにし得点を表示する
-	    		$("#status").text("提出済み");
-	    		$("#score").text(json.score+"点");
+    		if( json.errorMsg != null){
+	    		$("#errorMsg").text(json.errorMsg);
+    		}else if(json.now > 0){
+    			alert("登録完了しました！\n処理件数"+json.now+"件");
     		}
 
 	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+	    	finishFlg = true;
 	    	removeLoading();
 	    	alert("err:"+textStatus);
 	        console.log( textStatus  + errorThrown);
@@ -263,6 +263,7 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
 	    // 画面表示メッセージ
 	    var dispMsg = "";
 
+	    $("#loading").remove();
 	    // 引数が空の場合は画像のみ
 	    if( msg != "" ){
 	        dispMsg = "<div class='loadingMsg'>" + msg + "</div>";
@@ -282,6 +283,36 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
 	function getUniqueStr(){
 		 var strong = 1000;
 		 return new Date().getTime().toString(16)  + Math.floor(strong*Math.random()).toString(16)
+	}
+
+	function progress(){
+
+		var params = "uuid="+uuid;
+
+	    $.ajax({
+	        type : 'GET',
+	        url : 'csvprogress',
+	        data : params,
+	        dataType : 'json',
+	        processData : false,
+	        contentType : false,
+	        timeout : 360000, // milliseconds
+
+	    }).done(function(json) {
+	    	dispLoading("CSV登録処理中..."+json.now+"/"+json.total);
+	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+	    	removeLoading();
+	    	alert("err:"+textStatus);
+	        console.log( textStatus  + errorThrown);
+	    });
+
+	    if( !finishFlg ){
+	    	refresh();
+		}
+	}
+
+	function refresh(){
+		setTimeout(progress,500)
 	}
 
 	</script>

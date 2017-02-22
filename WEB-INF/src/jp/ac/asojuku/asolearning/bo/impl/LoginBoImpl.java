@@ -16,7 +16,9 @@ import jp.ac.asojuku.asolearning.exception.AccountLockedException;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.exception.LoginFailureException;
+import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.util.Digest;
+import jp.ac.asojuku.asolearning.util.UserUtils;
 
 /**
  * ログイン処理
@@ -41,7 +43,7 @@ public class LoginBoImpl implements LoginBo {
 
 			//ユーザー情報を取得
 			UserTblEntity entity =
-					dao.getUserInfoByUserName(mailadress);
+					dao.getUserInfoByMailAddress(mailadress);
 
 			//ユーザー状態チェック
 			vlidateUserState(entity,mailadress,password);
@@ -87,6 +89,9 @@ public class LoginBoImpl implements LoginBo {
 		loginDto.setCourseId(entity.getCourseMaster().getCourseId());
 		loginDto.setUserId(entity.getUserId());
 		loginDto.setRoleId(entity.getRoleMaster().getRoleId());
+		loginDto.setCourseName(entity.getCourseMaster().getCourseName());
+		loginDto.setRoleName(RoleId.search(entity.getRoleMaster().getRoleId()).getMsg());
+		loginDto.setGrade(UserUtils.getGrade(entity));
 
 		return loginDto;
 	}

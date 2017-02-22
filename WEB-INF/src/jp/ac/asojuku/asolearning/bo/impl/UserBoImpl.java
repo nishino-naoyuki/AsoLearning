@@ -76,16 +76,131 @@ public class UserBoImpl implements UserBo {
 		CSVProgressDto progress = new CSVProgressDto(userList.size(),0);
 		///////////////////////////////////////
 		//初期情報をセッションにセット
-		session.setAttribute(SessionConst.SESSION_CSV_PROGRESS, progress);
+		session.setAttribute(uuid+SessionConst.SESSION_CSV_PROGRESS, progress);
 
-		///////////////////////////////////////
-		//処理を行う
-		for( UserCSV user : userList){
+		UserDao dao = new UserDao();
 
+		try {
+
+			//DB接続
+			dao.connect();
+			//トランザクション
+			dao.beginTranzaction();
+			///////////////////////////////////////
+			//処理を行う
+			for( UserCSV user : userList){
+				//もうちょっと良い方法がありそうだが、ココだけのためにクラス作るのも
+				//面倒なので、こうする。。。。(> <)
+				if("rdoInsertUpdate".equalsIgnoreCase(type)){
+					//追加・更新
+					insertOrUpdate(dao,user);
+				}else if("rdoDelete".equalsIgnoreCase(type)){
+					//削除
+
+				}else if("rdoGraduate".equalsIgnoreCase(type)){
+					//卒業
+
+				}else{
+					//退学
+
+				}
+				///////////////////////////////////////
+				//セッションの情報を更新
+				updateSessionInfo(uuid,session,progress);
+			}
+
+			dao.commit();
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			dao.rollback();
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			dao.rollback();
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
 		}
 
 	}
 
+	/**
+	 * 処理件数をアップし、セッションの情報をカウントアップ
+	 * @param session
+	 * @param progress
+	 */
+	private void updateSessionInfo(String uuid,HttpSession session,CSVProgressDto progress){
+		progress.addNow();
+		session.setAttribute(uuid+SessionConst.SESSION_CSV_PROGRESS, progress);
+	}
+
+	/**
+	 * 追加・更新処理
+	 * @param dao
+	 * @param user
+	 * @throws SQLException
+	 * @throws AsoLearningSystemErrException
+	 */
+	public void insertOrUpdate(UserDao dao,UserCSV user) throws SQLException, AsoLearningSystemErrException{
+
+		UserTblEntity userEntity = dao.getUserInfoByMailAddress(user.getMailAddress());
+
+		boolean insertFlg = (userEntity==null);
+
+		//取得したEnityとCSVのデータをマージする
+		userEntity = mergeUserTblEntityFrom(user,userEntity);
+		//パスワードのハッシュ値計算
+		String hashPwd = Digest.createPassword(userEntity.getMailadress(),userEntity.getPassword());
+
+		if( insertFlg ){
+			//新規追加
+			dao.insert(userEntity,hashPwd);
+		}else{
+			//更新
+			dao.update(userEntity, hashPwd);
+		}
+	}
+
+	/**
+	 * CSVのデータからEntityを作成する
+	 * @param user
+	 * @param baseEntity
+	 * @return
+	 */
+	public UserTblEntity mergeUserTblEntityFrom(UserCSV user,UserTblEntity baseEntity){
+
+		UserTblEntity entity = baseEntity;
+		CourseMasterEntity course = null;
+		RoleMasterEntity role = null;
+		if( entity == null ){
+			entity = new UserTblEntity();
+			role = new RoleMasterEntity();
+			course = new CourseMasterEntity();
+
+		}else{
+			role = entity.getRoleMaster();
+			course = entity.getCourseMaster();
+		}
+
+		entity.setMailadress(user.getMailAddress());
+		entity.setAdmissionYear(user.getAdmissionYear());
+		entity.setName( user.getName() );
+		entity.setNickName(user.getNickName());
+		entity.setPassword(user.getPassword());
+
+		role.setRoleId(user.getRoleId());
+		course.setCourseId(user.getCourseId());
+
+		entity.setRoleMaster(role);
+		entity.setCourseMaster(course);
+
+		return entity;
+	}
 	/**
 	 * ユーザー情報（新規登録・更新用）
 	 * @param dto

@@ -159,17 +159,15 @@ if( taskId == null){
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <% int rank = 1; %>
                                 <% for(RankingDto ranking : rankingList){ %>
                                     <tr>
-                                        <td><%=rank %></td>
+                                        <td><%=ranking.getRank() %></td>
                                         <td><%=ranking.getCourseName() %></td>
-                                        <td>&nbsp;</td>
+                                        <td><%=ranking.getGrade() %></td>
                                         <td><%=ranking.getName() %></td>
                                         <td><%=ranking.getNickName() %></td>
                                         <td><%=ranking.getScore() %></td>
                                     </tr>
-                                    <% rank++; %>
                                 <% } %>
                                 </tbody>
                             </table>
