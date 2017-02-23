@@ -11,35 +11,35 @@ import java.util.Date;
  *
  */
 public class UserDto {
-	private int userId;
+	private Integer userId;
 
 	private String mailAdress;
 	private String name;
 	private String nickName;
 	private Date accountExpryDate;
 	private Date passwordExpriryDate;
-	private int courseId;
+	private Integer courseId;
 	private String courseName;
-	private int roleId;
+	private Integer roleId;
 	private String roleName;
 	private boolean isFirstFlg;
-	private int certifyErrCnt;
+	private Integer certifyErrCnt;
 	private boolean isLockFlg;
-	private int admissionYear;
-	private int graduateYear;
-	private int repeatYearCount;
+	private String admissionYear;
+	private String graduateYear;
+	private String repeatYearCount;
 	private String password;
 
 	/**
 	 * @return userId
 	 */
-	public int getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 	/**
 	 * @param userId セットする userId
 	 */
-	public void setUserId(int userId) {
+	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
 	/**
@@ -105,25 +105,25 @@ public class UserDto {
 	/**
 	 * @return courseId
 	 */
-	public int getCourseId() {
+	public Integer getCourseId() {
 		return courseId;
 	}
 	/**
 	 * @param courseId セットする courseId
 	 */
-	public void setCourseId(int courseId) {
+	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
 	}
 	/**
 	 * @return roleId
 	 */
-	public int getRoleId() {
+	public Integer getRoleId() {
 		return roleId;
 	}
 	/**
 	 * @param roleId セットする roleId
 	 */
-	public void setRoleId(int roleId) {
+	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
 	}
 	/**
@@ -141,13 +141,13 @@ public class UserDto {
 	/**
 	 * @return certifyErrCnt
 	 */
-	public int getCertifyErrCnt() {
+	public Integer getCertifyErrCnt() {
 		return certifyErrCnt;
 	}
 	/**
 	 * @param certifyErrCnt セットする certifyErrCnt
 	 */
-	public void setCertifyErrCnt(int certifyErrCnt) {
+	public void setCertifyErrCnt(Integer certifyErrCnt) {
 		this.certifyErrCnt = certifyErrCnt;
 	}
 	/**
@@ -165,37 +165,37 @@ public class UserDto {
 	/**
 	 * @return admissionYear
 	 */
-	public int getAdmissionYear() {
+	public String getAdmissionYear() {
 		return admissionYear;
 	}
 	/**
 	 * @param admissionYear セットする admissionYear
 	 */
-	public void setAdmissionYear(int admissionYear) {
+	public void setAdmissionYear(String admissionYear) {
 		this.admissionYear = admissionYear;
 	}
 	/**
 	 * @return graduateYear
 	 */
-	public int getGraduateYear() {
+	public String getGraduateYear() {
 		return graduateYear;
 	}
 	/**
 	 * @param graduateYear セットする graduateYear
 	 */
-	public void setGraduateYear(int graduateYear) {
+	public void setGraduateYear(String graduateYear) {
 		this.graduateYear = graduateYear;
 	}
 	/**
 	 * @return repeatYearCount
 	 */
-	public int getRepeatYearCount() {
+	public String getRepeatYearCount() {
 		return repeatYearCount;
 	}
 	/**
 	 * @param repeatYearCount セットする repeatYearCount
 	 */
-	public void setRepeatYearCount(int repeatYearCount) {
+	public void setRepeatYearCount(String repeatYearCount) {
 		this.repeatYearCount = repeatYearCount;
 	}
 	/**

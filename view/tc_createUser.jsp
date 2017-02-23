@@ -51,9 +51,13 @@ UserDto userDto = (UserDto)request.getAttribute(RequestConst.REQUEST_USER_DTO);
 
 Integer courseId = -1;
 Integer roleId = -1;
-if( userDto != null){
-	courseId = userDto.getUserId();
-	roleId = userDto.getRoleId();
+if( userDto != null ){
+	if( userDto.getCourseId() != null){
+		courseId = userDto.getCourseId();
+	}
+	if( userDto.getRoleId() != null){
+		roleId = userDto.getRoleId();
+	}
 }
 
 
@@ -61,7 +65,6 @@ if( userDto != null){
 </head>
 
 <body>
-
     <div id="wrapper">
 
         <!-- Navigation -->
@@ -156,7 +159,7 @@ if( userDto != null){
 	                                		</td>
 	                                	</tr>
 	                                	<tr>
-	                                		<th>学科[必須]</th>
+	                                		<th>学科[必須]（西暦）</th>
 	                                		<td>
 	                                		<div class="form-group">
 

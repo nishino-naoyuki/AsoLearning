@@ -21,6 +21,7 @@ import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.RequestConst;
 import jp.ac.asojuku.asolearning.param.RoleId;
+import jp.ac.asojuku.asolearning.validator.UserValidator;
 
 /**
  * @author nishino
@@ -46,18 +47,19 @@ public class CreateUserComfirmServlet extends BaseServlet {
 		errors = new ActionErrors();
 
 		///////////////////////////////////
-		//パラメータチェック
-		checkError(req);
-
-		///////////////////////////////////
 		//学科データを取得
 		CourseBo coursBo = new CourseBoImpl();
 
 		List<CourseDto> list = coursBo.getCourseAllList();
 
 		///////////////////////////////////
+		//パラメータチェック
+		checkError(req,list);
+
+		UserDto userDto = null;
+		///////////////////////////////////
 		//パラメータ取得
-		UserDto userDto = getParams(req,list);
+		userDto = getParams(req,list);
 
 		/////////////////////////////////
 		//画面遷移
@@ -94,7 +96,21 @@ public class CreateUserComfirmServlet extends BaseServlet {
 		}
 	}
 
-	private void checkError(HttpServletRequest req){
+	/**
+	 * エラーチェック
+	 * @param req
+	 * @param list
+	 * @throws AsoLearningSystemErrException
+	 */
+	private void checkError(HttpServletRequest req,List<CourseDto> list) throws AsoLearningSystemErrException{
+
+		UserValidator.useName(req.getParameter("name"), errors);
+		UserValidator.useNickName(req.getParameter("nickname"), errors);
+		UserValidator.roleId(req.getParameter(RequestConst.REQUEST_ROLE_ID), errors);
+		UserValidator.courseId(req.getParameter(RequestConst.REQUEST_COURSE_ID), list, errors);
+		UserValidator.admissionYear(req.getParameter("admissionYear"), errors);
+		UserValidator.mailAddress(req.getParameter("mailadress"), errors);
+		UserValidator.password(req.getParameter("password"), errors);
 
 	}
 
@@ -110,7 +126,7 @@ public class CreateUserComfirmServlet extends BaseServlet {
 		userDto.setName(req.getParameter("name"));
 		userDto.setMailAdress(req.getParameter("mailadress"));
 		userDto.setNickName(req.getParameter("nickname"));
-		userDto.setAdmissionYear(getIntParam("admissionYear",req));
+		userDto.setAdmissionYear(req.getParameter("admissionYear"));
 		userDto.setPassword(req.getParameter("password"));
 		userDto.setCourseId(getIntParam(RequestConst.REQUEST_COURSE_ID,req));
 		userDto.setRoleId(getIntParam(RequestConst.REQUEST_ROLE_ID,req));

@@ -23,10 +23,12 @@ import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.RoleMasterEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
+import jp.ac.asojuku.asolearning.err.ErrorCode;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.param.SessionConst;
 import jp.ac.asojuku.asolearning.util.Digest;
+import jp.ac.asojuku.asolearning.validator.UserValidator;
 
 public class UserBoImpl implements UserBo {
 	Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
@@ -203,6 +205,7 @@ public class UserBoImpl implements UserBo {
 	}
 	/**
 	 * ユーザー情報（新規登録・更新用）
+	 * ※チェック済みのデータであることが前提
 	 * @param dto
 	 * @return
 	 */
@@ -215,7 +218,7 @@ public class UserBoImpl implements UserBo {
 		entity.setNickName(dto.getNickName());
 		entity.setAccountExpryDate(dto.getAccountExpryDate());
 		entity.setPasswordExpirydate(dto.getAccountExpryDate());
-		entity.setAdmissionYear(dto.getAdmissionYear());
+		entity.setAdmissionYear(Integer.parseInt(dto.getAdmissionYear()));
 
 		CourseMasterEntity courseMaster = new CourseMasterEntity();
 
@@ -228,6 +231,9 @@ public class UserBoImpl implements UserBo {
 		return entity;
 	}
 
+	/* (非 Javadoc)
+	 * @see jp.ac.asojuku.asolearning.bo.UserBo#checkForCSV(java.lang.String, jp.ac.asojuku.asolearning.err.ActionErrors, java.lang.String)
+	 */
 	@Override
 	public List<UserCSV> checkForCSV(String csvPath, ActionErrors errors,String type) throws AsoLearningSystemErrException {
 
@@ -245,10 +251,18 @@ public class UserBoImpl implements UserBo {
             // エラーチェック
             for(UserCSV userCsv : list){
             	//TODOエラーチェック
+        		UserValidator.useName(userCsv.getName(), errors);
+        		UserValidator.useNickName(userCsv.getNickName(), errors);
+        		UserValidator.roleId(String.valueOf(userCsv.getRoleId()), errors);
+        		//UserValidator.courseId(String.valueOf(userCsv.getRoleId()), list, errors);
+        		UserValidator.admissionYear(String.valueOf(userCsv.getRoleId()), errors);
+        		UserValidator.mailAddress(String.valueOf(userCsv.getAdmissionYear()), errors);
+        		UserValidator.password(userCsv.getPassword(), errors);
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+        	logger.warn("CSVパースエラー：",e);
+        	errors.add(ErrorCode.ERR_CSV_FORMAT_ERROR);
         }
 
 		return list;

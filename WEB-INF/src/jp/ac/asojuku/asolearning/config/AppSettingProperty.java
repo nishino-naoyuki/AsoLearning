@@ -23,6 +23,7 @@ public class AppSettingProperty extends ConfigBase {
 	private static final String INPUT_DIR = "input.directory";
 	private static final String TEMP_DIR = "temp.directory";
 	private static final String DISPLAY_PREFIX = "display";
+	private static final String PASSWORD_POLICY = "password.policy";
 
 	//設定値
 	private final String ASP_PWD_SALT = "pwd.hash.salt";	//パスワードソルト
@@ -106,8 +107,20 @@ public class AppSettingProperty extends ConfigBase {
 	public String getTempDirectory(){
 		return getProperty(TEMP_DIR);
 	}
+	/**
+	 * 画面のアクセス可能ロール文字列を取得する
+	 * @param dispId
+	 * @return
+	 */
 	public String getDisplayPermit(String dispId){
 		return getProperty(DISPLAY_PREFIX+dispId);
 
+	}
+	/**
+	 * パスワードポリシーの取得
+	 * @return
+	 */
+	public String getPasswordPolicy(){
+		return getProperty(PASSWORD_POLICY);
 	}
 }

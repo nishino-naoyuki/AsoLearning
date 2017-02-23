@@ -47,4 +47,18 @@ public enum RoleId {
 
 		return MANAGER;
 	}
+
+	public static boolean check(int id){
+		boolean ret = false;
+
+		if( STUDENT.equals(id)){
+			ret = true;
+		}else if( TEACHER.equals(id)){
+			ret = true;
+		}else if( MANAGER.equals(id)){
+			ret = true;
+		}
+
+		return ret;
+	}
 }
