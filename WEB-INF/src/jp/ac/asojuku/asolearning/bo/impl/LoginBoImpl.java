@@ -75,8 +75,9 @@ public class LoginBoImpl implements LoginBo {
 	 * 会員情報よりログイン情報を取得する
 	 * @param entity
 	 * @return
+	 * @throws AsoLearningSystemErrException
 	 */
-	private LogonInfoDTO MemberEntityToLogonInfoDTO(UserTblEntity entity){
+	private LogonInfoDTO MemberEntityToLogonInfoDTO(UserTblEntity entity) throws AsoLearningSystemErrException{
 
 		if( entity == null ){
 			return null;
@@ -85,7 +86,7 @@ public class LoginBoImpl implements LoginBo {
 		LogonInfoDTO loginDto = new LogonInfoDTO();
 
 		loginDto.setName(entity.getName());
-		loginDto.setNickName(entity.getNickName());
+		loginDto.setNickName( Digest.decNickName( entity.getNickName(),entity.getMailadress()));
 		loginDto.setCourseId(entity.getCourseMaster().getCourseId());
 		loginDto.setUserId(entity.getUserId());
 		loginDto.setRoleId(entity.getRoleMaster().getRoleId());

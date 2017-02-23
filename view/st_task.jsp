@@ -127,11 +127,17 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                                 <tbody>
                                     <tr>
                                         <td>
+                                        <p id="status">
                                         <% if( taskdto.getResult() != null ){ %>
-                                        	<p id="status">提出済み</p>
+                                        	<% if(  taskdto.getResult().isHanded()){ %>
+                                        	提出済み
+                                        	<% }else{ %>
+                                        	不正解
+                                        	<%} %>
                                         <% }else{ %>
-                                        	<p id="status">未提出</p>
+                                        	未提出
                                         <% } %>
+                                        </p>
 								            <button type="submit" id="judge" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 判定</button>
                                         </td>
                                         <td>
@@ -147,18 +153,22 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 
                                         </td>
                                         <td>
-                                        <% if( taskdto.getResult() != null ){ %>
                                         	<p id="score">
+                                        <% if( taskdto.getResult() != null ){ %>
                                         	<a href="scoredetail?<%=RequestConst.REQUEST_DISP_NO%>=detail&<%=RequestConst.REQUEST_TASK_ID%>=<%=taskdto.getTaskId()%>"><%= taskdto.getResult().getTotal() %></a>
-                                        	</p>
                                         <% }else{ %>
                                         	&nbsp;
                                         <% } %>
+                                        	</p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="3">
-                                        この問題のあなたのランキングはXX位
+                                        <% if( taskdto.getRank() != null ){ %>
+                                        この問題のあなたのランキングは<%=taskdto.getRank() %>位
+                                        <% }else{ %>
+                                        	&nbsp;
+                                        <% } %>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -187,6 +197,12 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
     <script src="view/js/sb-admin-2.js"></script>
 
 	<script>
+	  if ($("input[name='javafile']").val()!== '') {
+		  $("#judge").attr('disabled', false);
+	  }else{
+		  $("#judge").attr('disabled', true);
+	  }
+
 	//アイコンをクリックした場合は、ファイル選択をクリックした挙動とする.
 	$('#file_select_icon').on('click', function() {
 	  $('#file_select').click();
@@ -197,6 +213,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 	$('#file_select').parent().on('change', '#file_select', function() {
 	  // $('#file_name').val($(this).val());
 	  $('#file_name').val($('#file_select').prop('files')[0].name);
+	  $("#judge").attr('disabled', false);
 	});
 
 	$('#judge').on('click', function() {
@@ -232,12 +249,16 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 	        }
 	    }).done(function(json) {
 			//エラーメッセージがある場合はエラーを表示する
-    		if( json.errorMsg != null){
+    		if( json.errorMsg != null && json.errorMsg != ""){
 	    		$("#uploadErrorMsg").text(json.errorMsg);
     		}else if(json.score > 0){
-    			//得点がついた場合は、提出済みにし得点を表示する
-	    		$("#status").text("提出済み");
-	    		$("#score").text(json.score+"点");
+    			if( json.allOK ){
+	    			//得点がついた場合は、提出済みにし得点を表示する
+		    		$("#status").text("提出済み");
+    			}else{
+		    		$("#status").text("不正解");
+    			}
+	    		$("#score").html("<a href='scoredetail?<%=RequestConst.REQUEST_DISP_NO%>=detail&<%=RequestConst.REQUEST_TASK_ID%>=<%=taskdto.getTaskId()%>'>"+json.score+"</a>");
     		}
 
 	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {

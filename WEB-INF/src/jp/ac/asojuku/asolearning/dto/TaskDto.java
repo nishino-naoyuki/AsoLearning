@@ -17,6 +17,7 @@ public class TaskDto {
 	private String question;		//問題文
 	private TaskResultDto result;
 	private TaskDetailDto detail;
+	private Integer rank;
 	/**
 	 * @return taskId
 	 */
@@ -94,6 +95,12 @@ public class TaskDto {
 	}
 	public void setQuestion(String question) {
 		this.question = question;
+	}
+	public Integer getRank() {
+		return rank;
+	}
+	public void setRank(Integer rank) {
+		this.rank = rank;
 	}
 
 

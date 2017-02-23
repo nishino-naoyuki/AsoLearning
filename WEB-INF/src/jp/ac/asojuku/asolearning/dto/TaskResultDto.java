@@ -11,6 +11,15 @@ package jp.ac.asojuku.asolearning.dto;
 public class TaskResultDto {
 
 	private Float total;
+	private boolean handed;
+
+	public boolean isHanded() {
+		return handed;
+	}
+
+	public void setHanded(boolean handed) {
+		this.handed = handed;
+	}
 
 	/**
 	 * @return total

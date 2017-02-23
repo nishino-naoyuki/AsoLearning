@@ -23,6 +23,12 @@
     <!-- MetisMenu CSS -->
     <link href="view/metisMenu/metisMenu.min.css" rel="stylesheet">
 
+    <!-- DataTables CSS -->
+    <link href="view/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="view/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+
     <!-- Custom CSS -->
     <link href="view/css/sb-admin-2.css" rel="stylesheet">
 
@@ -84,71 +90,83 @@ List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUES
 LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 %>
                 <div class="row">
- <%
- if( CollectionUtils.isEmpty(taskList) ){
- %>
-	 課題はありません
- <%
- }else{
- %>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                <thead>
-                                    <tr class="info">
-                                        <th>No.</th>
-                                        <th>ソース</th>
-                                        <th>締め切り</th>
-                                        <th>必須</th>
-                                        <th>得点</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <% for( TaskDto taskDto : taskList ){ %>
-                                    <tr>
+	                <div class="col-lg-12">
+	                	<div class="panel panel-info">
+	                		<div class="panel-heading">
+	                			課題一覧
+	                		</div>
+		                	<div class="panel-body">
+		 <%
+		 if( CollectionUtils.isEmpty(taskList) ){
+		 %>
+			 課題はありません
+		 <%
+		 }else{
+		 %>
+		                        <div class="table-responsive">
+		                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
 
-                                        <td>
-                                        <a href="task?taskid=<%=taskDto.getTaskId()%>">
-                                        <%= taskDto.getTaskName() %>
-                                        </a>
-                                        </td>
+		                                <thead>
+		                                    <tr class="info">
+		                                        <th>No.</th>
+		                                        <th>ソース</th>
+		                                        <th>締め切り</th>
+		                                        <th>必須</th>
+		                                        <th>得点</th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody>
+		                                <% for( TaskDto taskDto : taskList ){ %>
+		                                    <tr>
 
-                                        <% if( taskDto.getResult() != null ){ %>
-                                        	<td>提出済み</td>
-                                        <% }else{ %>
-                                        	<td>未提出</td>
-                                        <% } %>
+		                                        <td>
+		                                        <a href="task?taskid=<%=taskDto.getTaskId()%>">
+		                                        <%= taskDto.getTaskName() %>
+		                                        </a>
+		                                        </td>
 
-                                        <% if( taskDto.getTerminationDate() != null ){ %>
-                                        	<td>あり</td>
-                                        <% }else{ %>
-                                        	<td>なし</td>
-                                        <% } %>
+		                                        <% if( taskDto.getResult() != null ){ %>
+		                                        	<% if(  taskDto.getResult().isHanded()){ %>
+		                                        	<td>提出済み</td>
+		                                        	<% }else{ %>
+		                                        	<td>不正解</td>
+		                                        	<%} %>
+		                                        <% }else{ %>
+		                                        	<td>未提出</td>
+		                                        <% } %>
 
-                                        <% if( taskDto.isRequiredFlg() ){ %>
-                                        	<td>必須</td>
-                                        <% }else{ %>
-                                        	<td>任意</td>
-                                        <% } %>
+		                                        <% if( taskDto.getTerminationDate() != null ){ %>
+		                                        	<td>あり</td>
+		                                        <% }else{ %>
+		                                        	<td>なし</td>
+		                                        <% } %>
 
-                                        <% if( taskDto.getResult() != null ){ %>
-                                        	<td>
-                                        	<a href="scoredetail?<%=RequestConst.REQUEST_DISP_NO%>=list&<%=RequestConst.REQUEST_TASK_ID%>=<%=taskDto.getTaskId()%>"><%= taskDto.getResult().getTotal() %></a>
-                                        	</td>
-                                        <% }else{ %>
-                                        	<td>&nbsp;</td>
-                                        <% } %>
-                                    </tr>
-                                <% } %>
-                                </tbody>
-                            </table>
-                        </div>
+		                                        <% if( taskDto.isRequiredFlg() ){ %>
+		                                        	<td>必須</td>
+		                                        <% }else{ %>
+		                                        	<td>任意</td>
+		                                        <% } %>
 
- <%
- }
- %>
-                </div>
-                <!-- /.row -->
+		                                        <% if( taskDto.getResult() != null ){ %>
+		                                        	<td>
+		                                        	<a href="scoredetail?<%=RequestConst.REQUEST_DISP_NO%>=list&<%=RequestConst.REQUEST_TASK_ID%>=<%=taskDto.getTaskId()%>"><%= taskDto.getResult().getTotal() %></a>
+		                                        	</td>
+		                                        <% }else{ %>
+		                                        	<td>&nbsp;</td>
+		                                        <% } %>
+		                                    </tr>
+		                                <% } %>
+		                                </tbody>
+		                            </table>
+		                        </div>
 
+		 <%
+		 }
+		 %>
+		                </div>
+	                </div><!-- panel body -->
+				  </div><!-- panel -->
+				</div>
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -166,9 +184,33 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
     <!-- Metis Menu Plugin JavaScript -->
     <script src="view/metisMenu/metisMenu.min.js"></script>
 
+    <!-- DataTables JavaScript -->
+    <script src="view/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="view/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="view/datatables-responsive/dataTables.responsive.js"></script>
+
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
+<script>
 
+$(document).ready(function() {
+	// デフォルトの設定を変更
+    $.extend( $.fn.dataTable.defaults, {
+        language: {
+            url: "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Japanese.json"
+        }
+    });
+
+    $('#dataTables-example').DataTable({
+        responsive: true,
+        columnDefs: [
+                     // 2列目(0から始まるため1になっています)の幅を100pxにする
+                     { targets: 1, width: 100 }
+                 ]
+
+    });
+});
+</script>
 </body>
 
 </html>

@@ -24,6 +24,8 @@ public class AppSettingProperty extends ConfigBase {
 	private static final String TEMP_DIR = "temp.directory";
 	private static final String DISPLAY_PREFIX = "display";
 	private static final String PASSWORD_POLICY = "password.policy";
+	private static final String NICKNAME_KY = "nickname.enc.ky";
+	private static final String NICKNAME_IV = "nickname.enc.iv";
 
 	//設定値
 	private final String ASP_PWD_SALT = "pwd.hash.salt";	//パスワードソルト
@@ -122,5 +124,19 @@ public class AppSettingProperty extends ConfigBase {
 	 */
 	public String getPasswordPolicy(){
 		return getProperty(PASSWORD_POLICY);
+	}
+	/**
+	 * ニックネームのKey
+	 * @return
+	 */
+	public String getNickNameKy(){
+		return getProperty(NICKNAME_KY);
+	}
+	/**
+	 * ニックネームのIV（初期ペクトる）
+	 * @return
+	 */
+	public String getNickNameIv(){
+		return getProperty(NICKNAME_IV);
 	}
 }

@@ -24,6 +24,7 @@ import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
+import jp.ac.asojuku.asolearning.util.Digest;
 import jp.ac.asojuku.asolearning.util.UserUtils;
 
 /**
@@ -190,11 +191,42 @@ public class ResultBoImpl implements ResultBo {
 		rankingDto.setRank(rank);
 		rankingDto.setName(userEntity.getName());
 		rankingDto.setCourseName(userEntity.getCourseMaster().getCourseName());
-		rankingDto.setNickName(userEntity.getNickName());
+		rankingDto.setNickName(Digest.decNickName( userEntity.getNickName(),userEntity.getMailadress()));
 		rankingDto.setScore(retEntity.getTotalScore());
 		rankingDto.setCourseId(userEntity.getCourseMaster().getCourseId());
 		rankingDto.setGrade(UserUtils.getGrade(userEntity));
 
 		return rankingDto;
+	}
+
+	@Override
+	public Integer getRankingForUser(Integer userId, Integer taskId) throws AsoLearningSystemErrException {
+
+		Integer rank = null;
+		ResultDao dao = new ResultDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			rank = dao.getRankingForUser(userId, taskId);
+
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return rank;
 	}
 }

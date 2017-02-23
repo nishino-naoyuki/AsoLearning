@@ -347,6 +347,7 @@ public class TaskDao extends Dao {
 				UserTblEntity user = new UserTblEntity();
 				ret.setResultId(rs.getInt("RESULT_ID"));
 				ret.setTotalScore(rs.getFloat("TOTAL_SCORE"));
+				ret.setHanded(rs.getInt("HANDED"));
 				user.setUserId(rs.getInt("USER_ID"));
 				ret.setUserTbl(user);
 				results.add(ret);

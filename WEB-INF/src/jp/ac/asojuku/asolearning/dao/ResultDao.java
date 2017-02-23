@@ -50,6 +50,7 @@ public class ResultDao extends Dao {
 			+ "u.USER_ID,"
 			+ "u.NAME,"
 			+ "u.NICK_NAME,"
+			+ "u.MAILADRESS,"
 			+ "u.ADMISSION_YEAR,"
 			+ "u.REPEAT_YEAR_COUNT,"
 			+ "t.NAME taskname,"
@@ -70,8 +71,8 @@ public class ResultDao extends Dao {
 	//挿入SQL
 	private static final String RESULT_INSERT_SQL =
 			"INSERT INTO RESULT_TBL "
-			+ "(RESULT_ID,USER_ID,TASK_ID,TOTAL_SCORE) "
-			+ "VALUES(null,?,?,?) ";
+			+ "(RESULT_ID,USER_ID,TASK_ID,TOTAL_SCORE,HANDED) "
+			+ "VALUES(null,?,?,?,?) ";
 
 	private static final String TESTCASE_INSERT_SQL =
 			"INSERT INTO RESULT_TESTCASE_TBL "
@@ -88,7 +89,8 @@ public class ResultDao extends Dao {
 			"UPDATE RESULT_TBL SET "
 			+ "USER_ID = ?,"
 			+ "TASK_ID = ?,"
-			+ "TOTAL_SCORE = ? "
+			+ "TOTAL_SCORE = ?,"
+			+ "HANDED=? "
 			+ "WHERE RESULT_ID=? ";
 
 	private static final String TESTCASE_UPDATE_SQL =
@@ -108,6 +110,58 @@ public class ResultDao extends Dao {
 			+ "AVR_MVG_SCORE = ?,"
 			+ "AVR_LOC_SCORE = ? "
 			+ "WHERE RESULT_ID = ?";
+
+	//UserIDランキングを求めるSQL
+	private static final String RESULT_RANKING_USERID_SQL_SELECT =
+			"SELECT "
+			+ "TOTAL_SCORE,"
+			+ "("
+			+ "   SELECT COUNT(*)+1 FROM RESULT_TBL r2 WHERE r2.TOTAL_SCORE > r1.TOTAL_SCORE"
+			+ ") rank "
+			+ "FROM RESULT_TBL r1 "
+			+ "WHERE r1.USER_ID=? AND r1.TASK_ID=?";
+
+	/**
+	 * ユーザーと課題を指定してランキングを取得する
+	 * @param userId
+	 * @param taskId
+	 * @return
+	 * @throws SQLException
+	 */
+	public Integer getRankingForUser(Integer userId,Integer taskId) throws SQLException{
+		Integer rank = null;
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+        try {
+    		// ステートメント生成
+        	StringBuffer sql = new StringBuffer(RESULT_RANKING_USERID_SQL_SELECT);
+
+			ps = con.prepareStatement(sql.toString());
+
+			ps.setInt(1, userId);
+			ps.setInt(2, taskId);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        //値を取り出す
+	        while(rs.next()){
+
+	        	rank = rs.getInt("rank");
+	        }
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+        return rank;
+	}
 
 	/**
 	 * ランキングの取得
@@ -215,6 +269,7 @@ public class ResultDao extends Dao {
 		userEntity.setUserId(rs.getInt("USER_ID"));
 		userEntity.setName(rs.getString("NAME"));
 		userEntity.setNickName(rs.getString("NICK_NAME"));
+		userEntity.setMailadress(rs.getString("MAILADRESS"));
 		userEntity.setAdmissionYear(rs.getInt("ADMISSION_YEAR"));
 		userEntity.setRepeatYearCount(rs.getInt("REPEAT_YEAR_COUNT"));
 
@@ -405,6 +460,7 @@ public class ResultDao extends Dao {
         	ps1.setInt(1, userId);
         	ps1.setInt(2, resultEntity.getTaskTbl().getTaskId());
         	ps1.setFloat(3, resultEntity.getTotalScore());
+        	ps1.setInt(4, resultEntity.getHanded());
 
         	ps1.executeUpdate();
 
@@ -490,7 +546,8 @@ public class ResultDao extends Dao {
         	ps1.setInt(1, userId);
         	ps1.setInt(2, resultEntity.getTaskTbl().getTaskId());
         	ps1.setFloat(3, resultEntity.getTotalScore());
-        	ps1.setInt(4, resultEntity.getResultId());
+        	ps1.setInt(4, resultEntity.getHanded());
+        	ps1.setInt(5, resultEntity.getResultId());
 
         	ps1.executeUpdate();
 

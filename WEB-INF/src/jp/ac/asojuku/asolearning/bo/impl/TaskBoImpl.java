@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.bo.TaskBo;
 import jp.ac.asojuku.asolearning.config.MessageProperty;
+import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
@@ -163,13 +164,14 @@ public class TaskBoImpl implements TaskBo {
 			}
 
 		}
-		//点数
+		//点数と提出フラグ
 		TaskResultDto result = null;
 
 		if( entity.getResultTblSet() != null ){
 			result = new TaskResultDto();
 			ResultTblEntity rte = entity.getResultTblSet().iterator().next();
 			result.setTotal(rte.getTotalScore());
+			result.setHanded((rte.getHanded() == 1 ? true:false));
 		}
 		dto.setResult(result);
 
@@ -214,13 +216,18 @@ public class TaskBoImpl implements TaskBo {
 			//DB接続
 			dao.connect();
 
+			ResultDao retDao = new ResultDao(dao.getConnection());
+
 			//課題リスト情報を取得
 			TaskTblEntity entity =
 					dao.getTaskDetal(user.getUserId(), user.getCourseId(), taskId);
 
+			Integer rank = retDao.getRankingForUser(user.getUserId(), taskId);
 
 			//会員テーブル→ログイン情報
 			dto = getEntityToDto(entity);
+			//ランクをセット
+			dto.setRank(rank);
 
 		} catch (DBConnectException e) {
 			//ログ出力

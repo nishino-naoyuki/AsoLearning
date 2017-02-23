@@ -24,6 +24,13 @@
     <!-- MetisMenu CSS -->
     <link href="view/metisMenu/metisMenu.min.css" rel="stylesheet">
 
+
+    <!-- DataTables CSS -->
+    <link href="view/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="view/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+
     <!-- Custom CSS -->
     <link href="view/css/sb-admin-2.css" rel="stylesheet">
 
@@ -96,29 +103,38 @@ if( taskId == null){
 
 				<form action="ranking" method="GET">
                 <div class="row">
-                    <div class="col-lg-4">
-                    	学科
-	                     <select id="couse" class="form-control" name="<%=RequestConst.REQUEST_COURSE_ID%>">
-	                         <option value="" >すべて</option>
-	                     <% for(CourseDto course :courseList){ %>
-	                         <option value="<%=course.getId() %>" <%= (courseId == course.getId() ? "selected":"" ) %>><%=course.getName() %></option>
-	                     <%} %>
-	                     </select>
-                     </div>
-                    <div class="col-lg-4">
-                    課題
-                     <select id="task" class="form-control" name="<%=RequestConst.REQUEST_TASK_ID%>">
-                         <option value="" >全て</option>
-	                     <% for(TaskDto taskDto : taskList ){ %>
-                         	 <% if( taskDto != null){ %>
-	                         <option value="<%=taskDto.getTaskId() %>" <%= (taskId == taskDto.getTaskId() ? "selected":"" ) %> ><%=taskDto.getTaskName() %></option>
-	                         <%} %>
-	                     <%} %>
-                     </select>
-                     </div>
-                     <div class="col-lg-4">
-                     	<button type="submit"  class="btn btn-default">表示</button>
-                     </div>
+                    <div class="col-lg-12">
+	                	<div class="panel panel-primary">
+	                		<div class="panel-heading">
+	                			検索条件
+	                		</div>
+		                	<div class="panel-body">
+			                   <div class="col-lg-4">
+		                    		学科
+				                     <select id="couse" class="form-control" name="<%=RequestConst.REQUEST_COURSE_ID%>">
+				                         <option value="" >すべて</option>
+				                     <% for(CourseDto course :courseList){ %>
+				                         <option value="<%=course.getId() %>" <%= (courseId == course.getId() ? "selected":"" ) %>><%=course.getName() %></option>
+				                     <%} %>
+				                     </select>
+			                	</div>
+			                     <div class="col-lg-4">
+			                    	課題
+				                     <select id="task" class="form-control" name="<%=RequestConst.REQUEST_TASK_ID%>">
+				                         <option value="" >全て</option>
+					                     <% for(TaskDto taskDto : taskList ){ %>
+				                         	 <% if( taskDto != null){ %>
+					                         <option value="<%=taskDto.getTaskId() %>" <%= (taskId == taskDto.getTaskId() ? "selected":"" ) %> ><%=taskDto.getTaskName() %></option>
+					                         <%} %>
+					                     <%} %>
+				                     </select>
+			                	</div>
+			                     <div class="col-lg-4">
+			                     	<button type="submit"  class="btn btn-default">表示</button>
+			                     </div>
+		                     </div>
+		                </div>
+	            	</div>
                 </div>
                 </form>
                 <div class="row">
@@ -134,44 +150,53 @@ if( taskId == null){
                 </div>
 <% }else{ %>
                 <div class="row">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                <thead>
-                                    <tr class="info">
-                                        <th>
-                                        RANK
-                                        </th>
-                                        <th>
-                                        学科
-                                        </th>
-                                        <th>
-                                        学年
-                                        </th>
-                                        <th>
-                                        学籍番号
-                                        </th>
-                                        <th>
-                                        ニックネーム
-                                        </th>
-                                        <th>
-                                        点数
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <% for(RankingDto ranking : rankingList){ %>
-                                    <tr>
-                                        <td><%=ranking.getRank() %></td>
-                                        <td><%=ranking.getCourseName() %></td>
-                                        <td><%=ranking.getGrade() %></td>
-                                        <td><%=ranking.getName() %></td>
-                                        <td><%=ranking.getNickName() %></td>
-                                        <td><%=ranking.getScore() %></td>
-                                    </tr>
-                                <% } %>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="col-lg-12">
+	                	<div class="panel panel-info">
+	                		<div class="panel-heading">
+	                			検索結果
+	                		</div>
+		                	<div class="panel-body">
+		                        <div class="table-responsive">
+		                            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+		                                <thead>
+		                                    <tr class="info">
+		                                        <th>
+		                                        RANK
+		                                        </th>
+		                                        <th>
+		                                        学科
+		                                        </th>
+		                                        <th>
+		                                        学年
+		                                        </th>
+		                                        <th>
+		                                        学籍番号
+		                                        </th>
+		                                        <th>
+		                                        ニックネーム
+		                                        </th>
+		                                        <th>
+		                                        点数
+		                                        </th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody>
+		                                <% for(RankingDto ranking : rankingList){ %>
+		                                    <tr>
+		                                        <td><%=ranking.getRank() %></td>
+		                                        <td><%=ranking.getCourseName() %></td>
+		                                        <td><%=ranking.getGrade() %></td>
+		                                        <td><%=ranking.getName() %></td>
+		                                        <td><%=ranking.getNickName() %></td>
+		                                        <td><%=ranking.getScore() %></td>
+		                                    </tr>
+		                                <% } %>
+		                                </tbody>
+		                            </table>
+		                        </div>
+		                     </div>
+		                 </div>
+	                 </div>
                 </div>
                 <!-- /.row -->
 <% } %>
@@ -191,6 +216,12 @@ if( taskId == null){
 
     <!-- Metis Menu Plugin JavaScript -->
     <script src="view/metisMenu/metisMenu.min.js"></script>
+
+
+    <!-- DataTables JavaScript -->
+    <script src="view/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="view/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="view/datatables-responsive/dataTables.responsive.js"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
@@ -235,7 +266,20 @@ $(function(){
        // })
     })
 })
+    $(document).ready(function() {
+    	// デフォルトの設定を変更
+        $.extend( $.fn.dataTable.defaults, {
+            language: {
+                url: "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Japanese.json"
+            }
+        });
+        $('#dataTables-example').DataTable({
+            responsive: true,
+            // ソート機能 無効
+            ordering: false,
 
+        });
+    });
 </script>
 </body>
 

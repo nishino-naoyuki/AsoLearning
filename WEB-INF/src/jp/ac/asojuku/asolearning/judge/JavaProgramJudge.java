@@ -102,6 +102,11 @@ public class JavaProgramJudge implements Judge {
 			resultEntity.setTotalScore( getTotalScore(resultEntity) );
 
 			///////////////////////////////////////
+			//課題提出フラグをセット
+			json.allOK = isAllOK(resultEntity);
+			resultEntity.setHanded((json.allOK==true?1:0));
+
+			///////////////////////////////////////
 			//DBに書き込み
 			resultEntity.setTaskTbl(taskEntity);
 			setResultToDB(con,userId,resultEntity);
@@ -117,6 +122,30 @@ public class JavaProgramJudge implements Judge {
 		}
 
 		return json;
+	}
+
+	/**
+	 * すべて正解か？
+	 * @param resultEntity
+	 * @return
+	 */
+	private boolean isAllOK(ResultTblEntity resultEntity){
+
+		if( resultEntity.getResultTestcaseTblSet() == null ){
+			return false;
+		}
+		boolean isAllOk = true;
+
+		for( ResultTestcaseTblEntity testCase : resultEntity.getResultTestcaseTblSet() ){
+
+			if( testCase.getScore() == 0){
+				//0点ということは不正解
+				isAllOk = false;
+				break;
+			}
+		}
+
+		return isAllOk;
 	}
 
 	private ResultTblEntity getResultTblEntity(TaskTblEntity taskEntity,int userId){

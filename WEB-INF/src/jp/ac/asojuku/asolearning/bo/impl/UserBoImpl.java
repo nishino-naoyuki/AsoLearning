@@ -173,8 +173,9 @@ public class UserBoImpl implements UserBo {
 	 * @param user
 	 * @param baseEntity
 	 * @return
+	 * @throws AsoLearningSystemErrException
 	 */
-	public UserTblEntity mergeUserTblEntityFrom(UserCSV user,UserTblEntity baseEntity){
+	public UserTblEntity mergeUserTblEntityFrom(UserCSV user,UserTblEntity baseEntity) throws AsoLearningSystemErrException{
 
 		UserTblEntity entity = baseEntity;
 		CourseMasterEntity course = null;
@@ -192,7 +193,7 @@ public class UserBoImpl implements UserBo {
 		entity.setMailadress(user.getMailAddress());
 		entity.setAdmissionYear(user.getAdmissionYear());
 		entity.setName( user.getName() );
-		entity.setNickName(user.getNickName());
+		entity.setNickName( Digest.encNickName( user.getNickName(),user.getMailAddress() ));
 		entity.setPassword(user.getPassword());
 
 		role.setRoleId(user.getRoleId());
@@ -208,14 +209,15 @@ public class UserBoImpl implements UserBo {
 	 * ※チェック済みのデータであることが前提
 	 * @param dto
 	 * @return
+	 * @throws AsoLearningSystemErrException
 	 */
-	private UserTblEntity getUserTblEntityFrom(UserDto dto){
+	private UserTblEntity getUserTblEntityFrom(UserDto dto) throws AsoLearningSystemErrException{
 		UserTblEntity entity = new UserTblEntity();
 
 		entity.setUserId(dto.getUserId());
 		entity.setMailadress(dto.getMailAdress());
 		entity.setName(dto.getName());
-		entity.setNickName(dto.getNickName());
+		entity.setNickName( Digest.encNickName(dto.getNickName(), dto.getMailAdress()) );
 		entity.setAccountExpryDate(dto.getAccountExpryDate());
 		entity.setPasswordExpirydate(dto.getAccountExpryDate());
 		entity.setAdmissionYear(Integer.parseInt(dto.getAdmissionYear()));
