@@ -79,18 +79,22 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 			//公開情報をセット
 			List<TaskPublicDto> taskPublicList = getTaskPublicDtoList(req,courselist);
 
+			//dtoにセット
+			dto.setTaskPublicList(taskPublicList);
+			dto.setTaskTestCaseDtoList(testCaseList);
+
 			//エラーチェック
-			checkError(dto,testCaseList,taskPublicList);
+			checkError(dto);
 
 			RequestDispatcher rd = null;
 			if( errors.isHasErr() ){
 				//エラーがある場合は、リクエストにセット
-				setToRequest(req,dto,testCaseList,taskPublicList,courselist);
+				setToRequest(req,dto,courselist);
 				//画面遷移
 				rd = req.getRequestDispatcher("view/tc_createTask.jsp");
 			}else{
 				//エラーが無い場合はセッションにセット
-				setToSession(req,dto,testCaseList,taskPublicList);
+				setToSession(req,dto);
 				rd = req.getRequestDispatcher("view/tc_creatTaskConfirm.jsp");
 			}
 			rd.forward(req, resp);
@@ -103,23 +107,19 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 		}
 	}
 
-	private void setToRequest(HttpServletRequest req,TaskDto dto,List<TaskTestCaseDto> testCaseList,List<TaskPublicDto> taskPublicList,List<CourseDto> courselist){
+	private void setToRequest(HttpServletRequest req,TaskDto dto,List<CourseDto> courselist){
 
 		req.setAttribute(RequestConst.REQUEST_TASK_DTO, dto);
-		req.setAttribute(RequestConst.REQUEST_PUBLICSTATE, taskPublicList);
-		req.setAttribute(RequestConst.REQUEST_TESTCASE, testCaseList);
 		req.setAttribute(RequestConst.REQUEST_ERRORS, errors);
 		req.setAttribute(RequestConst.REQUEST_COURSE_LIST, courselist);
 	}
 
-	private void setToSession(HttpServletRequest req,TaskDto dto,List<TaskTestCaseDto> testCaseList,List<TaskPublicDto> taskPublicList){
+	private void setToSession(HttpServletRequest req,TaskDto dto){
 
 		HttpSession session = req.getSession(false);
 
 		if( session != null ){
 			session.setAttribute(RequestConst.REQUEST_TASK_DTO, dto);
-			session.setAttribute(RequestConst.REQUEST_PUBLICSTATE, taskPublicList);
-			session.setAttribute(RequestConst.REQUEST_TESTCASE, testCaseList);
 		}
 	}
 	/**
@@ -129,13 +129,13 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 	 * @param taskPublicList
 	 * @throws AsoLearningSystemErrException
 	 */
-	private void checkError(TaskDto dto,List<TaskTestCaseDto> testCaseList,List<TaskPublicDto> taskPublicList) throws AsoLearningSystemErrException{
+	private void checkError(TaskDto dto) throws AsoLearningSystemErrException{
 
 		//Validatorでエラーチェック
 		TaskValidator.taskName(dto.getTaskName(), errors);
 		TaskValidator.question(dto.getQuestion(), errors);
-		TaskValidator.publicStateList(taskPublicList, errors);
-		TaskValidator.testcaseList(testCaseList, errors);
+		TaskValidator.publicStateList(dto.getTaskPublicList(), errors);
+		TaskValidator.testcaseList(dto.getTaskTestCaseDtoList(), errors);
 	}
 
 	/**

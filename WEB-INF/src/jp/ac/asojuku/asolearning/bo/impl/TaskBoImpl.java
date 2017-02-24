@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.bo.TaskBo;
+import jp.ac.asojuku.asolearning.condition.TaskSearchContidion;
 import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
@@ -29,9 +30,13 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.exception.IllegalJudgeFileException;
 import jp.ac.asojuku.asolearning.json.JudgeResultJson;
+import jp.ac.asojuku.asolearning.json.TaskSearchResultJson;
 import jp.ac.asojuku.asolearning.judge.Judge;
 import jp.ac.asojuku.asolearning.judge.JudgeFactory;
+import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
+import jp.ac.asojuku.asolearning.util.DataUtil;
+import jp.ac.asojuku.asolearning.util.Digest;
 import jp.ac.asojuku.asolearning.util.SqlDateUtil;
 
 public class TaskBoImpl implements TaskBo {
@@ -148,26 +153,47 @@ public class TaskBoImpl implements TaskBo {
 		dto.setTaskId(entity.getTaskId());
 		dto.setTaskName(entity.getName());
 		dto.setQuestion(entity.getTaskQuestion());
-		//必須かどうかのフラグ
-		TaskPublicTblEntity tpe = entity.getTaskPublicTblSet().iterator().next();
-		if( tpe != null ){
-			if( TaskPublicStateId.PUBLIC_MUST.equals(tpe.getPublicStatusMaster().getStatusId()) ){
+		//公開設定
+		for( TaskPublicTblEntity publicEntity : entity.getTaskPublicTblSet()){
+
+			if( TaskPublicStateId.PUBLIC_MUST.equals(publicEntity.getPublicStatusMaster().getStatusId()) ){
 				dto.setRequiredFlg(true);
 			}else{
 				dto.setRequiredFlg(false);
 			}
 
-			if( tpe.getEndDatetime() != null ){
-				dto.setTerminationDate(new SimpleDateFormat("yyyy/MM/dd").format(tpe.getEndDatetime()));
+			if( publicEntity.getEndDatetime() != null ){
+				dto.setTerminationDate(new SimpleDateFormat("yyyy/MM/dd").format(publicEntity.getEndDatetime()));
 			}else{
 				dto.setTerminationDate(null);
 			}
 
+			TaskPublicDto pdto = new TaskPublicDto();
+
+			pdto.setCourseId(publicEntity.getCourseMaster().getCourseId());
+			pdto.setCourseName(publicEntity.getCourseMaster().getCourseName());
+			pdto.setEndDatetime( DataUtil.formattedDate(publicEntity.getEndDatetime(), "yyyy/MM/dd") );
+			pdto.setPublicDatetime(  DataUtil.formattedDate(publicEntity.getPublicDatetime(), "yyyy/MM/dd"));
+
+			dto.addTaskPublicList(pdto);
 		}
+
+		//テストケース
+		for( TestcaseTableEntity testcaseEnity : entity.getTestcaseTableSet()){
+			TaskTestCaseDto ttc = new TaskTestCaseDto();
+
+			ttc.setAllmostOfMarks(testcaseEnity.getAllmostOfMarks());
+			ttc.setInputFileName(testcaseEnity.getInputFileName());
+			ttc.setOutputFileName(testcaseEnity.getOutputFileName());
+			ttc.setTestcaseId(testcaseEnity.getTestcaseId());
+
+			dto.addTaskTestCaseDtoList(ttc);
+		}
+
 		//点数と提出フラグ
 		TaskResultDto result = null;
 
-		if( entity.getResultTblSet() != null ){
+		if( entity.getResultTblSet().size() >0  ){
 			result = new TaskResultDto();
 			ResultTblEntity rte = entity.getResultTblSet().iterator().next();
 			result.setTotal(rte.getTotalScore());
@@ -221,6 +247,12 @@ public class TaskBoImpl implements TaskBo {
 			//課題リスト情報を取得
 			TaskTblEntity entity =
 					dao.getTaskDetal(user.getUserId(), user.getCourseId(), taskId);
+			if( entity == null ){
+				//ここで、EntityがNULLということは、課題IDが改ざんされたか、途中で設定が帰られたか
+				//戻値理にNULLを入れて上位に伝える
+				logger.warn("課題IDが不正です。このユーザー("+user.getUserId()+")がアクセスできない課題です");
+				throw new AsoLearningSystemErrException("課題IDが不正です。");
+			}
 
 			Integer rank = retDao.getRankingForUser(user.getUserId(), taskId);
 
@@ -247,12 +279,10 @@ public class TaskBoImpl implements TaskBo {
 	}
 
 	@Override
-	public void insert(LogonInfoDTO user, TaskDto dto, List<TaskTestCaseDto> testCaseList,
-			List<TaskPublicDto> taskPublicList) throws AsoLearningSystemErrException {
+	public void insert(LogonInfoDTO user, TaskDto dto) throws AsoLearningSystemErrException {
 
 
-		if( user == null || dto == null ||
-				testCaseList == null || taskPublicList == null ){
+		if( user == null || dto == null  ){
 			return;
 		}
 
@@ -263,9 +293,9 @@ public class TaskBoImpl implements TaskBo {
 			//DB接続
 			dao.connect();
 
-			TaskTblEntity entity = getTaskTblEntity(dto,testCaseList,taskPublicList);
+			TaskTblEntity entity = getTaskTblEntity(dto,dto.getTaskTestCaseDtoList(),dto.getTaskPublicList());
 			//課題リスト情報を取得
-			dao.insert(user.getName(), entity);
+			dao.insert(user.getUserId(), entity);
 
 		} catch (DBConnectException e) {
 			//ログ出力
@@ -342,6 +372,48 @@ public class TaskBoImpl implements TaskBo {
 	}
 
 	@Override
+	public TaskDto getTaskDetailById(Integer taskId,LogonInfoDTO user) throws AsoLearningSystemErrException {
+
+		TaskDto dto = new TaskDto();
+		TaskDao dao = new TaskDao();
+
+		//IDのみを指定して課題を取得できるのは先生か管理者だけ（編集者）
+		if( RoleId.STUDENT.equals( user.getRoleId() ) ){
+			//生徒はIDだけでは取得させない。
+			return null;
+		}
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//課題リスト情報を取得
+			TaskTblEntity entity =
+					dao.getTaskDetal(taskId);
+
+
+			//会員テーブル→ログイン情報
+			dto = getEntityToDto(entity);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return dto;
+	}
+
+	@Override
 	public TaskDto getTaskDetailForName(String name) throws AsoLearningSystemErrException {
 
 		TaskDto dto = new TaskDto();
@@ -413,5 +485,112 @@ public class TaskBoImpl implements TaskBo {
 		}
 
 		return dtoList;
+	}
+
+	@Override
+	public List<TaskSearchResultJson> search(TaskSearchContidion condition) throws AsoLearningSystemErrException {
+
+		List<TaskSearchResultJson> jsonList = new ArrayList<TaskSearchResultJson>();
+
+		TaskDao dao = new TaskDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//課題リスト情報を取得
+			List<TaskTblEntity> entityList =
+					dao.getTaskListBy(condition);
+
+			//JSONへ変換
+			for(TaskTblEntity taskEnity : entityList){
+				jsonList.add(getTaskSearchResultJsonFromEntity(taskEnity));
+			}
+
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return jsonList;
+	}
+
+	/**
+	 * @param entity
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	TaskSearchResultJson getTaskSearchResultJsonFromEntity(TaskTblEntity entity) throws AsoLearningSystemErrException{
+		TaskSearchResultJson json = new TaskSearchResultJson();
+
+		json.taskId = entity.getTaskId();
+		json.taskName = entity.getName();
+		json.creator = Digest.decNickName(entity.getCreateUserNickName(), entity.getMailAddress()) ;
+		json.limit =
+			(entity.getTerminationDate() != null ? DataUtil.formattedDate(entity.getTerminationDate(), "yyyy/MM/dd"):"");
+
+		StringBuffer sb = new StringBuffer();
+		for(TaskPublicTblEntity taskPublic: entity.getTaskPublicTblSet() ){
+			String statusName = taskPublic.getPublicStatusMaster().getStatusName();
+
+			if( sb.length() > 0 ){
+				sb.append(",");
+			}
+			sb.append(statusName.substring(0, 1));
+			sb.append(":");
+			sb.append(taskPublic.getCourseMaster().getCourseName());
+
+		}
+		json.targetCourseList = sb.toString();
+
+		return json;
+	}
+
+	@Override
+	public void update(LogonInfoDTO user, TaskDto dto) throws AsoLearningSystemErrException {
+
+		if( user == null || dto == null ){
+			return;
+		}
+
+		TaskDao dao = new TaskDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			TaskTblEntity entity = getTaskTblEntity(dto,dto.getTaskTestCaseDtoList(),dto.getTaskPublicList());
+			//課題リスト情報を取得
+			dao.update(user.getUserId(), entity);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (ParseException e) {
+			logger.warn("パースエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
 	}
 }

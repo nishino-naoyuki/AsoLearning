@@ -3,6 +3,9 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 課題情報
  * @author nishino
@@ -16,8 +19,10 @@ public class TaskDto {
 	private boolean RequiredFlg;	//公開設定
 	private String question;		//問題文
 	private TaskResultDto result;
-	private TaskDetailDto detail;
 	private Integer rank;
+	private List<TaskPublicDto> taskPublicList = new ArrayList<>();
+	private List<TaskTestCaseDto> taskTestCaseDtoList = new ArrayList<>();
+
 	/**
 	 * @return taskId
 	 */
@@ -78,18 +83,6 @@ public class TaskDto {
 	public void setResult(TaskResultDto result) {
 		this.result = result;
 	}
-	/**
-	 * @return detail
-	 */
-	public TaskDetailDto getDetail() {
-		return detail;
-	}
-	/**
-	 * @param detail セットする detail
-	 */
-	public void setDetail(TaskDetailDto detail) {
-		this.detail = detail;
-	}
 	public String getQuestion() {
 		return question;
 	}
@@ -101,6 +94,24 @@ public class TaskDto {
 	}
 	public void setRank(Integer rank) {
 		this.rank = rank;
+	}
+	public List<TaskPublicDto> getTaskPublicList() {
+		return taskPublicList;
+	}
+	public void setTaskPublicList(List<TaskPublicDto> taskPublicList) {
+		this.taskPublicList = taskPublicList;
+	}
+	public void addTaskPublicList(TaskPublicDto taskPublic) {
+		this.taskPublicList.add(taskPublic);
+	}
+	public List<TaskTestCaseDto> getTaskTestCaseDtoList() {
+		return taskTestCaseDtoList;
+	}
+	public void setTaskTestCaseDtoList(List<TaskTestCaseDto> taskTestCaseDtoList) {
+		this.taskTestCaseDtoList = taskTestCaseDtoList;
+	}
+	public void addTaskTestCaseDtoList(TaskTestCaseDto taskTestCaseDto) {
+		this.taskTestCaseDtoList.add(taskTestCaseDto);
 	}
 
 

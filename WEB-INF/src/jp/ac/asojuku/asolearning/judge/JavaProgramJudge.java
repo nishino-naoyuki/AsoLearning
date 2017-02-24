@@ -119,6 +119,8 @@ public class JavaProgramJudge implements Judge {
 			logger.warn("判定結果エラー：", e);
 		} catch (SQLException e) {
 			logger.warn("SQLエラー：", e);
+		} catch (Exception e) {
+			logger.warn("不明エラー：", e);
 		}
 
 		return json;
@@ -152,7 +154,7 @@ public class JavaProgramJudge implements Judge {
 
 		ResultTblEntity resultEntity = new ResultTblEntity();
 
-		if( taskEntity.getResultTblSet() != null ){
+		if( taskEntity.getResultTblSet().size() > 0 ){
 			for( ResultTblEntity wkResult : taskEntity.getResultTblSet() ){
 
 				if(wkResult.getUserTbl().getUserId() == userId){
@@ -203,7 +205,9 @@ public class JavaProgramJudge implements Judge {
 
 		//実行クラス名（＝ファイル名の拡張子を除いたもの）を取得
 		String className = FileUtils.getPreffix(fileName);
-		String inputFileName = (testcase.getInputFileName()==null ? "":testcase.getInputFileName());
+		//入力ファイルの古パスを取得
+		String inputDir = AppSettingProperty.getInstance().getInputDirectory();
+		String inputFileName = (testcase.getInputFileName()==null ? "":inputDir+"/"+testcase.getInputFileName());
 
 		ProcessBuilder pb =
 				new ProcessBuilder(shellPath,dirName,fileName,resultDir,className,inputFileName);

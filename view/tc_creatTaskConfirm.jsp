@@ -46,8 +46,8 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 <%
 	//エラー情報を取得する
 	TaskDto dto = (TaskDto)session.getAttribute(SessionConst.SESSION_TASK_DTO);
-	List<TaskTestCaseDto> testCaseList = (List<TaskTestCaseDto>)session.getAttribute(SessionConst.SESSION_TESTCASE);
-	List<TaskPublicDto> taskPublicList = (List<TaskPublicDto>)session.getAttribute(SessionConst.SESSION_PUBLICSTATE);
+	List<TaskPublicDto> taskPublicList = dto.getTaskPublicList();
+	List<TaskTestCaseDto> testCaseList = dto.getTaskTestCaseDtoList();
 %>
 </head>
 

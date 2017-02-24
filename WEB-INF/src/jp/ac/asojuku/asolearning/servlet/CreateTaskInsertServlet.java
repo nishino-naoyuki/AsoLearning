@@ -18,7 +18,6 @@ import jp.ac.asojuku.asolearning.bo.TaskBo;
 import jp.ac.asojuku.asolearning.bo.impl.TaskBoImpl;
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
-import jp.ac.asojuku.asolearning.dto.TaskPublicDto;
 import jp.ac.asojuku.asolearning.dto.TaskTestCaseDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.RequestConst;
@@ -50,17 +49,13 @@ public class CreateTaskInsertServlet extends BaseServlet {
 		HttpSession session = req.getSession(false);
 
 		TaskDto dto = null;
-		List<TaskTestCaseDto> testCaseList = null;
-		List<TaskPublicDto> taskPublicList = null;
 
 		if( session != null ){
 			dto = (TaskDto)session.getAttribute(RequestConst.REQUEST_TASK_DTO);
-			testCaseList = (List<TaskTestCaseDto>)session.getAttribute(RequestConst.REQUEST_TESTCASE);
-			taskPublicList = (List<TaskPublicDto>)session.getAttribute(RequestConst.REQUEST_PUBLICSTATE);
 		}
 
 		//	セッションに情報が無い場合はシステムエラー
-		if( dto == null || testCaseList == null || taskPublicList ==null ){
+		if( dto == null ){
 			throw new AsoLearningSystemErrException("セッションから課題情報が取得できません");
 		}
 
@@ -68,11 +63,11 @@ public class CreateTaskInsertServlet extends BaseServlet {
 		//DBへセット
 		TaskBo task = new TaskBoImpl();
 
-		task.insert(getUserInfoDtoFromSession(req), dto, testCaseList, taskPublicList);
+		task.insert(getUserInfoDtoFromSession(req), dto);
 
 		////////////////////////////////////
 		//ファイルを本番の場所へ移動
-		moveTestcaseFile(testCaseList);
+		moveTestcaseFile(dto.getTaskTestCaseDtoList());
 
 		////////////////////////////////////
 		//完了画面減りダイレクト（セッション情報はリダイレクト先で消す）

@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>課題一覧</title>
+    <title>課題検索</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
@@ -75,94 +75,82 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            課題一覧 <small>あなたへの課題の一覧です</small>
+                            課題検索
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-pencil-square" ></i> 課題一覧
+                                <i class="fa fa-pencil-square"></i> 課題検索
                             </li>
                         </ol>
                     </div>
                 </div>
                 <!-- /.row -->
 <%
+List<CourseDto> courseList = (List<CourseDto>)request.getAttribute(RequestConst.REQUEST_COURSE_LIST);
 List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUEST_TASK_LIST);
 LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 %>
                 <div class="row">
+                    <div class="col-lg-12">
+	                	<div class="panel panel-primary">
+	                		<div class="panel-heading">
+	                			検索条件
+	                		</div>
+		                	<div class="panel-body">
+	                        	<div class="form-group">
+			                    	課題名
+				                    <input type="text" name="taskname" >
+				                </div>
+	                        	<div class="form-group">
+			                    	作者名
+				                    <input type="text" name="creator" >
+				                </div>
+	                        	<div class="form-group">
+		                    		学科
+		                    		<select id="couse" class="form-control" name="<%=RequestConst.REQUEST_COURSE_ID%>">
+				                         <option value="" >すべて</option>
+				                     <% for(CourseDto course :courseList){ %>
+				                         <option value="<%=course.getId() %>" ><%=course.getName() %></option>
+				                     <%} %>
+				                     </select>
+				                </div>
+			                     <div class="col-lg-12">
+			                     	<button id="search"  class="btn btn-default">検索</button>
+			                     </div>
+		                     </div>
+		                </div>
+	            	</div>
+                </div>
+
+                <div class="row" id="search_nodata" style="display:none">
+                検索結果０件
+                </div>
+
+                <div class="row" id="search_result_row" style="display:none">
 	                <div class="col-lg-12">
 	                	<div class="panel panel-info">
 	                		<div class="panel-heading">
-	                			課題一覧
+	                			検索結果
 	                		</div>
 		                	<div class="panel-body">
-		 <%
-		 if( CollectionUtils.isEmpty(taskList) ){
-		 %>
-			 課題はありません
-		 <%
-		 }else{
-		 %>
 		                        <div class="table-responsive">
 		                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
 
 		                                <thead>
 		                                    <tr class="info">
-		                                        <th>No.</th>
-		                                        <th>ソース</th>
-		                                        <th>締め切り</th>
-		                                        <th>必須</th>
-		                                        <th>得点</th>
+		                                        <th>課題名</th>
+		                                        <th>作者</th>
+		                                        <th>対象学科</th>
+		                                        <th>公開開始日</th>
+		                                        <th>締切</th>
 		                                    </tr>
 		                                </thead>
-		                                <tbody id="table-body">
-		                                <% for( TaskDto taskDto : taskList ){ %>
-		                                    <tr>
-
-		                                        <td>
-		                                        <a href="task?taskid=<%=taskDto.getTaskId()%>">
-		                                        <%= taskDto.getTaskName() %>
-		                                        </a>
-		                                        </td>
-
-		                                        <% if( taskDto.getResult() != null ){ %>
-		                                        	<% if(  taskDto.getResult().isHanded()){ %>
-		                                        	<td>提出済み</td>
-		                                        	<% }else{ %>
-		                                        	<td>不正解</td>
-		                                        	<%} %>
-		                                        <% }else{ %>
-		                                        	<td>未提出</td>
-		                                        <% } %>
-
-		                                        <% if( taskDto.getTerminationDate() != null ){ %>
-		                                        	<td>あり</td>
-		                                        <% }else{ %>
-		                                        	<td>なし</td>
-		                                        <% } %>
-
-		                                        <% if( taskDto.isRequiredFlg() ){ %>
-		                                        	<td>必須</td>
-		                                        <% }else{ %>
-		                                        	<td>任意</td>
-		                                        <% } %>
-
-		                                        <% if( taskDto.getResult() != null ){ %>
-		                                        	<td>
-		                                        	<a href="scoredetail?<%=RequestConst.REQUEST_DISP_NO%>=list&<%=RequestConst.REQUEST_TASK_ID%>=<%=taskDto.getTaskId()%>"><%= taskDto.getResult().getTotal() %></a>
-		                                        	</td>
-		                                        <% }else{ %>
-		                                        	<td>&nbsp;</td>
-		                                        <% } %>
-		                                    </tr>
-		                                <% } %>
+		                                <tbody id="search_result">
 		                                </tbody>
 		                            </table>
 		                        </div>
 
-		 <%
-		 }
-		 %>
+
 		                </div>
 	                </div><!-- panel body -->
 				  </div><!-- panel -->
@@ -193,7 +181,6 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
     <script src="view/js/sb-admin-2.js"></script>
 <script>
 
-
 $(document).ready(function() {
 	// デフォルトの設定を変更
     $.extend( $.fn.dataTable.defaults, {
@@ -202,7 +189,7 @@ $(document).ready(function() {
         }
     });
 
-    ddd = $('#dataTables-example').DataTable({
+    $('#dataTables-example').DataTable({
         responsive: true,
         columnDefs: [
                      // 2列目(0から始まるため1になっています)の幅を100pxにする
@@ -211,6 +198,74 @@ $(document).ready(function() {
 
     });
 });
+
+
+$('#search').on('click', function() {
+	var fd = new FormData();
+
+	fd.append( "taskname", $("input[name='taskname']").val() );
+	fd.append( "creator", $("input[name='creator']").val() );
+	fd.append( "<%=RequestConst.REQUEST_COURSE_ID%>", $("input[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val() );
+
+	submit_action("searchTask",fd,null);
+});
+function submit_action(url, input_data, mode) {
+	var params = "";
+
+	if( $("input[name='taskname']").val() != ""){
+		params += "taskname="+ $("input[name='taskname']").val();
+	}
+	if( $("input[name='creator']").val() != ""){
+		if(params.length>0){ params += "&";}
+		params += "creator="+ $("input[name='creator']").val();
+	}
+	if( $("select[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val() != 0){
+		if(params.length>0){ params += "&";}
+		params += "<%=RequestConst.REQUEST_COURSE_ID%>="+ $("select[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val();
+	}
+
+	alert(params);
+    $.ajax({
+        type : 'GET',
+        url : url,
+        data :params,
+        dataType : 'json',
+        processData : false,
+        contentType: "text/html; charset=UTF-8",
+        timeout : 360000, // milliseconds
+
+    }).done(function(json) {
+
+    	if( json.length == 0 ){
+    		$("#search_result_row").hide();
+    		$("#search_nodata").show();
+    	}else{
+    		$("#search_result_row").show();
+    	}
+
+    	$('#dataTables-example').DataTable().destroy();
+    	for( var i=0; i < json.length; i++){
+    		var element;
+    		element = json[i];
+    		var str  = "<tr><td><a href='tc_updateTask?taskId="+element.taskId+"'>"+element.taskName+"</a></td><td>"+element.creator+"</td><td>"+element.targetCourseList+"</td><td>"+element.limit+"</td></tr>";
+    		//alert(str);
+    		$('#search_result').append(str);
+    	}
+        $('#dataTables-example').DataTable({
+            responsive: true,
+            columnDefs: [
+                         // 2列目(0から始まるため1になっています)の幅を100pxにする
+                         { targets: 1, width: 100 }
+                     ]
+
+        });
+
+    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    	alert("err:"+textStatus);
+        console.log( textStatus  + errorThrown);
+    });
+};
+
 </script>
 </body>
 

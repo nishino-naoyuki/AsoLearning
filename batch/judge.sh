@@ -14,4 +14,4 @@ javac -d $1/classes $1/$2 2>$3/error.txt
 
 # 実行する
 cd $1/classes
-java $4 > $3/result.txt
+java $4 $5 > $3/result.txt

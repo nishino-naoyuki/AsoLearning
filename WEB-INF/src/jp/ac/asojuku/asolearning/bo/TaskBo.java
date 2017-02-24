@@ -5,12 +5,12 @@ package jp.ac.asojuku.asolearning.bo;
 
 import java.util.List;
 
+import jp.ac.asojuku.asolearning.condition.TaskSearchContidion;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
-import jp.ac.asojuku.asolearning.dto.TaskPublicDto;
-import jp.ac.asojuku.asolearning.dto.TaskTestCaseDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.json.JudgeResultJson;
+import jp.ac.asojuku.asolearning.json.TaskSearchResultJson;
 
 /**
  * 課題インターフェース
@@ -20,7 +20,26 @@ import jp.ac.asojuku.asolearning.json.JudgeResultJson;
 public interface TaskBo {
 
 	/**
+	 * 課題の検索処理
+	 *
+	 * @param condition
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	public List<TaskSearchResultJson> search(TaskSearchContidion condition) throws AsoLearningSystemErrException;
+
+	/**
 	 * 新規追加
+	 *
+	 * @param user
+	 * @param dto
+	 * @throws AsoLearningSystemErrException
+	 */
+	public void insert(LogonInfoDTO user,
+			TaskDto dto) throws AsoLearningSystemErrException;
+
+	/**
+	 * 更新
 	 *
 	 * @param user
 	 * @param dto
@@ -28,10 +47,8 @@ public interface TaskBo {
 	 * @param taskPublicList
 	 * @throws AsoLearningSystemErrException
 	 */
-	public void insert(LogonInfoDTO user,
-			TaskDto dto,
-			List<TaskTestCaseDto> testCaseList,
-			List<TaskPublicDto> taskPublicList) throws AsoLearningSystemErrException;
+	public void update(LogonInfoDTO user,
+			TaskDto dto) throws AsoLearningSystemErrException;
 
 	/**
 	 * 判定処理を行う
@@ -77,5 +94,15 @@ public interface TaskBo {
 	 * @throws AsoLearningSystemErrException
 	 */
 	public List<TaskDto> getTaskListByCouseId(Integer couseId) throws AsoLearningSystemErrException;
+
+	/**
+	 * 課題をIDを指定して取得する
+	 *
+	 * @param taskId
+	 * @param user
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	TaskDto getTaskDetailById(Integer taskId, LogonInfoDTO user) throws AsoLearningSystemErrException;
 
 }

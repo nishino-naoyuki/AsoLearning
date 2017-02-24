@@ -190,4 +190,32 @@ public class Dao {
 		sb.append(whereCond);
 
 	}
+
+	protected String getLikeString(String param){
+
+		String[] params = param.split("");
+		StringBuffer sb = new StringBuffer();
+
+		for(String str:params){
+			switch(str){
+			case "\\":
+				sb.append("\\");
+				break;
+			case "%":
+				sb.append("\\");
+				break;
+			case "_":
+				sb.append("\\");
+				break;
+			}
+			sb.append(str);
+		}
+
+		if( sb.length() > 0){
+			sb.insert(0, "%");
+			sb.append("%");
+		}
+
+		return sb.toString();
+	}
 }

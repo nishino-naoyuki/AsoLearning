@@ -5,12 +5,12 @@ set OUTPUT_DIR = %3
 
 cd %1
 
-rem CCCC‚Å•iŽ¿ŒŸ¸
+rem CCCCï¿½Å•iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 "C:\Program Files\CCCC\cccc" %1/%2 --outdir=%3\cccc
 
-rem ƒRƒ“ƒpƒCƒ‹
+rem ï¿½Rï¿½ï¿½ï¿½pï¿½Cï¿½ï¿½
 javac -d %1\classes %1\%2 2>%3\error.txt
 
-rem ŽÀsˆ—
+rem ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½
 cd %1\classes
-java %4 > %3\result.txt
+java %4 %5 > %3\result.txt
