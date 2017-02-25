@@ -31,6 +31,16 @@ public class ResultDao extends Dao {
 	}
 
 	//検索SQL
+	private static final String RESULT_SEARCH_TASKID_SQL =
+			"SELECT * FROM RESULT_TBL r "
+			+ "LEFT JOIN RESULT_TESTCASE_TBL rt ON(rt.RESULT_ID = r.RESULT_ID) "
+			+ "LEFT JOIN RESULT_METRICS_TBL rm ON(rm.RESULT_ID = r.RESULT_ID) "
+			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID = t.TASK_ID) "
+			+ "LEFT JOIN USER_TBL u ON(r.USER_ID = u.USER_ID) "
+			+ "WHERE r.TASK_ID=? AND "
+			+ "u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null "
+			+ "ORDER BY r.RESULT_ID";
+	//検索SQL
 	private static final String RESULT_SEARCH_SQL =
 			"SELECT * FROM RESULT_TBL r "
 			+ "LEFT JOIN RESULT_TESTCASE_TBL rt ON(rt.RESULT_ID = r.RESULT_ID) "
@@ -120,6 +130,65 @@ public class ResultDao extends Dao {
 			+ ") rank "
 			+ "FROM RESULT_TBL r1 "
 			+ "WHERE r1.USER_ID=? AND r1.TASK_ID=?";
+
+	/**
+	 * 結果情報を取得する
+	 *
+	 * @param taskId
+	 * @param userId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<ResultTblEntity> getResultByTaskId(int taskId) throws SQLException{
+
+		List<ResultTblEntity> list = new ArrayList<>();
+
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+        try {
+    		// ステートメント生成
+			ps = con.prepareStatement(RESULT_SEARCH_TASKID_SQL);
+
+	        ps.setInt(1, taskId);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        //値を取り出す
+	        int resultId = -1;
+	        int wkResultId = 0;
+	        ResultTblEntity resultEntity = null;
+	        while(rs.next()){
+	        	wkResultId = rs.getInt("RESULT_ID");
+
+	        	if( resultId != wkResultId ){
+		        	if( resultEntity != null ){
+		        		list.add(resultEntity);
+		        	}
+		        	resultEntity = createResultTblEntity(rs);
+		        	wkResultId = resultId;
+	        	}
+	        	//テストケースは複数アル
+	        	resultEntity.addResultTestcaseTbl(createResultTestcaseTblEntity(rs));
+
+	        }
+	        //最後の１件はループの外で登録する
+	        if( resultEntity != null){
+	        	list.add(resultEntity);
+	        }
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+		return list;
+	}
 
 	/**
 	 * ユーザーと課題を指定してランキングを取得する

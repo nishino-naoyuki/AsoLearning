@@ -10,7 +10,9 @@ package jp.ac.asojuku.asolearning.dto;
  */
 public class TaskResultDto {
 
+	private Integer taskId;
 	private Float total;
+	private String taskName;
 	private boolean handed;
 
 	public boolean isHanded() {
@@ -33,6 +35,22 @@ public class TaskResultDto {
 	 */
 	public void setTotal(Float total) {
 		this.total = total;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public Integer getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Integer taskId) {
+		this.taskId = taskId;
 	}
 
 }

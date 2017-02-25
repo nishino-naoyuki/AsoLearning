@@ -29,6 +29,7 @@ public class UserDto {
 	private String graduateYear;
 	private String repeatYearCount;
 	private String password;
+	private Integer grade;
 
 	/**
 	 * @return userId
@@ -203,6 +204,12 @@ public class UserDto {
 	 */
 	public String getCourseName() {
 		return courseName;
+	}
+	public Integer getGrade() {
+		return grade;
+	}
+	public void setGrade(Integer grade) {
+		this.grade = grade;
 	}
 	/**
 	 * @param courseName セットする courseName

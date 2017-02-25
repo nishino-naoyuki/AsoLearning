@@ -8,7 +8,7 @@ package jp.ac.asojuku.asolearning.condition;
  * @author nishino
  *
  */
-public class TaskSearchContidion {
+public class SearchTaskCondition {
 
 	private String taskName;
 	private String creator;

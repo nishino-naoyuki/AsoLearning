@@ -3,10 +3,12 @@ package jp.ac.asojuku.asolearning.bo.impl;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,12 +17,19 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 
 import jp.ac.asojuku.asolearning.bo.UserBo;
+import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.csv.model.UserCSV;
+import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dao.UserDao;
 import jp.ac.asojuku.asolearning.dto.CSVProgressDto;
+import jp.ac.asojuku.asolearning.dto.TaskResultDto;
+import jp.ac.asojuku.asolearning.dto.UserDetailDto;
 import jp.ac.asojuku.asolearning.dto.UserDto;
+import jp.ac.asojuku.asolearning.dto.UserSearchResultDto;
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
+import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.RoleMasterEntity;
+import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.err.ErrorCode;
@@ -28,6 +37,7 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.param.SessionConst;
 import jp.ac.asojuku.asolearning.util.Digest;
+import jp.ac.asojuku.asolearning.util.UserUtils;
 import jp.ac.asojuku.asolearning.validator.UserValidator;
 
 public class UserBoImpl implements UserBo {
@@ -268,5 +278,248 @@ public class UserBoImpl implements UserBo {
         }
 
 		return list;
+	}
+
+	@Override
+	public List<UserSearchResultDto> search(SearchUserCondition cond) throws AsoLearningSystemErrException {
+
+		List<UserSearchResultDto> list = new ArrayList<UserSearchResultDto> ();
+		UserDao dao = new UserDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//課題リスト情報を取得
+			List<UserTblEntity> useEntityList = dao.search(cond);
+
+			//Entity -> Dto
+			for( UserTblEntity entiy : useEntityList ){
+				list.add( getUserSearchResultDtoFromEntity(entiy) );
+			}
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return list;
+	}
+
+	/**
+	 * Entity -> DTO
+	 * @param entiy
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	private UserSearchResultDto getUserSearchResultDtoFromEntity(UserTblEntity entiy) throws AsoLearningSystemErrException{
+		UserSearchResultDto dto = new UserSearchResultDto();
+
+		//ユーザー情報をセット
+		dto.setUserDto(getUserDtoFromEntity(entiy));
+
+		//結果をセット
+		if( CollectionUtils.isNotEmpty(entiy.getResultTblSet()) ){
+			for(ResultTblEntity result : entiy.getResultTblSet()){
+				TaskResultDto retDto = new TaskResultDto();
+
+				retDto.setHanded( (result.getHanded()==0?false:true) );
+				retDto.setTotal(result.getTotalScore());
+				retDto.setTaskName(result.getTaskTbl().getName());
+
+				dto.addResultList(retDto);
+			}
+
+		}
+
+		return dto;
+	}
+
+	/**
+	 * Entity -> DTO
+	 * @param entiy
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	private UserDto getUserDtoFromEntity(UserTblEntity entiy) throws AsoLearningSystemErrException{
+		UserDto userDto = new UserDto();
+
+		userDto.setUserId( entiy.getUserId() );
+		userDto.setMailAdress( entiy.getMailadress() );
+		userDto.setName( entiy.getName() );
+		userDto.setNickName( Digest.decNickName(entiy.getNickName(),entiy.getMailadress()) );
+		userDto.setAccountExpryDate( entiy.getAccountExpryDate() );
+		userDto.setPasswordExpriryDate( entiy.getPasswordExpirydate() );
+		userDto.setCourseId( entiy.getCourseMaster().getCourseId() );
+		userDto.setRoleId( entiy.getRoleMaster().getRoleId() );
+		userDto.setFirstFlg( (entiy.getIsFirstFlg()==1?true:false) );
+		userDto.setCertifyErrCnt(entiy.getCertifyErrCnt() );
+		userDto.setLockFlg( (entiy.getIsLockFlg()==1?true:false) );
+		userDto.setAdmissionYear( (entiy.getAdmissionYear()==null ? "":entiy.getAdmissionYear().toString()) );
+		userDto.setGraduateYear( (entiy.getGraduateYear()==null ? "":entiy.getGraduateYear().toString()) );
+		userDto.setRepeatYearCount( (entiy.getRepeatYearCount()==null ? "":entiy.getRepeatYearCount().toString()) );
+		userDto.setCourseName(entiy.getCourseMaster().getCourseName());
+		userDto.setRoleName(entiy.getRoleMaster().getRoleName());
+		userDto.setGrade(UserUtils.getGrade(entiy));
+
+		return userDto;
+	}
+
+	@Override
+	public UserDetailDto detail(Integer userId) throws AsoLearningSystemErrException {
+
+		UserDetailDto dto = new UserDetailDto();
+		UserDao dao = new UserDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			TaskDao taskdao = new TaskDao(dao.getConnection());
+			//ユーザー情報を取得
+			UserTblEntity userEntity = dao.detail(userId);
+			//課題リスト情報を取得
+			List<TaskTblEntity> entityList =
+					taskdao.getTaskList(userId, userEntity.getCourseMaster().getCourseId(), 0, 10);
+
+			//Entity -> Dto
+			dto = getUserDetailDtoFromEntity(userEntity,entityList);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return dto;
+	}
+
+	/**
+	 * Entity -> DTO
+	 * @param entiy
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	private UserDetailDto getUserDetailDtoFromEntity(UserTblEntity entiy,List<TaskTblEntity> entityList) throws AsoLearningSystemErrException{
+		UserDetailDto userDto = new UserDetailDto();
+
+		userDto.setUserId( entiy.getUserId() );
+		userDto.setMailAdress( entiy.getMailadress() );
+		userDto.setName( entiy.getName() );
+		userDto.setNickName( Digest.decNickName(entiy.getNickName(),entiy.getMailadress()) );
+		userDto.setAccountExpryDate( entiy.getAccountExpryDate() );
+		userDto.setPasswordExpriryDate( entiy.getPasswordExpirydate() );
+		userDto.setCourseId( entiy.getCourseMaster().getCourseId() );
+		userDto.setRoleId( entiy.getRoleMaster().getRoleId() );
+		userDto.setFirstFlg( (entiy.getIsFirstFlg()==1?true:false) );
+		userDto.setCertifyErrCnt(entiy.getCertifyErrCnt() );
+		userDto.setLockFlg( (entiy.getIsLockFlg()==1?true:false) );
+		userDto.setAdmissionYear( (entiy.getAdmissionYear()==null ? "":entiy.getAdmissionYear().toString()) );
+		userDto.setGraduateYear( (entiy.getGraduateYear()==null ? "":entiy.getGraduateYear().toString()) );
+		userDto.setRepeatYearCount( (entiy.getRepeatYearCount()==null ? "":entiy.getRepeatYearCount().toString()) );
+		userDto.setCourseName(entiy.getCourseMaster().getCourseName());
+		userDto.setRoleName(entiy.getRoleMaster().getRoleName());
+		userDto.setGrade(UserUtils.getGrade(entiy));
+
+		for( TaskTblEntity task : entityList ){
+			TaskResultDto retDto = new TaskResultDto();
+
+			if( CollectionUtils.isEmpty( task.getResultTblSet() ) ){
+				retDto.setHanded(false);
+			}else{
+				ResultTblEntity result = task.getResultTblSet().iterator().next();
+
+				retDto.setHanded( (result.getHanded()==0?false:true) );
+				retDto.setTotal(result.getTotalScore());
+			}
+			retDto.setTaskId(task.getTaskId());
+			retDto.setTaskName(task.getName());
+
+			userDto.addResultList(retDto);
+		}
+
+		return userDto;
+	}
+
+	@Override
+	public void updatePassword(Integer userId, String password,String maileaddress) throws AsoLearningSystemErrException {
+
+		UserDao dao = new UserDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//パスワードのハッシュ値計算
+			String hashPwd = Digest.createPassword(maileaddress,password);
+
+			//パスワード変更
+			dao.updatePassword(userId, hashPwd);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+	}
+
+	@Override
+	public void updateNickName(Integer userId, String nickName,String maileaddress) throws AsoLearningSystemErrException {
+
+		UserDao dao = new UserDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//パスワードのハッシュ値計算
+			String encNickName = Digest.encNickName(nickName, maileaddress);
+
+			//パスワード変更
+			dao.updateNickName(userId, encNickName);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
 	}
 }

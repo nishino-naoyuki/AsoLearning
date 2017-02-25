@@ -6,13 +6,17 @@ package jp.ac.asojuku.asolearning.validator;
 import java.text.ParseException;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
+import jp.ac.asojuku.asolearning.bo.ResultBo;
 import jp.ac.asojuku.asolearning.bo.TaskBo;
+import jp.ac.asojuku.asolearning.bo.impl.ResultBoImpl;
 import jp.ac.asojuku.asolearning.bo.impl.TaskBoImpl;
 import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dto.TaskPublicDto;
+import jp.ac.asojuku.asolearning.dto.TaskResultDetailDto;
 import jp.ac.asojuku.asolearning.dto.TaskTestCaseDto;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.err.ErrorCode;
@@ -25,6 +29,21 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public class TaskValidator {
 
+	/**
+	 * 課題の結果があるか？
+	 * @param taskId
+	 * @param errors
+	 * @throws AsoLearningSystemErrException
+	 */
+	public static void isExistResult(Integer taskId,ActionErrors errors) throws AsoLearningSystemErrException{
+		ResultBo result = new ResultBoImpl();
+
+		List<TaskResultDetailDto> list = result.getResultDetailById(taskId);
+
+		if(CollectionUtils.isNotEmpty(list)){
+			errors.add(ErrorCode.	ERR_TASK_RESULT_EXIST_ERR);
+		}
+	}
 	/**
 	 * 課題名のチェック
 	 * @param name

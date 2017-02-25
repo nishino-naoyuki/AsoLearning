@@ -23,8 +23,8 @@ import jp.ac.asojuku.asolearning.param.RequestConst;
  * @author nishino
  *
  */
-@WebServlet(name="TaskSearchStartServlet",urlPatterns={"/tasksearch"})
-public class TaskSearchStartServlet extends BaseServlet {
+@WebServlet(name="SearchTaskStartServlet",urlPatterns={"/tasksearch"})
+public class SearchTaskStartServlet extends BaseServlet {
 
 	private final String DISPNO = "00604";
 	@Override
@@ -45,7 +45,7 @@ public class TaskSearchStartServlet extends BaseServlet {
 
 		///////////////////////////////////////////
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_taskSearch.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("view/tc_searchTask.jsp");
 		rd.forward(req, resp);
 	}
 

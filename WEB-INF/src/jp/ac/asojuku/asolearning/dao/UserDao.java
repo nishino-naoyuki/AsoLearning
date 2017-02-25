@@ -7,12 +7,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
+import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.RoleMasterEntity;
+import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 
 /**
@@ -22,6 +28,31 @@ import jp.ac.asojuku.asolearning.entity.UserTblEntity;
  */
 public class UserDao extends Dao {
 	Logger logger = LoggerFactory.getLogger(UserDao.class);
+
+
+	private static final String MEMBER_DETAIL_SQL =
+			"SELECT * FROM USER_TBL u "
+			+ "LEFT JOIN COURSE_MASTER c ON(c.COURSE_ID = u.COURSE_ID) "
+			+ "LEFT JOIN ROLE_MASTER r ON(r.ROLE_ID = u.ROLE_ID) "
+			+ "LEFT JOIN RESULT_TBL ret ON(ret.USER_ID = u.USER_ID) "
+			+ "LEFT JOIN TASK_TBL t ON(t.TASK_ID = ret.TASK_ID) "
+			+ "WHERE u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null AND u.USER_ID=?";
+
+	private static final String MEMBER_SEARCH_SQL =
+			"SELECT * FROM USER_TBL u "
+			+ "LEFT JOIN COURSE_MASTER c ON(c.COURSE_ID = u.COURSE_ID) "
+			+ "LEFT JOIN ROLE_MASTER r ON(r.ROLE_ID = u.ROLE_ID) "
+			+ "LEFT JOIN RESULT_TBL ret ON(ret.USER_ID = u.USER_ID) "
+			+ "LEFT JOIN TASK_TBL t ON(t.TASK_ID = ret.TASK_ID) "
+			+ "WHERE u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null ";
+	private static final String MEMBER_SEARCH_COND1 = " u.NAME LIKE ? ";
+	private static final String MEMBER_SEARCH_COND2 = " u.MAILADRESS LIKE ? ";
+	private static final String MEMBER_SEARCH_COND3 = " u.COURSE_ID = ? ";
+	private static final String MEMBER_SEARCH_COND4 = " u.ROLE_ID = ? ";
+	private static final String MEMBER_SEARCH_COND5 = " ret.HANDED = ? ";
+	private static final String MEMBER_SEARCH_COND5_NULL = " (ret.HANDED = ? OR ret.HANDED is null) ";
+	private static final String MEMBER_SEARCH_COND6 = " t.TASK_ID = ? ";
+	private static final String MEMBER_SEARCH_ORDER = " ORDER BY u.COURSE_ID,u.USER_ID,t.TASK_ID";
 
 	// ユーザーIDとパスワードを指定してユーザー情報を取得する
 	private static final String MEMBER_INFO_BY_UP_SQL =
@@ -69,13 +100,258 @@ public class UserDao extends Dao {
 			+ "UPDATE_DATE=CURRENT_TIMESTAMP "
 			+ "WHERE USER_ID=?";
 
+	// ユーザーの更新
+	private static final String MEMBER_PASSWORD_UPDATE_SQL =
+			 "UPDATE USER_TBL SET "
+			+ "PASSWORD=?,"
+			+ "UPDATE_DATE=CURRENT_TIMESTAMP "
+			+ "WHERE USER_ID=?";
 
+	// ユーザーの更新
+	private static final String MEMBER_NICKNAME_UPDATE_SQL =
+			 "UPDATE USER_TBL SET "
+			+ "NICK_NAME=?,"
+			+ "UPDATE_DATE=CURRENT_TIMESTAMP "
+			+ "WHERE USER_ID=?";
 
 
 	public UserDao() {
 	}
 	public UserDao(Connection con) {
 		super(con);
+	}
+
+	/**
+	 * パスワードの更新
+	 * @param userId
+	 * @param hashedPass
+	 * @throws SQLException
+	 */
+	public void updatePassword(Integer userId,String hashedPass) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+        	ps = con.prepareStatement(MEMBER_PASSWORD_UPDATE_SQL);
+
+        	//パラメータセット
+        	ps.setString(1, hashedPass);	//PASSWORD
+        	ps.setInt(2, userId);
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			logger.warn("SQLException:",e);
+			throw e;
+		} finally {
+			safeClose(ps,null);
+		}
+	}
+
+	/**
+	 * ニックネームの更新
+	 * @param userId
+	 * @param nickName
+	 * @throws SQLException
+	 */
+	public void updateNickName(Integer userId,String nickName) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+        	ps = con.prepareStatement(MEMBER_NICKNAME_UPDATE_SQL);
+
+        	//パラメータセット
+        	ps.setString(1, nickName);	//nickName
+        	ps.setInt(2, userId);
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			logger.warn("SQLException:",e);
+			throw e;
+		} finally {
+			safeClose(ps,null);
+		}
+	}
+
+	/**
+	 * ユーザー情報を取得する
+	 * @param userId
+	 * @return
+	 * @throws SQLException
+	 */
+	public UserTblEntity detail(Integer userId) throws SQLException{
+
+		if( con == null ){
+			return null;
+		}
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		UserTblEntity entity = null;
+
+        try {
+        	StringBuffer sb = new StringBuffer(MEMBER_DETAIL_SQL);
+
+    		// ステートメント生成
+			ps = con.prepareStatement(sb.toString());
+
+			ps.setInt(1, userId);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        //値を取り出す
+	        while(rs.next()){
+	        	if( entity == null ){
+		        	entity = createUserTblEntityFromResultSet(rs);
+	        	}
+	        	entity.addResultTbl(createResultTblEntity(rs));
+	        }
+
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+		return entity;
+	}
+
+	public List<UserTblEntity> search(SearchUserCondition cond) throws SQLException{
+		List<UserTblEntity> list = new ArrayList<>();
+
+		if( con == null ){
+			return null;
+		}
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		UserTblEntity entity = null;
+
+        try {
+        	StringBuffer sb = new StringBuffer(MEMBER_SEARCH_SQL);
+        	sb.append(getWhereString(cond));
+        	sb.append(MEMBER_SEARCH_ORDER);
+
+    		// ステートメント生成
+			ps = con.prepareStatement(sb.toString());
+
+			setWhereParameter(cond,ps);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        int wkUserId = -1;
+	        int userId;
+	        //値を取り出す
+	        while(rs.next()){
+	        	userId = rs.getInt("USER_ID");
+	        	if( userId != wkUserId ){
+	        		if( entity != null ){
+	        			list.add(entity);
+	        		}
+		        	entity = createUserTblEntityFromResultSet(rs);
+		        	wkUserId = userId;
+	        	}
+	        	entity.addResultTbl(createResultTblEntity(rs));
+	        }
+
+    		if( entity != null ){
+    			list.add(entity);
+    		}
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+		return list;
+	}
+
+	/**
+	 * @param cond
+	 * @param ps
+	 * @throws SQLException
+	 */
+	private void setWhereParameter(SearchUserCondition cond,PreparedStatement ps) throws SQLException{
+		int index = 1;
+
+		if( StringUtils.isNotEmpty(cond.getName()) ){
+			ps.setString(index++, cond.getName());
+
+		}
+		if( StringUtils.isNotEmpty(cond.getMailaddress()) ){
+			ps.setString(index++, cond.getMailaddress());
+		}
+		if(cond.getCourseId() != null){
+			ps.setInt(index++, cond.getCourseId());
+		}
+		if(cond.getRoleId() != null){
+			ps.setInt(index++, cond.getRoleId());
+		}
+		if(cond.getHanded() != null){
+			ps.setInt(index++, cond.getHanded());
+		}
+		if(cond.getTaskId() != null){
+			ps.setInt(index++, cond.getTaskId());
+		}
+	}
+
+	/**
+	 * WHERE分をつくる
+	 * @param cond
+	 * @return
+	 */
+	private String getWhereString(SearchUserCondition cond){
+
+		StringBuffer sb = new StringBuffer();
+
+		if( StringUtils.isNotEmpty(cond.getName()) ){
+			appendWhereWithAnd(sb,MEMBER_SEARCH_COND1);
+
+		}
+		if( StringUtils.isNotEmpty(cond.getMailaddress()) ){
+			appendWhereWithAnd(sb,MEMBER_SEARCH_COND2);
+		}
+		if(cond.getCourseId() != null){
+			appendWhereWithAnd(sb,MEMBER_SEARCH_COND3);
+		}
+		if(cond.getRoleId() != null){
+			appendWhereWithAnd(sb,MEMBER_SEARCH_COND4);
+		}
+		if(cond.getHanded() != null){
+			if( cond.getHanded() == 1 ){
+				appendWhereWithAnd(sb,MEMBER_SEARCH_COND5);
+			}else{
+				appendWhereWithAnd(sb,MEMBER_SEARCH_COND5_NULL);
+			}
+		}
+		if(cond.getTaskId() != null){
+			appendWhereWithAnd(sb,MEMBER_SEARCH_COND6);
+		}
+
+		if( sb.length() > 0 ){
+			sb.insert(0, " AND ");
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -334,5 +610,33 @@ public class UserDao extends Dao {
 		// entity.setResultTblSet(Set<ResultTblEntity>);
 
 		return entity;
+	}
+
+	/**
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	private ResultTblEntity createResultTblEntity(ResultSet rs) throws SQLException{
+
+		ResultTblEntity retEntity = new ResultTblEntity();
+
+		retEntity.setResultId(rs.getInt("RESULT_ID"));
+		retEntity.setTotalScore(rs.getFloat("TOTAL_SCORE"));
+		retEntity.setHanded(rs.getInt("HANDED"));
+
+		TaskTblEntity taskEntity = new TaskTblEntity();
+
+		taskEntity.setTaskId(rs.getInt("TASK_ID"));
+		taskEntity.setName(rs.getString("NAME"));
+		taskEntity.setTaskQuestion(rs.getString("TASK_QUESTION"));
+		taskEntity.setCreateUserId(rs.getInt("CREATE_USER_ID"));
+		taskEntity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
+		taskEntity.setUpdateTim(rs.getTimestamp("UPDATE_TIM"));
+		taskEntity.setTerminationDate(rs.getDate("termination_date"));
+
+		retEntity.setTaskTbl(taskEntity);
+
+		return retEntity;
 	}
 }

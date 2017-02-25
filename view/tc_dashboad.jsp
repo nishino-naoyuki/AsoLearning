@@ -6,14 +6,15 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
 <%@ page import="java.util.List" %>
-<%@ page import="jp.ac.asojuku.asolearning.dto.TaskDto" %>
+<%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
+	<link rel="shortcut icon" href="view/ico/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>課題一覧</title>
+    <title>ダッシュボード</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="view/css/bootstrap.min.css" rel="stylesheet">

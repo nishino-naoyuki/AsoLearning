@@ -12,11 +12,11 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
      <div class="sidebar-nav navbar-collapse">
          <ul class="nav" id="side-menu">
              <li class="active">
-                 <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                 <a href="st_dashboad"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
              </li>
 <% if( PermissionChecker.check("00101", loginInfo.getRoleId())){ %>
              <li >
-                 <a href="tasklist"><i class="fa fa-pencil-square fa-fw"></i> 課題一覧<span class="fa arrow"></span></a>
+                 <a href="tasklist"><i class="fa fa-pencil-square fa-fw"></i> 課題一覧</a>
 
              </li>
 <%
@@ -40,6 +40,11 @@ if( PermissionChecker.check("00201", loginInfo.getRoleId())){
   if( PermissionChecker.check("00802", loginInfo.getRoleId()) ){ %>
              <li>
                  <a href="tc_createUser"><i class="fa fa-user fa-fw"></i>ユーザー作成</a>
+             </li>
+<% }
+  if( PermissionChecker.check("00801", loginInfo.getRoleId()) ){ %>
+             <li>
+                 <a href="usersearch"><i class="fa fa-user fa-fw"></i>ユーザー検索</a>
              </li>
 <% }
   if( PermissionChecker.check("01001", loginInfo.getRoleId()) ){ %>

@@ -65,6 +65,7 @@
 <%
 TaskResultDetailDto resultDto = (TaskResultDetailDto)request.getAttribute(RequestConst.REQUEST_TASK_RESULT);
 String dispName = (String)request.getAttribute(RequestConst.REQUEST_DISP_NO);
+Integer userId = (Integer)request.getAttribute(RequestConst.REQUEST_USER_ID);
 %>
         <!-- Page Content -->
         <div id="page-wrapper">
@@ -85,6 +86,12 @@ String dispName = (String)request.getAttribute(RequestConst.REQUEST_DISP_NO);
                                 <i class="fa fa-check-circle-o"></i>
                                 <a href="task?taskid=<%=resultDto.getTaskId()%>">
                                         <%= resultDto.getTaskName() %></a>
+                            </li>
+                            <% }else if( "user".equals(dispName) ){ %>
+                            <li>
+                                <i class="fa fa-check-circle-o"></i>
+                                <a href="userDetail?userId=<%=userId%>">
+                                        ユーザー詳細</a>
                             </li>
                             <%} %>
                             <li class="active">

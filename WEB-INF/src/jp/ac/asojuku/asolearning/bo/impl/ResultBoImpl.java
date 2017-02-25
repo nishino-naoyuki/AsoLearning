@@ -229,4 +229,40 @@ public class ResultBoImpl implements ResultBo {
 
 		return rank;
 	}
+
+	@Override
+	public List<TaskResultDetailDto> getResultDetailById(int taskId) throws AsoLearningSystemErrException {
+
+		List<TaskResultDetailDto> list = new ArrayList<TaskResultDetailDto>();
+
+		ResultDao dao = new ResultDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//課題リスト情報を取得
+			List<ResultTblEntity> entityList = dao.getResultByTaskId(taskId);
+
+			for( ResultTblEntity entity:entityList){
+				list.add( getTaskResultDetail(entity) );
+			}
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return list;
+	}
 }

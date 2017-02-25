@@ -17,8 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.param.SessionConst;
+import jp.ac.asojuku.asolearning.util.FileUtils;
 
 /**
  * ログインのチェックを行うフィルター
@@ -28,10 +32,15 @@ import jp.ac.asojuku.asolearning.param.SessionConst;
  */
 @WebFilter(filterName="LoginCheckFilter", urlPatterns="/*")
 public class LoginCheckFilter implements Filter{
+	Logger logger = LoggerFactory.getLogger(LoginCheckFilter.class);
 	//チェック除外画面
 	private String excludeDispList[] =
 		{
 			"/login","/auth","/logout"
+		};
+	private String excludeExtList[] =
+		{
+			"js","css","png","gif","jpg","ico"
 		};
 
 	@Override
@@ -52,6 +61,11 @@ public class LoginCheckFilter implements Filter{
 			chain.doFilter(request, response);
 			return;
 		}
+		//js,cs,png,gif,ico,jpgは除外
+		if( Arrays.asList(excludeExtList).contains(FileUtils.getExt(servletPath))){
+			chain.doFilter(request, response);
+			return;
+		}
 
 		//ログインセッションを取得し、存在しない場合は、ログイン画面に飛ばす
 		HttpSession session = ((HttpServletRequest)request).getSession(false);
@@ -66,6 +80,7 @@ public class LoginCheckFilter implements Filter{
 
 		if( loginInfo == null ){
 			//ログイン画面へ転送
+			logger.debug("Filter!!! servletPath="+servletPath);
 			((HttpServletResponse)response).sendRedirect("login");
 		}else{
 			chain.doFilter(request, response);

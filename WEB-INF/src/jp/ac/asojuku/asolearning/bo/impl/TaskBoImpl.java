@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.bo.TaskBo;
-import jp.ac.asojuku.asolearning.condition.TaskSearchContidion;
+import jp.ac.asojuku.asolearning.condition.SearchTaskCondition;
 import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
@@ -172,6 +172,7 @@ public class TaskBoImpl implements TaskBo {
 
 			pdto.setCourseId(publicEntity.getCourseMaster().getCourseId());
 			pdto.setCourseName(publicEntity.getCourseMaster().getCourseName());
+			pdto.setStatus(TaskPublicStateId.valueOf(publicEntity.getPublicStatusMaster().getStatusId()));
 			pdto.setEndDatetime( DataUtil.formattedDate(publicEntity.getEndDatetime(), "yyyy/MM/dd") );
 			pdto.setPublicDatetime(  DataUtil.formattedDate(publicEntity.getPublicDatetime(), "yyyy/MM/dd"));
 
@@ -488,7 +489,7 @@ public class TaskBoImpl implements TaskBo {
 	}
 
 	@Override
-	public List<TaskSearchResultJson> search(TaskSearchContidion condition) throws AsoLearningSystemErrException {
+	public List<TaskSearchResultJson> search(SearchTaskCondition condition) throws AsoLearningSystemErrException {
 
 		List<TaskSearchResultJson> jsonList = new ArrayList<TaskSearchResultJson>();
 

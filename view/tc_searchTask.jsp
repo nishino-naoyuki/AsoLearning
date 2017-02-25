@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+	<link rel="shortcut icon" href="view/ico/favicon.ico">
 
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
@@ -9,6 +10,7 @@
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.*" %>
 <%@ page import="org.apache.commons.collections4.*" %>
+	<LINK REL="SHORTCUT ICON" HREF="view/ico/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -201,15 +203,6 @@ $(document).ready(function() {
 
 
 $('#search').on('click', function() {
-	var fd = new FormData();
-
-	fd.append( "taskname", $("input[name='taskname']").val() );
-	fd.append( "creator", $("input[name='creator']").val() );
-	fd.append( "<%=RequestConst.REQUEST_COURSE_ID%>", $("input[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val() );
-
-	submit_action("searchTask",fd,null);
-});
-function submit_action(url, input_data, mode) {
 	var params = "";
 
 	if( $("input[name='taskname']").val() != ""){
@@ -224,10 +217,10 @@ function submit_action(url, input_data, mode) {
 		params += "<%=RequestConst.REQUEST_COURSE_ID%>="+ $("select[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val();
 	}
 
-	alert(params);
+	//alert(params);
     $.ajax({
         type : 'GET',
-        url : url,
+        url : "searchTask",
         data :params,
         dataType : 'json',
         processData : false,
@@ -264,7 +257,7 @@ function submit_action(url, input_data, mode) {
     	alert("err:"+textStatus);
         console.log( textStatus  + errorThrown);
     });
-};
+});
 
 </script>
 </body>

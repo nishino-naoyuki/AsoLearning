@@ -67,13 +67,13 @@ public class LoginServlet extends BaseServlet {
 
 			if( RoleId.STUDENT.equals(loginInfo.getRoleId()) ){
 				//画面転送（リダイレクト）
-				resp.sendRedirect("tasklist");
+				resp.sendRedirect("st_dashboad");
 			}else if( RoleId.TEACHER.equals(loginInfo.getRoleId()) ){
 				//画面転送（リダイレクト）
 				resp.sendRedirect("st_dashboad");
 			}else{
 				//画面転送（リダイレクト）
-				resp.sendRedirect("tasklist");
+				resp.sendRedirect("st_dashboad");
 			}
 
 		} catch (LoginFailureException | AccountLockedException e) {

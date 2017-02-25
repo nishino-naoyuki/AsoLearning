@@ -45,7 +45,8 @@ public class TaskScoreServlet extends BaseServlet {
 		//////////////////////////////////
 		//パラメータ取得
 		String dispNo = req.getParameter(RequestConst.REQUEST_DISP_NO);
-		int taskId = getTaskIdFromParam(req);
+		Integer taskId = getIntParam(RequestConst.REQUEST_TASK_ID,req);
+		Integer userId = getIntParam("userId",req);
 
 		//////////////////////////////////
 		//結果情報取得
@@ -66,6 +67,7 @@ public class TaskScoreServlet extends BaseServlet {
 		//画面転送
 		req.setAttribute(RequestConst.REQUEST_DISP_NO, dispNo);
 		req.setAttribute(RequestConst.REQUEST_TASK_RESULT, dto);
+		req.setAttribute(RequestConst.REQUEST_USER_ID, userId);
 		RequestDispatcher rd = req.getRequestDispatcher("view/st_taskscore.jsp");
 		rd.forward(req, resp);
 
@@ -81,23 +83,4 @@ public class TaskScoreServlet extends BaseServlet {
 	}
 
 
-	/**
-	 * 一覧画面から
-	 * @param req
-	 * @return
-	 * @throws AsoLearningSystemErrException
-	 */
-	private Integer getTaskIdFromParam(HttpServletRequest req) throws AsoLearningSystemErrException{
-		Integer taskId = null;
-
-		String sTaskId = req.getParameter(RequestConst.REQUEST_TASK_ID);
-
-		try{
-			taskId = Integer.parseInt(sTaskId);
-		}catch( NumberFormatException e ){
-			logger.warn("パラメータが指定されていないか、不正です：",e);
-		}
-
-		return taskId;
-	}
 }

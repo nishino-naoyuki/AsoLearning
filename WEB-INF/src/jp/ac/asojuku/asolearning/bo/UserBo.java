@@ -7,8 +7,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.csv.model.UserCSV;
+import jp.ac.asojuku.asolearning.dto.UserDetailDto;
 import jp.ac.asojuku.asolearning.dto.UserDto;
+import jp.ac.asojuku.asolearning.dto.UserSearchResultDto;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 
@@ -19,6 +22,24 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public interface UserBo {
 
+	public void updatePassword(Integer userId,String password,String maileaddress) throws AsoLearningSystemErrException;
+	public void updateNickName(Integer userId,String nickName,String maileaddress) throws AsoLearningSystemErrException;
+	/**
+	 * 詳細情報を取得する
+	 *
+	 * @param userId
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	public UserDetailDto detail(Integer userId) throws AsoLearningSystemErrException;
+	/**
+	 * 検索処理
+	 *
+	 * @param cond
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	List<UserSearchResultDto> search(SearchUserCondition cond)  throws AsoLearningSystemErrException;
 	/**
 	 * ユーザー情報の挿入
 	 * @param userDto

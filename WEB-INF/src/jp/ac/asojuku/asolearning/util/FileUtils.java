@@ -34,6 +34,35 @@ public class FileUtils {
 	}
 
 	/**
+	 * 拡張子を取得する
+	 * @param fileName
+	 * @return
+	 */
+	public static String getExt(String fileName){
+
+	    if (fileName == null)
+	        return null;
+	    int point = fileName.lastIndexOf(".");
+	    if(point == -1){
+	    	return "";
+	    }
+
+	    return fileName.substring(point+1);
+	}
+	/**
+	 * ファイル名が指定した拡張子かどうかを判断する
+	 * @param file
+	 * @param ext
+	 * @return
+	 */
+	public static boolean checkFileExt(String filename,String ext) {
+
+		File file = new File(filename);
+
+		return file.isFile() && file.canRead() && file.getPath().endsWith("."+ext);
+	}
+
+	/**
 	 * ディレクトリ作成
 	 * @param dir
 	 */

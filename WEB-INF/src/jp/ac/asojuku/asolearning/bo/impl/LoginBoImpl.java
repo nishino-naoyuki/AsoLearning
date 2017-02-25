@@ -93,6 +93,7 @@ public class LoginBoImpl implements LoginBo {
 		loginDto.setCourseName(entity.getCourseMaster().getCourseName());
 		loginDto.setRoleName(RoleId.search(entity.getRoleMaster().getRoleId()).getMsg());
 		loginDto.setGrade(UserUtils.getGrade(entity));
+		loginDto.setMailAddress(entity.getMailadress());
 
 		return loginDto;
 	}

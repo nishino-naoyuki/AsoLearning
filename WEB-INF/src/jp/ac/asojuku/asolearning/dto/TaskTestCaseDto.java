@@ -21,6 +21,10 @@ public class TaskTestCaseDto {
 	/** 入力ファイル名. */
 	private String inputFileName;
 
+	// 更新時にのみ使用するデータ
+	private boolean updateInputFileFlag;
+	private boolean updateOutputFileFlag;
+
 	/**
 	 * @return allmostOfMarks
 	 */
@@ -75,5 +79,21 @@ public class TaskTestCaseDto {
 	 */
 	public void setTestcaseId(Integer testcaseId) {
 		this.testcaseId = testcaseId;
+	}
+
+	public boolean isUpdateInputFileFlag() {
+		return updateInputFileFlag;
+	}
+
+	public void setUpdateInputFileFlag(boolean updateInputFileFlag) {
+		this.updateInputFileFlag = updateInputFileFlag;
+	}
+
+	public boolean isUpdateOutputFileFlag() {
+		return updateOutputFileFlag;
+	}
+
+	public void setUpdateOutputFileFlag(boolean updateOutputFileFlag) {
+		this.updateOutputFileFlag = updateOutputFileFlag;
 	}
 }

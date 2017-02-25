@@ -19,25 +19,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.ac.asojuku.asolearning.bo.TaskBo;
 import jp.ac.asojuku.asolearning.bo.impl.TaskBoImpl;
-import jp.ac.asojuku.asolearning.condition.TaskSearchContidion;
+import jp.ac.asojuku.asolearning.condition.SearchTaskCondition;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.json.TaskSearchResultJson;
 import jp.ac.asojuku.asolearning.param.RequestConst;
 
 /**
+ * ユーザー検索処理
  * @author nishino
  *
  */
-@WebServlet(name="TaskSearchServlet",urlPatterns={"/searchTask"})
-public class TaskSearchServlet extends BaseServlet {
+@WebServlet(name="SearchTaskServlet",urlPatterns={"/searchTask"})
+public class SearchTaskServlet extends BaseServlet {
 
-	Logger logger = LoggerFactory.getLogger(TaskSearchServlet.class);
+	Logger logger = LoggerFactory.getLogger(SearchTaskServlet.class);
 
-	private final String DISPNO = "00604";
+	private final String DISPNO = "00801";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;
 	}
+
 
 	@Override
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp)
@@ -49,7 +51,7 @@ public class TaskSearchServlet extends BaseServlet {
         try{
 			//////////////////////////////
 			//パラメータを取得
-        	TaskSearchContidion cond = getCondition(req);
+        	SearchTaskCondition cond = getCondition(req);
 
 			//////////////////////////////
 			//課題一覧を取得
@@ -82,8 +84,8 @@ public class TaskSearchServlet extends BaseServlet {
 	 * @param req
 	 * @return
 	 */
-	private TaskSearchContidion getCondition(HttpServletRequest req){
-		TaskSearchContidion cond = new TaskSearchContidion();
+	private SearchTaskCondition getCondition(HttpServletRequest req){
+		SearchTaskCondition cond = new SearchTaskCondition();
 
 		cond.setCourseId(getIntParam(RequestConst.REQUEST_COURSE_ID,req));
 		cond.setTaskName(req.getParameter("taskname"));
@@ -91,6 +93,4 @@ public class TaskSearchServlet extends BaseServlet {
 
 		return cond;
 	}
-
-
 }

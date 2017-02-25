@@ -41,6 +41,8 @@ public abstract class BaseServlet extends HttpServlet {
 			doGetMain(req,resp);
 		} catch (AsoLearningSystemErrException e) {
 			fowardSystemError(req,resp,e);
+		} catch (Exception e){
+			fowardSystemError(req,resp,e);
 		}
 	}
 
@@ -61,6 +63,8 @@ public abstract class BaseServlet extends HttpServlet {
 			doPostMain(req,resp);
 		} catch (AsoLearningSystemErrException e) {
 			fowardSystemError(req,resp,e);
+		} catch (Exception e){
+			fowardSystemError(req,resp,e);
 		}
 	}
 
@@ -72,7 +76,7 @@ public abstract class BaseServlet extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void fowardSystemError(HttpServletRequest req,HttpServletResponse resp,AsoLearningSystemErrException e) throws ServletException, IOException{
+	private void fowardSystemError(HttpServletRequest req,HttpServletResponse resp,Exception e) throws ServletException, IOException{
 
 		Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
@@ -98,12 +102,16 @@ public abstract class BaseServlet extends HttpServlet {
 
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException,AsoLearningSystemErrException
 	{
-		//TODO:405エラーチック名画面へ遷移
+		//405エラーチック名画面へ遷移
+		RequestDispatcher rd = req.getRequestDispatcher("view/error/405.jsp");
+		rd.forward(req, resp);
 	}
 
 	protected void doPostMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException,AsoLearningSystemErrException
 	{
-		//TODO:405エラーチック名画面へ遷移
+		//405エラーチック名画面へ遷移
+		RequestDispatcher rd = req.getRequestDispatcher("view/error/405.jsp");
+		rd.forward(req, resp);
 
 	}
 

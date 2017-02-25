@@ -7,7 +7,7 @@ public class DataUtil {
 
 	public static String formattedDate(Date date, String timeFormat) {
 		if( date == null ){
-			return null;
+			return "";
 		}
         return new SimpleDateFormat(timeFormat).format(date);
     }

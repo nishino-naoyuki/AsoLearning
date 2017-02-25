@@ -25,6 +25,16 @@ public interface ResultBo {
 	 * @return
 	 * @throws AsoLearningSystemErrException
 	 */
+	List<TaskResultDetailDto> getResultDetailById(int taskId) throws AsoLearningSystemErrException;
+
+	/**
+	 * 結果の詳細情報の取得
+	 *
+	 * @param taskId
+	 * @param userId
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
 	TaskResultDetailDto getResultDetail(int taskId,int userId) throws AsoLearningSystemErrException;
 
 	/**

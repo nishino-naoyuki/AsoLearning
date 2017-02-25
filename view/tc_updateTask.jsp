@@ -7,8 +7,11 @@
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.TaskPublicStateId" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.err.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.util.*" %>
+	<LINK REL="SHORTCUT ICON" HREF="view/ico/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -49,10 +52,10 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	List<TaskPublicDto> taskPublicList = (taskDto == null ? null :taskDto.getTaskPublicList());
 	List<TaskTestCaseDto> testCaseList = (taskDto == null ? null :taskDto.getTaskTestCaseDtoList());
 %>
+
 </head>
 
 <body>
-
     <div id="wrapper">
 
         <!-- Navigation -->
@@ -77,7 +80,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
         <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid">
-				<form action="tc_confirmTask" enctype="multipart/form-data" method="post" >
+				<form action="tc_confirmUpdateTask" enctype="multipart/form-data" method="post" >
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -151,41 +154,70 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                    </tr>
 	                                </thead>
 	                                <tbody>
-	                                	<tr id="testcase_table_tr[0]" class="testcase_table_tr">
+	                                <% if( testCaseList == null){ testCaseList=new ArrayList<TaskTestCaseDto>(); } %>
+	                                <% int idx=0; %>
+	                                <% for(TaskTestCaseDto testcase : testCaseList ){ %>
+	                                	<tr id="testcase_table_tr[<%=idx %>]" class="testcase_table_tr">
 
 	                                		<td>
-	                                			<input class="close" type="button" value="削除" id="close[0]" style="display: none;">
+	                                			<input class="close" type="button" value="削除" id="close[<%=idx %>]" <%=idx>0?"data-n="+idx:"style=\"display: none;\"" %> >
 	                                		</td>
 	                                		<td>
-	                                			<div id="index[0]">1</div>
+	                                			<div id="index[<%=idx %>]"><%=idx+1 %></div>
 	                                		</td>
 	                                		<td>
-		                                        <input type="file" id="infile_select[0]" name="inputfile[0]" class="form-control" style="display:none;">
+		                                        <input type="file" id="infile_select[<%=idx %>]" name="inputfile[<%=idx %>]" class="form-control" style="display:none;" <%=idx>0?"data-n="+idx:"" %>>
 		                                        <div class="input-group">
-
+			                                        <% if( testcase.getInputFileName()!=null ){%>
+													<p id="nowInput">
+										          	現在の設定値：
+														<%= FileUtils.getFileNameFromPath( testcase.getInputFileName()) %>
+													</p>
+														<input type="hidden" name="infile_hide[<%=idx %>]" value="<%= testcase.getInputFileName() %>">
+													<% }else{ %>
+													<p id="nowInput">
+										          	現在の設定値：
+														設定なし
+													</p>
+														<input type="hidden" name="infile_hide[<%=idx %>]" value="">
+													<% } %>
 										          <span class="input-group-btn">
-										            <button type="button" id="infile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
+										            <button type="button" id="infile_select_icon[<%=idx %>]" class="btn btn-sm" <%=idx>0?"data-n="+idx:"" %>><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
 										          </span>
-										          <input type="text" id="inputfile_name[0]" name="inputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
+										          <input type="text" id="inputfile_name[<%=idx %>]" <%=idx>0?"data-n="+idx:"" %> name="inputfile_name[<%=idx %>]" class="form-control" placeholder="Select file ..." readonly>
 
 										        </div>
 	                                		</td>
 	                                		<td>
-		                                        <input type="file" id="outfile_select[0]" name="outputfile[0]" class="form-control" style="display:none;">
+		                                        <input type="file" id="outfile_select[<%=idx %>]" <%=idx>0?"data-n="+idx:"" %> name="outputfile[<%=idx %>]" class="form-control" style="display:none;">
 		                                        <div class="input-group">
-
+			                                        <% if( testcase.getOutputFileName()!=null ){%>
+														<input type="hidden" name="outfile_hide[<%=idx %>]" value="<%= testcase.getOutputFileName() %>">
+													<p id="nowOutput">
+										          現在の設定値：
+														<%= FileUtils.getFileNameFromPath( testcase.getOutputFileName()) %>
+													</p>
+													<% }else{ %>
+													<p id="nowOutput">
+										          現在の設定値：
+														設定なし
+													</p>
+														<input type="hidden" name="outfile_hide[<%=idx %>]" value="">
+													<% } %>
 										          <span class="input-group-btn">
-										            <button type="button" id="outfile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
+										            <button type="button" id="outfile_select_icon[<%=idx %>]" <%=idx>0?"data-n="+idx:"" %> class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
 										          </span>
-										          <input type="text" id="outputfile_name[0]" name="outputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
+										          <input type="text" id="outputfile_name[<%=idx %>]" <%=idx>0?"data-n="+idx:"" %> name="outputfile_name[<%=idx %>]" class="form-control" placeholder="Select file ..." readonly>
 
 										        </div>
 	                                		</td>
 	                                		<td>
-	                                			<input type="text" id="haiten[0]" name="haiten[0]" placeholder="配点を記入してください">
+	                                			<input type="text" id="haiten[<%=idx %>]" <%=idx>0?"data-n="+idx:"" %> name="haiten[<%=idx %>]" placeholder="配点を記入してください" value=<%=testcase.getAllmostOfMarks()%>>
 
 	                                		</td>
 	                                	</tr>
+	                                <% idx++; %>
+	                                <% } %>
 	                                </tbody>
 	                            </table>
 	                        </div>
@@ -253,6 +285,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                        </div>
 						</div>
                 	</div>
+                	<input type="hidden" name="taskId" value="<%=taskDto.getTaskId()%>">
                 </div>
                 <!-- /.row -->
                 <div class="row">
@@ -282,6 +315,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
 	<script>
+	  testcase_cnt = <%=testCaseList.size()-1%>
 	//アイコンをクリックした場合は、ファイル選択をクリックした挙動とする.
 	$('[id^=infile_select_icon]').on('click', function() {
 		var idx = 0;
@@ -358,6 +392,8 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 					  $('#index\\['+testcase_cnt+'\\]').text( testcase_cnt+1 );
 				      clone.children('td').children('input.close').show();
 				      clone.slideDown('slow');
+				      clone.children('td').children('div').children('p#nowInput').hide();
+				      clone.children('td').children('div').children('p#nowOutput').hide();
 		  		}
 
 		  });

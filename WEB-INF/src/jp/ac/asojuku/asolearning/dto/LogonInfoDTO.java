@@ -18,6 +18,7 @@ public class LogonInfoDTO {
 	private String courseName;
 	private String roleName;
 	private Integer grade;
+	private String mailAddress;
 
 
 	/**
@@ -115,6 +116,12 @@ public class LogonInfoDTO {
 	 */
 	public void setGrade(Integer grade) {
 		this.grade = grade;
+	}
+	public String getMailAddress() {
+		return mailAddress;
+	}
+	public void setMailAddress(String mailAddress) {
+		this.mailAddress = mailAddress;
 	}
 
 

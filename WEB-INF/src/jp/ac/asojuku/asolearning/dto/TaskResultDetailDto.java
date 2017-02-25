@@ -16,6 +16,7 @@ public class TaskResultDetailDto {
 	private int taskId;
 	private String taskName;
 	private float totalScore;
+	private boolean handed;
 
 	private List<TaskResultTestCaseDto> testcase = new ArrayList<TaskResultTestCaseDto>();
 	private TaskResultMetricsDto metrics;
@@ -81,6 +82,12 @@ public class TaskResultDetailDto {
 	 */
 	public void setMetrics(TaskResultMetricsDto metrics) {
 		this.metrics = metrics;
+	}
+	public boolean isHanded() {
+		return handed;
+	}
+	public void setHanded(boolean handed) {
+		this.handed = handed;
 	}
 
 

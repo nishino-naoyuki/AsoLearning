@@ -10,6 +10,7 @@
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.err.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.util.*" %>
+	<LINK REL="SHORTCUT ICON" HREF="view/ico/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">

@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
-import jp.ac.asojuku.asolearning.condition.TaskSearchContidion;
+import jp.ac.asojuku.asolearning.condition.SearchTaskCondition;
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.PublicStatusMasterEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
@@ -142,7 +142,7 @@ public class TaskDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<TaskTblEntity> getTaskListBy(TaskSearchContidion condition) throws SQLException{
+	public List<TaskTblEntity> getTaskListBy(SearchTaskCondition condition) throws SQLException{
 
 		if( con == null ){
 			return null;
@@ -209,7 +209,7 @@ public class TaskDao extends Dao {
 	 * @param ps
 	 * @throws SQLException
 	 */
-	private void setWhereParameter(TaskSearchContidion condition,PreparedStatement ps) throws SQLException{
+	private void setWhereParameter(SearchTaskCondition condition,PreparedStatement ps) throws SQLException{
 		int index = 1;
 
 		if( StringUtils.isNotEmpty(condition.getTaskName()) ){
@@ -229,7 +229,7 @@ public class TaskDao extends Dao {
 	 * @param condition
 	 * @return
 	 */
-	private String getWhereString(TaskSearchContidion condition){
+	private String getWhereString(SearchTaskCondition condition){
 		StringBuffer sb = new StringBuffer();
 
 		if( StringUtils.isNotEmpty(condition.getTaskName()) ){
@@ -486,7 +486,7 @@ public class TaskDao extends Dao {
 		}
 	}
 
-	public List<TaskTblEntity> getTaskList(int studentId,int courseId,Integer offset,Integer count) throws SQLException{
+	public List<TaskTblEntity> getTaskList(Integer studentId,Integer courseId,Integer offset,Integer count) throws SQLException{
 
 		if( con == null ){
 			return null;
@@ -680,8 +680,6 @@ public class TaskDao extends Dao {
 
         	ps1.executeUpdate();
 
-			int taskId = getLastInsertid("TASK_TBL");
-
         	////////////////////////////
         	//TASKTESTCASE_INSERT_SQL
 			Set<TestcaseTableEntity> testCaseSet = entity.getTestcaseTableSet();
@@ -698,7 +696,7 @@ public class TaskDao extends Dao {
 				}else{
 					ps2.setNull(3, java.sql.Types.DATE);
 				}
-				ps2.setInt(4, taskId);
+				ps2.setInt(4, entity.getTaskId());
 				ps2.setInt(5, caseId);
 
 				ps2.addBatch();
@@ -727,7 +725,7 @@ public class TaskDao extends Dao {
 				}else{
 					ps3.setNull(3, java.sql.Types.DATE);
 				}
-				ps3.setInt(4, taskId);
+				ps3.setInt(4, entity.getTaskId());
 				ps3.setInt(5, pub.getCourseMaster().getCourseId());
 
 				ps3.addBatch();
