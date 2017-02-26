@@ -110,12 +110,8 @@ if( taskId == null){
 	                        	<div class="form-group">
 			                    	学籍番号
 				                    <input type="text" name="username" >
-				                </div>
-	                        	<div class="form-group">
 			                    	メールアドレス
 				                    <input type="text" name="mailaddress" >
-				                </div>
-	                        	<div class="form-group">
 			                    	学年
 				                    <input type="text" name="grade" >
 				                </div>
@@ -290,9 +286,11 @@ $('#search').on('click', function() {
     		$("#search_nodata").show();
     	}else{
     		$("#search_result_row").show();
+    		$("#search_nodata").hide();
     	}
 
     	$('#dataTables-example').DataTable().destroy();
+    	$('#search_result').html("");
     	for( var i=0; i < json.length; i++){
     		var element;
     		var handedTask = "";

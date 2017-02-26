@@ -202,8 +202,8 @@ List<TaskResultDto> retList = userDto.getResultList();
                 <!-- /.row -->
 
                 <!-- /.row -->
-                <div class="row">
-                	 <button type="submit" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 登録</button>
+                <div class="row" style="display:none">
+                	 <button type="submit" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 編集</button>
                 </div>
                 </form>
             </div>

@@ -26,6 +26,8 @@ public class AppSettingProperty extends ConfigBase {
 	private static final String PASSWORD_POLICY = "password.policy";
 	private static final String NICKNAME_KY = "nickname.enc.ky";
 	private static final String NICKNAME_IV = "nickname.enc.iv";
+	private static final String PWD_EXPIRY = "password.expiry";
+	private static final String PWD_LOCK_LIMIT = "pwd.lock.limit";
 
 	//設定値
 	private final String ASP_PWD_SALT = "pwd.hash.salt";	//パスワードソルト
@@ -53,8 +55,18 @@ public class AppSettingProperty extends ConfigBase {
 	protected String getConfigName(){ return CONFIG_NAME; }
 
 
+	public String getPwdLockLmit(){
+		return getProperty(PWD_LOCK_LIMIT);
+	}
 	/**
-	 * パスワードするとの取得
+	 * パスワード有効日数の取得
+	 * @return
+	 */
+	public String getPwdExpiry(){
+		return getProperty(PWD_EXPIRY);
+	}
+	/**
+	 * パスワードソルトの取得
 	 * @return
 	 */
 	public String getPwdHashSalt(){

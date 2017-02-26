@@ -4,11 +4,14 @@
 package jp.ac.asojuku.asolearning.bo.impl;
 
 import java.sql.SQLException;
+import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.bo.LoginBo;
+import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.dao.UserDao;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
@@ -46,7 +49,7 @@ public class LoginBoImpl implements LoginBo {
 					dao.getUserInfoByMailAddress(mailadress);
 
 			//ユーザー状態チェック
-			vlidateUserState(entity,mailadress,password);
+			vlidateUserState(entity,dao,mailadress,password);
 
 			//会員テーブル→ログイン情報
 			login = MemberEntityToLogonInfoDTO(entity);
@@ -106,8 +109,9 @@ public class LoginBoImpl implements LoginBo {
 	 * @param entity
 	 * @throws AsoLearningSystemErrException
 	 * @throws AccountLockedException
+	 * @throws SQLException
 	 */
-	private void vlidateUserState(UserTblEntity entity,String mailadress,String password)throws LoginFailureException, AsoLearningSystemErrException, AccountLockedException{
+	private void vlidateUserState(UserTblEntity entity,UserDao dao,String mailadress,String password)throws LoginFailureException, AsoLearningSystemErrException, AccountLockedException, SQLException{
 
 		if( entity == null){
 			throw new LoginFailureException();
@@ -116,17 +120,58 @@ public class LoginBoImpl implements LoginBo {
 		//パスワードのハッシュ値計算
 		String hashPwd = Digest.createPassword(mailadress,password);
 
-		if( !hashPwd.equals(entity.getPassword())){
-			//パスワード認証失敗かうんとアップ:TODO
-			throw new LoginFailureException();
-
-		}
-
 		//ロックフラグ
 		if( entity.getIsLockFlg() == 1 ){
 			throw new AccountLockedException();
 		}
 
-		//TODO:期限切れ
+		//期限切れ
+		Date now = new Date();
+
+		if(
+			StringUtils.isNotEmpty(AppSettingProperty.getInstance().getPwdExpiry()) &&
+			now.after(entity.getAccountExpryDate())
+			){
+			throw new LoginFailureException();
+		}
+
+		if( !hashPwd.equals(entity.getPassword())){
+			//パスワード認証失敗かうんとアップ
+			Integer limit = getPasswordLockLimit();
+			if( limit != null ){
+				entity.setCertifyErrCnt(entity.getCertifyErrCnt()+1);
+				dao.updateCertErrCnt(entity.getUserId(), entity.getCertifyErrCnt());
+
+				logger.warn("認証失敗回数アップ："+entity.getCertifyErrCnt());
+
+				if( entity.getCertifyErrCnt() > limit ){
+					//ロック
+					logger.warn("アカウントロック");
+					dao.updateLockFlg(entity.getUserId(), 1);
+				}
+			}
+			throw new LoginFailureException();
+
+		}
+
+
+	}
+
+	/**
+	 * パスワード閾値を取得
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	private Integer getPasswordLockLimit() throws AsoLearningSystemErrException{
+		Integer lockLimit = null;
+		String limit = AppSettingProperty.getInstance().getPwdLockLmit();
+
+		try{
+			lockLimit = Integer.parseInt(limit);
+		}catch(NumberFormatException e){
+			lockLimit = null;
+		}
+
+		return lockLimit;
 	}
 }

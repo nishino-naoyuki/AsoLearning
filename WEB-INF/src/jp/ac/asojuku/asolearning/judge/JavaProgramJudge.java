@@ -113,6 +113,10 @@ public class JavaProgramJudge implements Judge {
 
 			json.score = resultEntity.getTotalScore();
 
+			///////////////////////////////////////
+			//すべて終わったら判定ファイルは削除
+			FileUtils.delete(dirName);
+
 		}catch (InterruptedException | IOException e) {
 			logger.warn("判定結果エラー：", e);
 		} catch (JAXBException e) {

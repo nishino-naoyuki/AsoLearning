@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +53,7 @@ public class UserDao extends Dao {
 	private static final String MEMBER_SEARCH_COND5 = " ret.HANDED = ? ";
 	private static final String MEMBER_SEARCH_COND5_NULL = " (ret.HANDED = ? OR ret.HANDED is null) ";
 	private static final String MEMBER_SEARCH_COND6 = " t.TASK_ID = ? ";
-	private static final String MEMBER_SEARCH_ORDER = " ORDER BY u.COURSE_ID,u.USER_ID,t.TASK_ID";
+	private static final String MEMBER_SEARCH_ORDER = " ORDER BY u.USER_ID,u.COURSE_ID,t.TASK_ID";
 
 	// ユーザーIDとパスワードを指定してユーザー情報を取得する
 	private static final String MEMBER_INFO_BY_UP_SQL =
@@ -114,12 +115,130 @@ public class UserDao extends Dao {
 			+ "UPDATE_DATE=CURRENT_TIMESTAMP "
 			+ "WHERE USER_ID=?";
 
+	// ユーザーの更新（パスワード失敗回数）
+	private static final String MEMBER_PASSERR_UPDATE_SQL =
+			 "UPDATE USER_TBL SET "
+			+ "CERTIFY_ERR_CNT=?,"
+			+ "UPDATE_DATE=CURRENT_TIMESTAMP "
+			+ "WHERE USER_ID=?";
+
+	// ユーザーの更新（ロックフラグ）
+	private static final String MEMBER_LOCKFLG_UPDATE_SQL =
+			 "UPDATE USER_TBL SET "
+			+ "IS_LOCK_FLG=?,"
+			+ "UPDATE_DATE=CURRENT_TIMESTAMP "
+			+ "WHERE USER_ID=?";
+
+	// ユーザーの更新（パスワード有効期限）
+	private static final String MEMBER_PASSLIMIT_UPDATE_SQL =
+			 "UPDATE USER_TBL SET "
+			+ "PASSWORD_EXPIRYDATE=?,"
+			+ "UPDATE_DATE=CURRENT_TIMESTAMP "
+			+ "WHERE USER_ID=?";
+
 
 	public UserDao() {
 	}
 	public UserDao(Connection con) {
 		super(con);
 	}
+
+	/**
+	 * パスワードの有効期限を更新
+	 * @param userId
+	 * @param limitDate
+	 * @throws SQLException
+	 */
+	public void updatePassLimit(Integer userId,Date limitDate) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+        	ps = con.prepareStatement(MEMBER_PASSLIMIT_UPDATE_SQL);
+
+        	//パラメータセット
+        	ps.setDate(1, parseSQLLDateFromUtilData(limitDate));	//PASSWORD_EXPIRYDATE
+        	ps.setInt(2, userId);
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			logger.warn("SQLException:",e);
+			throw e;
+		} finally {
+			safeClose(ps,null);
+		}
+	}
+
+	/**
+	 * アカウントロックのフラグを更新
+	 * @param userId
+	 * @param lockFlg
+	 * @throws SQLException
+	 */
+	public void updateLockFlg(Integer userId,Integer lockFlg) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+        	ps = con.prepareStatement(MEMBER_LOCKFLG_UPDATE_SQL);
+
+        	//パラメータセット
+        	ps.setInt(1, lockFlg);	//CERTIFY_ERR_CNT
+        	ps.setInt(2, userId);
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			logger.warn("SQLException:",e);
+			throw e;
+		} finally {
+			safeClose(ps,null);
+		}
+	}
+
+	/**
+	 * 認証失敗回数を更新
+	 * @param userId
+	 * @param count
+	 * @throws SQLException
+	 */
+	public void updateCertErrCnt(Integer userId,Integer count) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+        	ps = con.prepareStatement(MEMBER_PASSERR_UPDATE_SQL);
+
+        	//パラメータセット
+        	ps.setInt(1, count);	//CERTIFY_ERR_CNT
+        	ps.setInt(2, userId);
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			logger.warn("SQLException:",e);
+			throw e;
+		} finally {
+			safeClose(ps,null);
+		}
+	}
+
 
 	/**
 	 * パスワードの更新
@@ -295,11 +414,11 @@ public class UserDao extends Dao {
 		int index = 1;
 
 		if( StringUtils.isNotEmpty(cond.getName()) ){
-			ps.setString(index++, cond.getName());
+			ps.setString(index++, getLikeString(cond.getName()));
 
 		}
 		if( StringUtils.isNotEmpty(cond.getMailaddress()) ){
-			ps.setString(index++, cond.getMailaddress());
+			ps.setString(index++, getLikeString(cond.getMailaddress()));
 		}
 		if(cond.getCourseId() != null){
 			ps.setInt(index++, cond.getCourseId());

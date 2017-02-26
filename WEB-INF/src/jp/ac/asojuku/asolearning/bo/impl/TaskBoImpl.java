@@ -35,7 +35,7 @@ import jp.ac.asojuku.asolearning.judge.Judge;
 import jp.ac.asojuku.asolearning.judge.JudgeFactory;
 import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
-import jp.ac.asojuku.asolearning.util.DataUtil;
+import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
 import jp.ac.asojuku.asolearning.util.SqlDateUtil;
 
@@ -173,8 +173,8 @@ public class TaskBoImpl implements TaskBo {
 			pdto.setCourseId(publicEntity.getCourseMaster().getCourseId());
 			pdto.setCourseName(publicEntity.getCourseMaster().getCourseName());
 			pdto.setStatus(TaskPublicStateId.valueOf(publicEntity.getPublicStatusMaster().getStatusId()));
-			pdto.setEndDatetime( DataUtil.formattedDate(publicEntity.getEndDatetime(), "yyyy/MM/dd") );
-			pdto.setPublicDatetime(  DataUtil.formattedDate(publicEntity.getPublicDatetime(), "yyyy/MM/dd"));
+			pdto.setEndDatetime( DateUtil.formattedDate(publicEntity.getEndDatetime(), "yyyy/MM/dd") );
+			pdto.setPublicDatetime(  DateUtil.formattedDate(publicEntity.getPublicDatetime(), "yyyy/MM/dd"));
 
 			dto.addTaskPublicList(pdto);
 		}
@@ -539,7 +539,7 @@ public class TaskBoImpl implements TaskBo {
 		json.taskName = entity.getName();
 		json.creator = Digest.decNickName(entity.getCreateUserNickName(), entity.getMailAddress()) ;
 		json.limit =
-			(entity.getTerminationDate() != null ? DataUtil.formattedDate(entity.getTerminationDate(), "yyyy/MM/dd"):"");
+			(entity.getTerminationDate() != null ? DateUtil.formattedDate(entity.getTerminationDate(), "yyyy/MM/dd"):"");
 
 		StringBuffer sb = new StringBuffer();
 		for(TaskPublicTblEntity taskPublic: entity.getTaskPublicTblSet() ){

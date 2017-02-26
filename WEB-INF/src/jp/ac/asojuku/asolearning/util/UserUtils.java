@@ -5,7 +5,9 @@ package jp.ac.asojuku.asolearning.util;
 
 import java.util.Calendar;
 
+import jp.ac.asojuku.asolearning.entity.RoleMasterEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
+import jp.ac.asojuku.asolearning.param.RoleId;
 
 /**
  * @author nishino
@@ -20,6 +22,12 @@ public class UserUtils {
 	 */
 	public static Integer getGrade(UserTblEntity userEntity){
 
+		RoleMasterEntity role =userEntity.getRoleMaster() ;
+
+		//学生でない場合は学年はnull
+		if( role != null && !RoleId.STUDENT.equals(role.getRoleId())){
+			return null;
+		}
 		if( userEntity.getAdmissionYear() == null ){
 			return null;
 		}

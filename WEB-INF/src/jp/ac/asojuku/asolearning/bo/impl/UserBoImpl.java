@@ -4,11 +4,13 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +20,7 @@ import com.opencsv.bean.CsvToBean;
 
 import jp.ac.asojuku.asolearning.bo.UserBo;
 import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
+import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.csv.model.UserCSV;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dao.UserDao;
@@ -36,6 +39,7 @@ import jp.ac.asojuku.asolearning.err.ErrorCode;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.param.SessionConst;
+import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
 import jp.ac.asojuku.asolearning.util.UserUtils;
 import jp.ac.asojuku.asolearning.validator.UserValidator;
@@ -201,7 +205,7 @@ public class UserBoImpl implements UserBo {
 		}
 
 		entity.setMailadress(user.getMailAddress());
-		entity.setAdmissionYear(user.getAdmissionYear());
+		entity.setAdmissionYear(( StringUtils.isEmpty( user.getAdmissionYear() ) ? null: Integer.parseInt(user.getAdmissionYear())));
 		entity.setName( user.getName() );
 		entity.setNickName( Digest.encNickName( user.getNickName(),user.getMailAddress() ));
 		entity.setPassword(user.getPassword());
@@ -267,8 +271,8 @@ public class UserBoImpl implements UserBo {
         		UserValidator.useNickName(userCsv.getNickName(), errors);
         		UserValidator.roleId(String.valueOf(userCsv.getRoleId()), errors);
         		//UserValidator.courseId(String.valueOf(userCsv.getRoleId()), list, errors);
-        		UserValidator.admissionYear(String.valueOf(userCsv.getRoleId()), errors);
-        		UserValidator.mailAddress(String.valueOf(userCsv.getAdmissionYear()), errors);
+        		UserValidator.admissionYear(userCsv.getAdmissionYear(), errors);
+        		UserValidator.mailAddress(userCsv.getMailAddress(), errors);
         		UserValidator.password(userCsv.getPassword(), errors);
             }
 
@@ -296,7 +300,10 @@ public class UserBoImpl implements UserBo {
 
 			//Entity -> Dto
 			for( UserTblEntity entiy : useEntityList ){
-				list.add( getUserSearchResultDtoFromEntity(entiy) );
+				UserSearchResultDto dto = getUserSearchResultDtoFromEntity(entiy,cond);
+				if( dto != null){
+					list.add( dto );
+				}
 			}
 
 		} catch (DBConnectException e) {
@@ -322,29 +329,48 @@ public class UserBoImpl implements UserBo {
 	 * @return
 	 * @throws AsoLearningSystemErrException
 	 */
-	private UserSearchResultDto getUserSearchResultDtoFromEntity(UserTblEntity entiy) throws AsoLearningSystemErrException{
-		UserSearchResultDto dto = new UserSearchResultDto();
+	private UserSearchResultDto getUserSearchResultDtoFromEntity(UserTblEntity entiy,SearchUserCondition cond) throws AsoLearningSystemErrException{
+		UserSearchResultDto dto = null;
 
-		//ユーザー情報をセット
-		dto.setUserDto(getUserDtoFromEntity(entiy));
+		//学年の検索条件はここでは軸
+		if( isNotSettingCondition(cond) ||	isMatchGrade(cond,UserUtils.getGrade(entiy)) ){
+			dto = new UserSearchResultDto();
 
-		//結果をセット
-		if( CollectionUtils.isNotEmpty(entiy.getResultTblSet()) ){
-			for(ResultTblEntity result : entiy.getResultTblSet()){
-				TaskResultDto retDto = new TaskResultDto();
+			//ユーザー情報をセット
+			dto.setUserDto(getUserDtoFromEntity(entiy));
 
-				retDto.setHanded( (result.getHanded()==0?false:true) );
-				retDto.setTotal(result.getTotalScore());
-				retDto.setTaskName(result.getTaskTbl().getName());
+			//結果をセット
+			if( CollectionUtils.isNotEmpty(entiy.getResultTblSet()) ){
+				for(ResultTblEntity result : entiy.getResultTblSet()){
+					TaskResultDto retDto = new TaskResultDto();
 
-				dto.addResultList(retDto);
+					retDto.setHanded( (result.getHanded()==0?false:true) );
+					retDto.setTotal(result.getTotalScore());
+					retDto.setTaskName(result.getTaskTbl().getName());
+
+					dto.addResultList(retDto);
+				}
+
 			}
-
 		}
 
 		return dto;
 	}
 
+	public boolean isNotSettingCondition(SearchUserCondition cond){
+		return cond.getGrade() == null;
+	}
+	public boolean isMatchGrade(SearchUserCondition cond,Integer grade){
+
+		if( grade == null && cond.getGrade() == null){
+			return true;
+		}
+		if( grade ==  cond.getGrade()){
+			return true;
+		}
+
+		return false;
+	}
 	/**
 	 * Entity -> DTO
 	 * @param entiy
@@ -476,6 +502,16 @@ public class UserBoImpl implements UserBo {
 			//パスワード変更
 			dao.updatePassword(userId, hashPwd);
 
+			//有効期限を設定ファイルから取得
+			Integer pwdExp = getPwdExpiry();
+			if( pwdExp != null ){
+				//ユーザー情報を取得しなおす
+				UserTblEntity userEntity = dao.detail(userId);
+				Date expDate = userEntity.getAccountExpryDate();
+				//設定ファイルの値を足したものを渡す
+				dao.updatePassLimit(userId, DateUtil.plusDay(expDate, pwdExp));
+			}
+
 		} catch (DBConnectException e) {
 			//ログ出力
 			logger.warn("DB接続エラー：",e);
@@ -490,6 +526,26 @@ public class UserBoImpl implements UserBo {
 			dao.close();
 		}
 
+	}
+
+	/**
+	 * パスワードの有効期限を取得する
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	private Integer getPwdExpiry() throws AsoLearningSystemErrException{
+		Integer pwdExpInt = null;
+		String pwdExp = AppSettingProperty.getInstance().getPwdExpiry();
+
+		if(StringUtils.isNotEmpty(pwdExp)){
+			try{
+				pwdExpInt = Integer.parseInt(pwdExp);
+			}catch(NumberFormatException e){
+				pwdExpInt = null;
+			}
+		}
+
+		return pwdExpInt;
 	}
 
 	@Override

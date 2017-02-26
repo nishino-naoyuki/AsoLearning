@@ -112,26 +112,23 @@ public class SearchUserServlet extends BaseServlet {
 
 		UserDto userDto = dto.getUserDto();
 
-		if( cond.getGrade() != null || userDto.getGrade() == null ||
-				userDto.getGrade() == cond.getGrade() ){
-			json = new UserSearchResultJson();
+		json = new UserSearchResultJson();
 
-			json.userId = userDto.getUserId();
-			json.name = userDto.getName();
-			json.mailAdress = userDto.getMailAdress();
-			json.courseName = userDto.getCourseName();
-			if(userDto.getGrade() != null){
-				json.grade = userDto.getGrade().toString();
-			}else{
-				json.grade = "";
-			}
-			json.nickName = userDto.getNickName() ;
+		json.userId = userDto.getUserId();
+		json.name = userDto.getName();
+		json.mailAdress = userDto.getMailAdress();
+		json.courseName = userDto.getCourseName();
+		if(userDto.getGrade() != null){
+			json.grade = userDto.getGrade().toString();
+		}else{
+			json.grade = "";
+		}
+		json.nickName = userDto.getNickName() ;
 
-			List<String> handedList = new ArrayList<>();
-			for(TaskResultDto ret : dto.getResultList()){
-				if( ret.isHanded() ){
-					handedList.add(ret.getTaskName());
-				}
+		List<String> handedList = new ArrayList<>();
+		for(TaskResultDto ret : dto.getResultList()){
+			if( ret.isHanded() ){
+				handedList.add(ret.getTaskName());
 			}
 		}
 

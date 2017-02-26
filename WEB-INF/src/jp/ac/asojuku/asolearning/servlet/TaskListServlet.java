@@ -48,8 +48,6 @@ public class TaskListServlet extends BaseServlet {
 	protected void doPostMain(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, AsoLearningSystemErrException {
 
-		super.doPostMain(req, resp);
-
 		//セッションからログイン情報を取得
 		LogonInfoDTO loginInfo = getUserInfoDtoFromSession(req);
 

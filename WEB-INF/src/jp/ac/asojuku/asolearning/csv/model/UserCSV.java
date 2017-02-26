@@ -23,7 +23,7 @@ public class UserCSV {
 	//パスワード
 	private String password;
 	//入学年度
-	private int admissionYear;
+	private String admissionYear;
 	public int getRoleId() {
 		return roleId;
 	}
@@ -60,10 +60,10 @@ public class UserCSV {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public int getAdmissionYear() {
+	public String getAdmissionYear() {
 		return admissionYear;
 	}
-	public void setAdmissionYear(int admissionYear) {
+	public void setAdmissionYear(String admissionYear) {
 		this.admissionYear = admissionYear;
 	}
 
