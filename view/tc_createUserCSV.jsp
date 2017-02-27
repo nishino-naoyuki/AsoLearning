@@ -17,7 +17,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>学生作成</title>
+    <title>ユーザー作成</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
@@ -83,7 +83,7 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            学生作成
+                            ユーザー作成
 
                         </h1>
                         <ol class="breadcrumb">
@@ -95,76 +95,74 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
                 </div>
                 <!-- /.row -->
                 <div class="row">
-                	<div class="panel panel-default">
-                		<div class="panel-heading">
-                			CSV登録
-                		</div>
-	                	<div class="panel-body">
-		                	<div id="error">
-		                		<p id="errorMsg" ></p>
-		                	</div>
-	                        <div class="table-responsive">
-	                            <table class="table table-bordered table-hover" id="form">
-	                                <tbody>
-	                                	<tr>
-	                                		<th>CSVファイル名</th>
-	                                		<td>
-	                                		<div class="form-group">
+                    <div class="col-lg-12">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			CSV登録
+	                		</div>
+		                	<div class="panel-body">
+			                	<div id="error">
+			                		<p id="errorMsg" ></p>
+			                	</div>
+		                        <div class="table-responsive">
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <tbody>
+		                                	<tr>
+		                                		<th>CSVファイル名</th>
+		                                		<td>
+		                                		<div class="form-group">
 
-		                                        <input type="file" id="csvfile" name="csvfile" class="form-control" style="display:none;">
-		                                        <div class="input-group">
-										          <span class="input-group-btn">
-										            <button type="button" id="csvfile_select_icon" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
-										          </span>
-										          <input type="text" id="csvfile_name" name="csvfile_name" class="form-control" placeholder="Select file ..." readonly>
+			                                        <input type="file" id="csvfile" name="csvfile" class="form-control" style="display:none;">
+			                                        <div class="input-group">
+											          <span class="input-group-btn">
+											            <button type="button" id="csvfile_select_icon" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
+											          </span>
+											          <input type="text" id="csvfile_name" name="csvfile_name" class="form-control" placeholder="Select file ..." readonly>
 
-										        </div>
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                	<tr>
-	                                		<td colspan="2">
-	                                        <div class="form-group">
-	                                            <label>種類</label>
-	                                            <div class="radio">
-	                                                <label>
-	                                                    <input type="radio" name="rdoType" id="rdoInsertUpdate" value="rdoInsertUpdate" checked>追加・更新
-	                                                </label>
-	                                            </div>
-	                                            <div class="radio">
-	                                                <label>
-	                                                    <input type="radio" name="rdoType" id="rdoDelete" value="rdoDelete">削除
-	                                                </label>
-	                                            </div>
-	                                            <div class="radio">
-	                                                <label>
-	                                                    <input type="radio" name="rdoType" id="rdoGraduate" value="rdoGraduate">卒業処理
-	                                                </label>
-	                                            </div>
-	                                            <div class="radio">
-	                                                <label>
-	                                                    <input type="radio" name="rdoType" id="rdoBye" value="rdoBye">退学処理
-	                                                </label>
-	                                            </div>
-	                                        </div>
+											        </div>
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<td colspan="2">
+		                                        <div class="form-group">
+		                                            <label>種類</label>
+		                                            <div class="radio">
+		                                                <label>
+		                                                    <input type="radio" name="rdoType" id="rdoInsertUpdate" value="rdoInsertUpdate" checked>追加・更新
+		                                                </label>
+		                                            </div>
+		                                            <div class="radio">
+		                                                <label>
+		                                                    <input type="radio" name="rdoType" id="rdoDelete" value="rdoDelete">削除
+		                                                </label>
+		                                            </div>
+		                                            <div class="radio">
+		                                                <label>
+		                                                    <input type="radio" name="rdoType" id="rdoGraduate" value="rdoGraduate">卒業処理
+		                                                </label>
+		                                            </div>
+		                                            <div class="radio">
+		                                                <label>
+		                                                    <input type="radio" name="rdoType" id="rdoBye" value="rdoBye">退学処理
+		                                                </label>
+		                                            </div>
+		                                        </div>
 
-	                                		</td>
-	                                	</tr>
-	                                </tbody>
-	                            </table>
-	                        </div>
-	                		<p>
-	                		<button type="button" id="startCSV" class="btn btn-default"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> CSV登録 </button>
-	                        </p>
-						</div>
+		                                		</td>
+		                                	</tr>
+		                                </tbody>
+		                            </table>
+		                        </div>
+		                		<p>
+		                		<button type="button" id="startCSV" class="btn btn-default"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> CSV登録 </button>
+		                        </p>
+							</div>
+	                	</div>
                 	</div>
                 </div>
                 <!-- /.row -->
 
-                <!-- /.row -->
-                <div class="row">
-                	 <button type="submit" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 確認</button>
-                </div>
                 </form>
             </div>
             <!-- /.container-fluid -->
@@ -239,7 +237,6 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
 	        complete : function(xhr, textStatus) {
 	            // allow resubmit
 	            $("#startCSV").attr('disabled', false);
-	            removeLoading();
 	        }
 	    }).done(function(json) {
 	    	finishFlg = true;
@@ -250,6 +247,7 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
     		}else if(json.now > 0){
     			alert("登録完了しました！\n処理件数"+json.now+"件");
     		}
+            removeLoading();
 
 	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
 	    	finishFlg = true;

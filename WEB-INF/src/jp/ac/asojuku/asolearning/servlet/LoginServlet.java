@@ -48,7 +48,7 @@ public class LoginServlet extends BaseServlet {
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 
-        logger.trace("userName={} password={}",userName,password);
+        //logger.trace("userName={} password={}",userName,password);
 
 		LogonInfoDTO loginInfo;
 
@@ -61,6 +61,7 @@ public class LoginServlet extends BaseServlet {
 				return;
 			}
 
+			logger.trace("login! userName={} ",userName);
 			//ログイン情報を保存
 			setLoginInfoToSession(request,loginInfo);
 			//ログイン成功の場合はトップ画面へ戻る

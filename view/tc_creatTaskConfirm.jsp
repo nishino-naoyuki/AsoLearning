@@ -196,7 +196,9 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                    <tr>
 	                                        <th>学科</th>
 	                                        <th>公開設定</th>
+	                                        <!--
 	                                        <th>公開時間設定</th>
+		                                     -->
 	                                        <th>締め切り設定</th>
 	                                    </tr>
 	                                </thead>
@@ -209,11 +211,13 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		<td>
 	                                           <%=pdto.getStatus().getMsg1()%>
 	                                		</td>
+	                                        <!--
 	                                		<td>
 	                                			<div class="form-group">
 	                                			<%=pdto.getPublicDatetime()%>
 	                                			</div>
 	                                		</td>
+		                                     -->
 	                                		<td>
 	                                			<div class="form-group">
 	                                			<%=pdto.getEndDatetime()%>

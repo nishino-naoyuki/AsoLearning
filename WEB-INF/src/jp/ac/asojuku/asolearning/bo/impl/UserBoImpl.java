@@ -347,6 +347,7 @@ public class UserBoImpl implements UserBo {
 					retDto.setHanded( (result.getHanded()==0?false:true) );
 					retDto.setTotal(result.getTotalScore());
 					retDto.setTaskName(result.getTaskTbl().getName());
+					retDto.setHandedDate( DateUtil.formattedDate(result.getHandedTimestamp(), "yyyy/MM/dd HH:mm:ss"));
 
 					dto.addResultList(retDto);
 				}
@@ -476,6 +477,7 @@ public class UserBoImpl implements UserBo {
 
 				retDto.setHanded( (result.getHanded()==0?false:true) );
 				retDto.setTotal(result.getTotalScore());
+				retDto.setHandedDate( DateUtil.formattedDate(result.getHandedTimestamp(), "yyyy/MM/dd HH:mm:ss"));
 			}
 			retDto.setTaskId(task.getTaskId());
 			retDto.setTaskName(task.getName());

@@ -13,4 +13,4 @@ javac -d %1\classes %1\%2 2>%3\error.txt
 
 rem ���s����
 cd %1\classes
-java %4 %5 > %3\result.txt
+java %4 %5 %6 %7 %8 %9 > %3\result.txt

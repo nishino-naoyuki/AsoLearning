@@ -199,6 +199,7 @@ public class TaskBoImpl implements TaskBo {
 			ResultTblEntity rte = entity.getResultTblSet().iterator().next();
 			result.setTotal(rte.getTotalScore());
 			result.setHanded((rte.getHanded() == 1 ? true:false));
+			result.setHandedDate( DateUtil.formattedDate(rte.getHandedTimestamp(), "yyyy/MM/dd HH:mm:ss"));
 		}
 		dto.setResult(result);
 

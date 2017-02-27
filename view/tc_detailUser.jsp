@@ -172,6 +172,7 @@ List<TaskResultDto> retList = userDto.getResultList();
 	                                    <tr class="info">
 	                                        <th>課題名</th>
 	                                        <th>状態</th>
+	                                        <th>提出日</th>
 	                                        <th>点数</th>
 	                                    </tr>
 	                                </thead>
@@ -185,12 +186,18 @@ List<TaskResultDto> retList = userDto.getResultList();
 												<%= (result.isHanded() ? "提出済み":"未提出") %>
 	                                		</td>
 	                                		<td>
-	                                		<% if( result.getTotal() != null ){ %>
-	                                		<a href='scoredetail?<%=RequestConst.REQUEST_DISP_NO%>=user&<%=RequestConst.REQUEST_TASK_ID%>=<%=result.getTaskId()%>&userId=<%=userDto.getUserId()%>'><%= result.getTotal() %></a>
+	                                		<% if( result.getHandedDate() != null ){ %>
+	                                			<%= result.getHandedDate() %>
 	                                		<% }else{ %>
-	                                		&nbsp;
+	                                			&nbsp;
 	                                		<% } %>
 	                                		<td>
+	                                		<% if( result.getTotal() != null ){ %>
+	                                			<a href='scoredetail?<%=RequestConst.REQUEST_DISP_NO%>=user&<%=RequestConst.REQUEST_TASK_ID%>=<%=result.getTaskId()%>&userId=<%=userDto.getUserId()%>'><%= result.getTotal() %></a>
+	                                		<% }else{ %>
+	                                			&nbsp;
+	                                		<% } %>
+	                                		</td>
 	                                	</tr>
 	                                <% } %>
 	                                </tbody>

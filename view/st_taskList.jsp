@@ -109,8 +109,8 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 
 		                                <thead>
 		                                    <tr class="info">
-		                                        <th>No.</th>
-		                                        <th>ソース</th>
+		                                        <th>課題名</th>
+		                                        <th>状態</th>
 		                                        <th>締め切り</th>
 		                                        <th>必須</th>
 		                                        <th>得点</th>
@@ -128,7 +128,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 
 		                                        <% if( taskDto.getResult() != null ){ %>
 		                                        	<% if(  taskDto.getResult().isHanded()){ %>
-		                                        	<td>提出済み</td>
+		                                        	<td>提出済み<br>（<%=taskDto.getResult().getHandedDate() %> 提出）</td>
 		                                        	<% }else{ %>
 		                                        	<td>不正解</td>
 		                                        	<%} %>
@@ -137,7 +137,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 		                                        <% } %>
 
 		                                        <% if( taskDto.getTerminationDate() != null ){ %>
-		                                        	<td>あり</td>
+		                                        	<td><%=taskDto.getTerminationDate() %></td>
 		                                        <% }else{ %>
 		                                        	<td>なし</td>
 		                                        <% } %>
@@ -207,7 +207,8 @@ $(document).ready(function() {
         responsive: true,
         columnDefs: [
                      // 2列目(0から始まるため1になっています)の幅を100pxにする
-                     { targets: 1, width: 100 }
+                     { targets: 1, width: 120 }
+                     { targets: 2, width: 100 }
                  ]
 
     });

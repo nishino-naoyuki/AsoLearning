@@ -51,11 +51,15 @@ public class TaskScoreServlet extends BaseServlet {
 		//////////////////////////////////
 		//結果情報取得
 
-		//セッションからログイン情報を取得
-		LogonInfoDTO loginInfo = getUserInfoDtoFromSession(req);
+		if( userId == null){
+			//引数でUserIDを指定されない場合は、セッションからログイン情報を取得
+			LogonInfoDTO loginInfo = getUserInfoDtoFromSession(req);
+
+			userId = loginInfo.getUserId();
+		}
 
 		ResultBo bo = new ResultBoImpl();
-		TaskResultDetailDto dto =bo.getResultDetail(taskId, loginInfo.getUserId());
+		TaskResultDetailDto dto =bo.getResultDetail(taskId, userId);
 		if( dto == null ){
 			//IDが無い場合は、エラー画面へ
 			RequestDispatcher rd = req.getRequestDispatcher("view/error/st_task_error.jsp");

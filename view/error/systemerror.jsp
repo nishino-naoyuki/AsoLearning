@@ -50,12 +50,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <jsp:include page="view/header/title.jsp"/>
+                <jsp:include page="/view/header/title.jsp"/>
             </div>
             <!-- /.navbar-header -->
-            <jsp:include page="view/header/header.jsp"/>
+            <jsp:include page="/view/header/header.jsp"/>
             <!-- /.navbar-top-links -->
-			<jsp:include page="view/sidebar/sidebar.jsp"/>
+			<jsp:include page="/view/sidebar/sidebar.jsp"/>
 
             <!-- /.navbar-static-side -->
         </nav>

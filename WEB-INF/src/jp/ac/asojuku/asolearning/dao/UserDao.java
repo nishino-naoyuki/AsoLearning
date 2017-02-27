@@ -50,8 +50,9 @@ public class UserDao extends Dao {
 	private static final String MEMBER_SEARCH_COND2 = " u.MAILADRESS LIKE ? ";
 	private static final String MEMBER_SEARCH_COND3 = " u.COURSE_ID = ? ";
 	private static final String MEMBER_SEARCH_COND4 = " u.ROLE_ID = ? ";
-	private static final String MEMBER_SEARCH_COND5 = " ret.HANDED = ? ";
-	private static final String MEMBER_SEARCH_COND5_NULL = " (ret.HANDED = ? OR ret.HANDED is null) ";
+	private static final String MEMBER_SEARCH_COND5 = " ret.HANDED = 1 ";
+	private static final String MEMBER_SEARCH_COND5_NULL1 = " (ret.HANDED = 0 OR not exists(select user_id from result_tbl r2 where r2.user_id=u.USER_ID)) ";
+	private static final String MEMBER_SEARCH_COND5_NULL2 = " (ret.HANDED = 0 OR not exists(select user_id from result_tbl r2 where t.TASK_ID=? and r2.user_id=u.USER_ID)) ";
 	private static final String MEMBER_SEARCH_COND6 = " t.TASK_ID = ? ";
 	private static final String MEMBER_SEARCH_ORDER = " ORDER BY u.USER_ID,u.COURSE_ID,t.TASK_ID";
 
@@ -427,11 +428,13 @@ public class UserDao extends Dao {
 			ps.setInt(index++, cond.getRoleId());
 		}
 		if(cond.getHanded() != null){
-			ps.setInt(index++, cond.getHanded());
+			if( cond.getHanded() == 0 && cond.getTaskId() != null ){
+				ps.setInt(index++, cond.getTaskId());
+			}
 		}
-		if(cond.getTaskId() != null){
-			ps.setInt(index++, cond.getTaskId());
-		}
+		//if(cond.getTaskId() != null){
+		//	ps.setInt(index++, cond.getTaskId());
+		//}
 	}
 
 	/**
@@ -457,15 +460,23 @@ public class UserDao extends Dao {
 			appendWhereWithAnd(sb,MEMBER_SEARCH_COND4);
 		}
 		if(cond.getHanded() != null){
+			//提出済みかどうかは、判定が複雑
 			if( cond.getHanded() == 1 ){
+				//提出済みはRESULT_TBLのHANDEDが１であればOK
 				appendWhereWithAnd(sb,MEMBER_SEARCH_COND5);
 			}else{
-				appendWhereWithAnd(sb,MEMBER_SEARCH_COND5_NULL);
+				//未提出はRESULT_TBLが存在するかどうかを見る
+				//されあに課題IDが指定されている場合は、課題IDを一緒に見る
+				if( cond.getTaskId() == null){
+					appendWhereWithAnd(sb,MEMBER_SEARCH_COND5_NULL1);
+				}else{
+					appendWhereWithAnd(sb,MEMBER_SEARCH_COND5_NULL2);
+				}
 			}
 		}
-		if(cond.getTaskId() != null){
-			appendWhereWithAnd(sb,MEMBER_SEARCH_COND6);
-		}
+		//if(cond.getTaskId() != null){
+		//	appendWhereWithAnd(sb,MEMBER_SEARCH_COND6);
+		//}
 
 		if( sb.length() > 0 ){
 			sb.insert(0, " AND ");
@@ -743,6 +754,7 @@ public class UserDao extends Dao {
 		retEntity.setResultId(rs.getInt("RESULT_ID"));
 		retEntity.setTotalScore(rs.getFloat("TOTAL_SCORE"));
 		retEntity.setHanded(rs.getInt("HANDED"));
+		retEntity.setHandedTimestamp(rs.getTimestamp("HANDED_TIMESTAMP"));
 
 		TaskTblEntity taskEntity = new TaskTblEntity();
 

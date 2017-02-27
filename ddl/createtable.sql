@@ -103,6 +103,8 @@ CREATE TABLE RESULT_TBL
 	TASK_ID int NOT NULL,
 	TOTAL_SCORE float NOT NULL,
 	HANDED int DEFAULT 0,
+	-- 再提出を含む最後に提出した日時
+	HANDED_TIMESTAMP datetime COMMENT '再提出を含む最後に提出した日時',
 	PRIMARY KEY (RESULT_ID)
 ) COMMENT = '結果テーブル
 判定を行った結果を格納するテーブル';
@@ -116,7 +118,7 @@ CREATE TABLE RESULT_TESTCASE_TBL
 	-- 得点は配点を超えない
 	SCORE int NOT NULL COMMENT '得点は配点を超えない',
 	-- コンパイルエラーの時などに表示するメッセージ
-	MESSAGE varchar(2000) COMMENT 'コンパイルエラーの時などに表示するメッセージ'
+	MESSAGE varchar(20000) COMMENT 'コンパイルエラーの時などに表示するメッセージ'
 ) COMMENT = 'テストケースの結果格納テーブル';
 
 
@@ -194,15 +196,23 @@ CREATE TABLE USER_TBL
 	-- メールアドレス（ログインID）
 	MAILADRESS varchar(255) NOT NULL COMMENT 'メールアドレス（ログインID）',
 	-- パスワードのハッシュ値
-	PASSWORD varchar(255) NOT NULL COMMENT 'パスワードのハッシュ値',
+	-- ソルト値は設定ファイルから取得
+	-- ソルト+パスワード+ソルト
+	-- でハッシュ値を計算
+	PASSWORD varchar(255) NOT NULL COMMENT 'パスワードのハッシュ値
+ソルト値は設定ファイルから取得
+ソルト+パスワード+ソルト
+でハッシュ値を計算',
 	-- 学生は学籍番号
 	-- 職員は職員ID
 	NAME varchar(100) NOT NULL COMMENT '学生は学籍番号
 職員は職員ID',
 	-- ニックネーム
-	-- ※暗号化する
+	-- ※AESで暗号化する
+	-- 鍵は、設定ファイルの設定値+メアド
 	NICK_NAME varchar(100) NOT NULL COMMENT 'ニックネーム
-※暗号化する',
+※AESで暗号化する
+鍵は、設定ファイルの設定値+メアド',
 	-- アカウントの有効期限（指定日まで有効）
 	-- NULLの場合は無期限
 	ACCOUNT_EXPRY_DATE date COMMENT 'アカウントの有効期限（指定日まで有効）

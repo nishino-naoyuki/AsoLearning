@@ -6,6 +6,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
 <%@ page import="java.util.List" %>
+<%@ page import="jp.ac.asojuku.asolearning.param.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.util.*" %>
 <%@ page import="org.apache.commons.collections4.*" %>
@@ -75,6 +76,7 @@ List<RankingDto> rankingList = (List<RankingDto>)request.getAttribute(RequestCon
 List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUEST_TASK_LIST);
 Integer courseId = (Integer)request.getAttribute(RequestConst.REQUEST_COURSE_ID);
 Integer taskId = (Integer)request.getAttribute(RequestConst.REQUEST_TASK_ID);
+LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 
 if( courseId == null){
 	courseId = -1;
@@ -187,7 +189,13 @@ if( taskId == null){
 		                                        <td><%=ranking.getRank() %></td>
 		                                        <td><%=ranking.getCourseName() %></td>
 		                                        <td><%=ranking.getGrade() %></td>
-		                                        <td><%=ranking.getName() %></td>
+		                                        <td>
+		                                        <% if( RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
+		                                        <%=ranking.getName() %>
+		                                        <% }else{ %>
+		                                        <a href='userDetail?userId=<%=ranking.getUserId()%>'><%=ranking.getName() %></a>
+		                                        <% } %>
+		                                        </td>
 		                                        <td><%=ranking.getNickName() %></td>
 		                                        <td><%=ranking.getScore() %></td>
 		                                    </tr>

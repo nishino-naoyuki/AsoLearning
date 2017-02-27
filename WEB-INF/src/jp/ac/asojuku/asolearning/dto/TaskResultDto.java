@@ -14,6 +14,7 @@ public class TaskResultDto {
 	private Float total;
 	private String taskName;
 	private boolean handed;
+	private String handedDate;
 
 	public boolean isHanded() {
 		return handed;
@@ -51,6 +52,14 @@ public class TaskResultDto {
 
 	public void setTaskId(Integer taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getHandedDate() {
+		return handedDate;
+	}
+
+	public void setHandedDate(String handedData) {
+		this.handedDate = handedData;
 	}
 
 }

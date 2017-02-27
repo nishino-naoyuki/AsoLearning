@@ -11,6 +11,7 @@ package jp.ac.asojuku.asolearning.dto;
  */
 public class RankingDto {
 
+	private int userId;
 	private int rank;
 	private String name;
 	private String courseName;
@@ -104,6 +105,12 @@ public class RankingDto {
 	 */
 	public void setGrade(int grade) {
 		this.grade = grade;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 

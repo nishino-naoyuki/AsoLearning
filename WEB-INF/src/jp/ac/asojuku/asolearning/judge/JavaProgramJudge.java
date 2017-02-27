@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.JAXBException;
@@ -64,6 +66,8 @@ public class JavaProgramJudge implements Judge {
 			throw new IllegalJudgeFileException();
 		}
 
+		Date now = new Date();
+
 		try{
 			String resultDir = dirName+RESULT;//AppSettingProperty.getInstance().getResultDirectory();
 			String classDir = dirName+CLASSES;
@@ -90,7 +94,7 @@ public class JavaProgramJudge implements Judge {
 
 				///////////////////////////////////////
 				//結果をEntityを登録
-				resultEntity.addResultTestcaseTbl(getResultTestcaseTblEntity(testcase,result,compileError,erroInfo));
+				resultEntity.addResultTestcaseTbl(getResultTestcaseTblEntity(testcase,result,compileError,resultDir,erroInfo));
 			}
 
 			///////////////////////////////////////
@@ -102,9 +106,10 @@ public class JavaProgramJudge implements Judge {
 			resultEntity.setTotalScore( getTotalScore(resultEntity) );
 
 			///////////////////////////////////////
-			//課題提出フラグをセット
+			//課題提出フラグと提出日時をセット
 			json.allOK = isAllOK(resultEntity);
 			resultEntity.setHanded((json.allOK==true?1:0));
+			resultEntity.setHandedTimestamp((json.allOK==true?now:null));
 
 			///////////////////////////////////////
 			//DBに書き込み
@@ -213,8 +218,18 @@ public class JavaProgramJudge implements Judge {
 		String inputDir = AppSettingProperty.getInstance().getInputDirectory();
 		String inputFileName = (testcase.getInputFileName()==null ? "":inputDir+"/"+testcase.getInputFileName());
 
+		//引数をゲット
+		List<String> paramList = FileUtils.readLine(inputFileName);
+		String[] args = {"","","","",""};
+		for( int i = 0 ; i < args.length && i < paramList.size(); i++ ){
+			args[i] = paramList.get(i);
+			//logger.info("args["+i+"]="+paramList.get(i));
+		}
+
+		//引数は常に5個渡す
 		ProcessBuilder pb =
-				new ProcessBuilder(shellPath,dirName,fileName,resultDir,className,inputFileName);
+				new ProcessBuilder(shellPath,dirName,fileName,resultDir,className,
+						args[0],args[1],args[2],args[3],args[4]);
 		Process process = pb.start();
 
 		logger.trace("バッチ実行開始：");
@@ -290,7 +305,7 @@ public class JavaProgramJudge implements Judge {
 	 * @return
 	 * @throws AsoLearningSystemErrException
 	 */
-	private ResultTestcaseTblEntity getResultTestcaseTblEntity(TestcaseTableEntity testcase,boolean result,boolean compileError,String errorMsg) throws AsoLearningSystemErrException{
+	private ResultTestcaseTblEntity getResultTestcaseTblEntity(TestcaseTableEntity testcase,boolean result,boolean compileError,String resultDir,String errorMsg) throws AsoLearningSystemErrException{
 		ResultTestcaseTblEntity resultTestcaseEntity = new ResultTestcaseTblEntity();
 
 		//テストIDをセット
@@ -312,13 +327,61 @@ public class JavaProgramJudge implements Judge {
 		}else{
 			//不正解の場合は０点
 			resultTestcaseEntity.setScore(0);
-			errorMsg = MessageProperty.getInstance().getProperty(MessageProperty.JUDGE_RET_NOTMATCH);
+
+			errorMsg = getErrorMessage(testcase,resultDir);
 		}
 		resultTestcaseEntity.setMessage(errorMsg);
 
 		return resultTestcaseEntity;
 	}
 
+	/**
+	 * 実行結果を表示
+	 * @param resultDir
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	private String getErrorMessage(TestcaseTableEntity testcase,String resultDir) throws AsoLearningSystemErrException{
+
+		StringBuffer sb = new StringBuffer();
+
+		sb.append(MessageProperty.getInstance().getProperty(MessageProperty.JUDGE_RET_NOTMATCH));
+
+		//入力ファイルの古パスを取得
+		String inputDir = AppSettingProperty.getInstance().getInputDirectory();
+		String inputFileName = (testcase.getInputFileName()==null ? "":inputDir+"/"+testcase.getInputFileName());
+
+		//引数をゲット
+		List<String> paramList = FileUtils.readLine(inputFileName);
+		//正解ファイルのパス
+		String answerDir = AppSettingProperty.getInstance().getAnswerDirectory();
+		String answerPath = answerDir + "/" + testcase.getOutputFileName();
+		List<String> answerList = FileUtils.readLine(answerPath);
+		//回答ファイルのパス
+		String resultPath = resultDir + "/" + RESULT_FILENAME;
+		List<String> resultList = FileUtils.readLine(resultPath);
+
+		if( paramList.size() > 0 ){
+			sb.append("\n\n*****[実行引数]*****\n");
+			for( String arg : paramList ){
+				sb.append(arg);
+				sb.append(" ");
+			}
+		}
+		sb.append("\n\n*****[実行結果]*****\n");
+		for( String msg : resultList ){
+			sb.append(msg);
+			sb.append("\n");
+		}
+		sb.append("\n*****[正解出力]*****\n");
+		for( String msg : answerList ){
+			sb.append(msg);
+			sb.append("\n");
+		}
+		sb.append("************************\n");
+
+		return sb.toString();
+	}
 	/**
 	 * 品質計測の結果を設定する
 	 * @param resultDir

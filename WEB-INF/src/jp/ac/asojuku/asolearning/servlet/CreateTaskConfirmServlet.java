@@ -179,7 +179,7 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 			dto.setCourseId(courseId);
 			dto.setCourseName(course.getName());
 			dto.setStatus(TaskPublicStateId.valueOf(status));
-			dto.setPublicDatetime(getStringParamFromPart(req,courseId+"-startterm"));
+			//dto.setPublicDatetime(getStringParamFromPart(req,courseId+"-startterm")); //TODO:今は未対応
 			dto.setEndDatetime(getStringParamFromPart(req,courseId+"-endterm"));
 
 			taskpublicList.add(dto);

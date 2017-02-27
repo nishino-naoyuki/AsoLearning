@@ -17,7 +17,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>学生作成</title>
+    <title>ユーザー作成</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
@@ -90,15 +90,15 @@ if( userDto != null){
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            学生作成
+                            ユーザー作成
 
                         </h1>
                         <ol class="breadcrumb">
                             <li>
-                                <i class="fa fa-user"></i> 学生作成
+                                <i class="fa fa-user"></i> ユーザー作成
                             </li>
                             <li class="active">
-                                <i class="fa fa-user"></i> 学生作成確認
+                                <i class="fa fa-user"></i> ユーザー作成確認
                             </li>
                         </ol>
                     </div>

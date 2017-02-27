@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -81,8 +82,8 @@ public class ResultDao extends Dao {
 	//挿入SQL
 	private static final String RESULT_INSERT_SQL =
 			"INSERT INTO RESULT_TBL "
-			+ "(RESULT_ID,USER_ID,TASK_ID,TOTAL_SCORE,HANDED) "
-			+ "VALUES(null,?,?,?,?) ";
+			+ "(RESULT_ID,USER_ID,TASK_ID,TOTAL_SCORE,HANDED,HANDED_TIMESTAMP) "
+			+ "VALUES(null,?,?,?,?,?) ";
 
 	private static final String TESTCASE_INSERT_SQL =
 			"INSERT INTO RESULT_TESTCASE_TBL "
@@ -100,7 +101,8 @@ public class ResultDao extends Dao {
 			+ "USER_ID = ?,"
 			+ "TASK_ID = ?,"
 			+ "TOTAL_SCORE = ?,"
-			+ "HANDED=? "
+			+ "HANDED=?,"
+			+ "HANDED_TIMESTAMP=?  "
 			+ "WHERE RESULT_ID=? ";
 
 	private static final String TESTCASE_UPDATE_SQL =
@@ -126,7 +128,9 @@ public class ResultDao extends Dao {
 			"SELECT "
 			+ "TOTAL_SCORE,"
 			+ "("
-			+ "   SELECT COUNT(*)+1 FROM RESULT_TBL r2 WHERE r2.TOTAL_SCORE > r1.TOTAL_SCORE"
+			+ "   SELECT COUNT(*)+1 "
+			+ "   FROM RESULT_TBL r2 "
+			+ "   WHERE r2.TOTAL_SCORE > r1.TOTAL_SCORE AND r2.TASK_ID=?"
 			+ ") rank "
 			+ "FROM RESULT_TBL r1 "
 			+ "WHERE r1.USER_ID=? AND r1.TASK_ID=?";
@@ -209,8 +213,9 @@ public class ResultDao extends Dao {
 
 			ps = con.prepareStatement(sql.toString());
 
-			ps.setInt(1, userId);
-			ps.setInt(2, taskId);
+			ps.setInt(1, taskId);
+			ps.setInt(2, userId);
+			ps.setInt(3, taskId);
 
 	        // SQLを実行
 	        rs = ps.executeQuery();
@@ -423,6 +428,8 @@ public class ResultDao extends Dao {
 
     	resultEntity.setResultId(rs.getInt("RESULT_ID"));
     	resultEntity.setTotalScore(rs.getFloat("TOTAL_SCORE"));
+    	resultEntity.setHanded(rs.getInt("HANDED"));
+    	resultEntity.setHandedTimestamp(rs.getTimestamp("HANDED_TIMESTAMP"));
 
     	//taskEntity
     	taskEntity.setTaskId(rs.getInt("TASK_ID"));
@@ -530,6 +537,11 @@ public class ResultDao extends Dao {
         	ps1.setInt(2, resultEntity.getTaskTbl().getTaskId());
         	ps1.setFloat(3, resultEntity.getTotalScore());
         	ps1.setInt(4, resultEntity.getHanded());
+			if( resultEntity.getHandedTimestamp() != null){
+				ps1.setDate(5, parseSQLLDateFromUtilData(resultEntity.getHandedTimestamp()) );
+			}else{
+				ps1.setNull(5, java.sql.Types.DATE);
+			}
 
         	ps1.executeUpdate();
 
@@ -616,7 +628,12 @@ public class ResultDao extends Dao {
         	ps1.setInt(2, resultEntity.getTaskTbl().getTaskId());
         	ps1.setFloat(3, resultEntity.getTotalScore());
         	ps1.setInt(4, resultEntity.getHanded());
-        	ps1.setInt(5, resultEntity.getResultId());
+			if( resultEntity.getHandedTimestamp() != null){
+				ps1.setTimestamp(5,new Timestamp(resultEntity.getHandedTimestamp().getTime())  );
+			}else{
+				ps1.setNull(5, java.sql.Types.TIMESTAMP);
+			}
+        	ps1.setInt(6, resultEntity.getResultId());
 
         	ps1.executeUpdate();
 

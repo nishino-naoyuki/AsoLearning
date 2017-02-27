@@ -17,7 +17,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>学生作成</title>
+    <title>ユーザー作成</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
@@ -95,104 +95,106 @@ if( userDto != null ){
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            学生作成
+                            ユーザー作成
 
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-user"></i> 学生作成
+                                <i class="fa fa-user"></i> ユーザー作成
                             </li>
                         </ol>
                     </div>
                 </div>
                 <!-- /.row -->
                 <div class="row">
+                    <div class="col-lg-12">
                 <%if( errors != null && errors.isHasErr() ){%>
                 	<% for( ActionError err : errors.getList() ){ %>
 							<div id="error"><%= err.getMessage() %></div>
                 	<% } %>
                 <% } %>
 
-                	<div class="panel panel-default">
-                		<div class="panel-heading">
-                			ユーザー情報
-                		</div>
-	                	<div class="panel-body">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			ユーザー情報
+	                		</div>
+		                	<div class="panel-body">
 
-	                        <div class="table-responsive">
-	                            <table class="table table-bordered table-hover" id="form">
-	                                <tbody>
-	                                	<tr>
-	                                		<th>ロール[必須]</th>
-	                                		<td>
-	                                		<div class="form-group">
+		                        <div class="table-responsive">
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <tbody>
+		                                	<tr>
+		                                		<th>ロール[必須]</th>
+		                                		<td>
+		                                		<div class="form-group">
 
-							                     <select id="couse" class="form-control" name="<%=RequestConst.REQUEST_ROLE_ID%>">
-							                         <option value="<%=RoleId.STUDENT.getId() %>" <%= (roleId == RoleId.STUDENT.getId() ? "selected":"" ) %> ><%=RoleId.STUDENT.getMsg() %></option>
-							                    	 <option value="<%=RoleId.TEACHER.getId() %>" <%= (roleId == RoleId.TEACHER.getId() ? "selected":"" ) %> ><%=RoleId.TEACHER.getMsg() %></option>
-							                    	 <option value="<%=RoleId.MANAGER.getId() %>" <%= (roleId == RoleId.MANAGER.getId() ? "selected":"" ) %> ><%=RoleId.MANAGER.getMsg() %></option>
-							                     </select>
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                	<tr>
-	                                		<th>学籍番号/社員番号[必須]</th>
-	                                		<td>
-	                                		<div class="form-group">
-												<input type="text" name="name" placeholder="学籍番号/社員番号を記入してください" value="<%=(userDto!=null? userDto.getName():"") %>">
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                	<tr>
-	                                		<th>メールアドレス[必須]</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<input type="text" name="mailadress" placeholder="メールアドレスを記入してください" value="<%=(userDto!=null? userDto.getMailAdress():"") %>">
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                	<tr>
-	                                		<th>ニックネーム[必須]</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<input type="text" name="nickname" placeholder="ニックネームを記入してください" value="<%=(userDto!=null? userDto.getNickName():"") %>">
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                	<tr>
-	                                		<th>学科[必須]（西暦）</th>
-	                                		<td>
-	                                		<div class="form-group">
+								                     <select id="couse" class="form-control" name="<%=RequestConst.REQUEST_ROLE_ID%>">
+								                         <option value="<%=RoleId.STUDENT.getId() %>" <%= (roleId == RoleId.STUDENT.getId() ? "selected":"" ) %> ><%=RoleId.STUDENT.getMsg() %></option>
+								                    	 <option value="<%=RoleId.TEACHER.getId() %>" <%= (roleId == RoleId.TEACHER.getId() ? "selected":"" ) %> ><%=RoleId.TEACHER.getMsg() %></option>
+								                    	 <option value="<%=RoleId.MANAGER.getId() %>" <%= (roleId == RoleId.MANAGER.getId() ? "selected":"" ) %> ><%=RoleId.MANAGER.getMsg() %></option>
+								                     </select>
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>学籍番号/社員番号[必須]</th>
+		                                		<td>
+		                                		<div class="form-group">
+													<input type="text" name="name" placeholder="学籍番号/社員番号を記入してください" value="<%=(userDto!=null? userDto.getName():"") %>">
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>メールアドレス[必須]</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<input type="text" name="mailadress" placeholder="メールアドレスを記入してください" value="<%=(userDto!=null? userDto.getMailAdress():"") %>">
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>ニックネーム[必須]</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<input type="text" name="nickname" placeholder="ニックネームを記入してください" value="<%=(userDto!=null? userDto.getNickName():"") %>">
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>学科[必須]（西暦）</th>
+		                                		<td>
+		                                		<div class="form-group">
 
-							                     <select id="couse" class="form-control" name="<%=RequestConst.REQUEST_COURSE_ID%>">
+								                     <select id="couse" class="form-control" name="<%=RequestConst.REQUEST_COURSE_ID%>">
 
-							                     <% for(CourseDto course :courseList){ %>
-							                         <option value="<%=course.getId() %>" <%= (courseId == course.getId() ? "selected":"" ) %>><%=course.getName() %></option>
-							                     <%} %>
-							                     </select>
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                	<tr>
-	                                		<th>パスワード[必須]</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<input type="password" name="password" placeholder="パスワードを記入してください">
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                	<tr>
-	                                		<th>入学年度</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<input type="text" name="admissionYear" placeholder="入学年度を記入してください" value="<%=(userDto!=null? userDto.getAdmissionYear():"") %>">
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                </tbody>
-	                            </table>
-	                        </div>
-						</div>
+								                     <% for(CourseDto course :courseList){ %>
+								                         <option value="<%=course.getId() %>" <%= (courseId == course.getId() ? "selected":"" ) %>><%=course.getName() %></option>
+								                     <%} %>
+								                     </select>
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>パスワード[必須]</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<input type="password" name="password" placeholder="パスワードを記入してください">
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>入学年度</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<input type="text" name="admissionYear" placeholder="入学年度を記入してください" value="<%=(userDto!=null? userDto.getAdmissionYear():"") %>">
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                </tbody>
+		                            </table>
+		                        </div>
+							</div>
+	                	</div>
                 	</div>
                 </div>
                 <!-- /.row -->

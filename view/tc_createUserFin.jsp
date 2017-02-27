@@ -68,11 +68,11 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            課題作成完了
+                            ユーザー作成完了
                         </h1>
                         <ol class="breadcrumb">
                             <li>
-                                <i class="fa fa-pencil-square"></i> 課題作成
+                                <i class="fa fa-pencil-square"></i> ユーザー作成
                             </li>
                             <li>
                                 <i class="fa fa-check-circle-o"></i> 確認

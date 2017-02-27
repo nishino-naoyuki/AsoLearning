@@ -8,6 +8,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.util.*" %>
+	<LINK REL="SHORTCUT ICON" HREF="view/ico/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -108,151 +109,169 @@ Integer userId = (Integer)request.getAttribute(RequestConst.REQUEST_USER_ID);
                 </div>
 <% }else{ %>
                 <div class="row">
-                	<div class="panel panel-default">
-                		<div class="panel-heading">
-                			総合得点
-                		</div>
-	                	<div class="panel-body">
-	                        <div class="table-responsive">
-	                            <table class="table table-bordered table-hover" id="form">
-	                                <tbody>
-	                                	<tr>
-	                                		<th>得点</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%=resultDto.getTotalScore() %>
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                </tbody>
-	                            </table>
-	                        </div>
-						</div>
+                    <div class="col-lg-12">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			基本情報
+	                		</div>
+		                	<div class="panel-body">
+		                        <div class="table-responsive">
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <tbody>
+		                                	<tr>
+		                                		<th>状態</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                        <% if(  resultDto.isHanded()){ %>
+		                                        	提出済み（<%=resultDto.getHandedDate() %> 提出）
+		                                        <% }else{ %>
+		                                        	不正解
+		                                        <%} %>
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>得点</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%=resultDto.getTotalScore() %>
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                </tbody>
+		                            </table>
+		                        </div>
+							</div>
+	                	</div>
                 	</div>
                 </div>
                 <!-- /.row -->
 
 
                 <div class="row">
-                	<div class="panel panel-default">
-                		<div class="panel-heading">
-                			テストケース
-                		</div>
-	                	<div class="panel-body">
-	                        <div class="table-responsive">
-	                            <table class="table table-bordered table-hover" id="form">
-	                                <tbody>
-	                                <%
-	                                int cnt = 1;
-	                                int total = 0;
-	                                for(TaskResultTestCaseDto testCase : resultDto.getTestcase()){
-	                                %>
-	                                	<tr>
-	                                		<th>パターン<%=cnt %></th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= (testCase.getScore() != 0 ? "正解":testCase.getMessage()) %>
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                <%
-	                                	total += testCase.getScore();
-	                                	cnt++;
-	                                }
-	                                %>
-	                                	<tr>
-	                                		<th>点数</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= total %>点
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                </tbody>
-	                            </table>
-	                        </div>
-						</div>
+                    <div class="col-lg-12">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			テストケース
+	                		</div>
+		                	<div class="panel-body">
+		                        <div class="table-responsive">
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <tbody>
+		                                <%
+		                                int cnt = 1;
+		                                int total = 0;
+		                                for(TaskResultTestCaseDto testCase : resultDto.getTestcase()){
+		                                %>
+		                                	<tr>
+		                                		<th>パターン<%=cnt %></th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= (testCase.getScore() != 0 ? "正解": HtmlUtil.nl2be(testCase.getMessage())) %>
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                <%
+		                                	total += testCase.getScore();
+		                                	cnt++;
+		                                }
+		                                %>
+		                                	<tr>
+		                                		<th>点数</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= total %>点
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                </tbody>
+		                            </table>
+		                        </div>
+							</div>
+	                	</div>
                 	</div>
                 </div>
                 <!-- /.row -->
 
                 <div class="row">
-                	<div class="panel panel-default">
-                		<div class="panel-heading">
-                			コード品質
-                		</div>
-	                	<div class="panel-body">
-	                        <div class="table-responsive">
-	                        <% TaskResultMetricsDto metricsDto = resultDto.getMetrics(); %>
-	                            <table class="table table-bordered table-hover" id="form">
-	                                <tbody>
-	                                	<tr>
-	                                		<th>最高複雑度</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= metricsDto.getMaxMvg() %>
-	                                		</div>
-	                                		</td>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= metricsDto.getMaxMvgScore() %>点
-	                                		</div>
-	                                		</td>
-	                                	</tr>
+                    <div class="col-lg-12">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			コード品質
+	                		</div>
+		                	<div class="panel-body">
+		                        <div class="table-responsive">
+		                        <% TaskResultMetricsDto metricsDto = resultDto.getMetrics(); %>
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <tbody>
+		                                	<tr>
+		                                		<th>最高複雑度</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= metricsDto.getMaxMvg() %>
+		                                		</div>
+		                                		</td>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= metricsDto.getMaxMvgScore() %>点
+		                                		</div>
+		                                		</td>
+		                                	</tr>
 
-	                                	<tr>
-	                                		<th>平均複雑度</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= metricsDto.getAvrMvg() %>
-	                                		</div>
-	                                		</td>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= metricsDto.getAvrMvgScore() %>点
-	                                		</div>
-	                                		</td>
-	                                	</tr>
+		                                	<tr>
+		                                		<th>平均複雑度</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= metricsDto.getAvrMvg() %>
+		                                		</div>
+		                                		</td>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= metricsDto.getAvrMvgScore() %>点
+		                                		</div>
+		                                		</td>
+		                                	</tr>
 
-	                                	<tr>
-	                                		<th>最高行数</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= metricsDto.getMaxLoc() %>
-	                                		</div>
-	                                		</td>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= metricsDto.getMaxLocScore() %>点
-	                                		</div>
-	                                		</td>
-	                                	</tr>
+		                                	<tr>
+		                                		<th>最高行数</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= metricsDto.getMaxLoc() %>
+		                                		</div>
+		                                		</td>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= metricsDto.getMaxLocScore() %>点
+		                                		</div>
+		                                		</td>
+		                                	</tr>
 
-	                                	<tr>
-	                                		<th>平均行数</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= metricsDto.getAvrLoc() %>
-	                                		</div>
-	                                		</td>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<%= metricsDto.getAvrLocScore() %>点
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                	<tr>
-	                                		<th>点数</th>
-	                                		<td colspan="2">
-	                                		<div class="form-group">
-	                                			<%= (metricsDto.getMaxMvgScore()+metricsDto.getAvrMvgScore()+metricsDto.getMaxLocScore()+metricsDto.getAvrLocScore()) %>点
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                </tbody>
-	                            </table>
-	                        </div>
-						</div>
+		                                	<tr>
+		                                		<th>平均行数</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= metricsDto.getAvrLoc() %>
+		                                		</div>
+		                                		</td>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<%= metricsDto.getAvrLocScore() %>点
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>点数</th>
+		                                		<td colspan="2">
+		                                		<div class="form-group">
+		                                			<%= (metricsDto.getMaxMvgScore()+metricsDto.getAvrMvgScore()+metricsDto.getMaxLocScore()+metricsDto.getAvrLocScore()) %>点
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                </tbody>
+		                            </table>
+		                        </div>
+							</div>
+	                	</div>
                 	</div>
                 </div>
                 <!-- /.row -->

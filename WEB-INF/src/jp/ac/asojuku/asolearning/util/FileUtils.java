@@ -3,14 +3,15 @@
  */
 package jp.ac.asojuku.asolearning.util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 /**
  * ファイルのユーティリティ
@@ -18,6 +19,41 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class FileUtils {
+
+	/**
+	 * ファイルから1行ごとのデータをリストとして読み込む
+	 * @param filePath
+	 * @return
+	 */
+	public static List<String> readLine(String filePath) {
+		List<String> lineList = new ArrayList<>();
+	    FileReader fr = null;
+	    BufferedReader br = null;
+	    try {
+	        fr = new FileReader(filePath);
+	        br = new BufferedReader(fr);
+
+	        String line;
+	        while ((line = br.readLine()) != null) {
+	        	lineList.add(line);
+	        }
+	    } catch (FileNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if(br != null )
+	            	br.close();
+	            if(fr != null)
+	            	fr.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return lineList;
+	}
 
 	/**
 	 * ファイル名が指定した拡張子かどうかを判断する
@@ -98,19 +134,14 @@ public class FileUtils {
 	 */
 	public static boolean fileCompare(String fileA, String fileB) {
 	    boolean bRet = false;
-		Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
-	    try {
-	        if( new File(fileA).length() != new File(fileA).length() ){
-	            return bRet;
-	        }
-	        byte[] byteA = Files.readAllBytes(Paths.get(fileA));
-	        byte[] byteB = Files.readAllBytes(Paths.get(fileB));
-	        bRet = Arrays.equals(byteA, byteB);
-	    } catch (IOException e) {
-	    	bRet = false;
-	    	logger.warn("ファイル比較中にエラーが発生しました：",e);
-	    }
+        List<String> listA = readLine(fileA);
+        List<String> listB = readLine(fileB);
+        String[] arrayA = listA.toArray(new String[0]);
+        String[] arrayB = listB.toArray(new String[0]);
+
+        bRet = Arrays.equals(arrayA, arrayB);
+
 	    return bRet;
 	}
 

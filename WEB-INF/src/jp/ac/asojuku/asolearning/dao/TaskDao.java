@@ -623,6 +623,7 @@ public class TaskDao extends Dao {
 			resultEntity.setResultId(rs.getInt("RESULT_ID"));
 			resultEntity.setTotalScore(rs.getFloat("TOTAL_SCORE"));
 			resultEntity.setHanded(rs.getInt("HANDED"));
+	    	resultEntity.setHandedTimestamp(rs.getTimestamp("HANDED_TIMESTAMP"));
 			user.setUserId(rs.getInt("USER_ID"));
 			resultEntity.setUserTbl(user);
 

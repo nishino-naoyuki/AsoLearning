@@ -87,10 +87,11 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                 <!-- /.row -->
 
                 <div class="row">
+                    <div class="col-lg-12">
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
-                                    <tr class="info">
+                                    <tr class="info" >
                                         <th>
                                         問題
                                         <% if( taskdto.isRequiredFlg() ){ %>
@@ -108,13 +109,43 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                                 </tbody>
                             </table>
                         </div>
+                     </div>
                 </div>
                 <!-- /.row -->
 
                 <div class="row">
-                	<div id="error">
-                		<p id="uploadErrorMsg" ></p>
-                	</div>
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="info" >
+                                        <th>
+                                        締め切り
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+	                                        <% if( taskdto.getTerminationDate() != null ){ %>
+	                                        	<%=taskdto.getTerminationDate() %>
+	                                        <% }else{ %>
+	                                        	なし
+	                                        <% } %>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                     </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+	                	<div id="error">
+	                		<p id="uploadErrorMsg" ></p>
+	                	</div>
 
                         <div class="table-responsive">
                             <table class="table table-bordered">
@@ -175,6 +206,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                                 </tbody>
                             </table>
                         </div>
+                    </div>
                 </div>
                 <!-- /.row -->
             </div>

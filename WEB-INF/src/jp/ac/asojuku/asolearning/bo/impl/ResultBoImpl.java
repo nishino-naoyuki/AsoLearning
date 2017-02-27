@@ -24,6 +24,7 @@ import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
+import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
 import jp.ac.asojuku.asolearning.util.UserUtils;
 
@@ -90,10 +91,14 @@ public class ResultBoImpl implements ResultBo {
 			return null;
 		}
 
+		//基本情報取得
 		dto.setTaskId( taskEntity.getTaskId() );
 		dto.setTaskName( taskEntity.getName() );
 		dto.setTotalScore(entity.getTotalScore());
+		dto.setHanded((entity.getHanded() == 1 ? true:false));
+		dto.setHandedDate(DateUtil.formattedDate(entity.getHandedTimestamp(), "yyyy/MM/dd HH:mm:ss"));
 
+		//メトリクスデータ取得
 		Set<ResultMetricsTblEntity> retMetricsEntitySet = entity.getResultMetricsTblSet();
 		for( ResultMetricsTblEntity rmt : retMetricsEntitySet ){
 			TaskResultMetricsDto retMetrics = new TaskResultMetricsDto();
@@ -110,6 +115,7 @@ public class ResultBoImpl implements ResultBo {
 			dto.setMetrics(retMetrics);
 		}
 
+		//テストケース結果取得
 		Set<ResultTestcaseTblEntity> retTestcaseSet = entity.getResultTestcaseTblSet();
 		for( ResultTestcaseTblEntity rtt : retTestcaseSet ){
 			TaskResultTestCaseDto retTestCase = new TaskResultTestCaseDto();
@@ -142,16 +148,16 @@ public class ResultBoImpl implements ResultBo {
 			//ランキングを取得
 			List<ResultTblEntity> retEntityList = dao.getRanking(courseId,taskId);
 
-			int rank = 1;
+			int rank = 0;
 			float wkScore = Float.MAX_VALUE;
 			for( ResultTblEntity retEntity : retEntityList){
-				RankingDto ranking = createRankingDto(retEntity,rank);
-				list.add(ranking);
 				//ランクはここでセット
-				if( wkScore > ranking.getScore()){
-					wkScore = ranking.getScore();
+				if( wkScore > retEntity.getTotalScore()){
+					wkScore = retEntity.getTotalScore();
 					rank++;
 				}
+				RankingDto ranking = createRankingDto(retEntity,rank);
+				list.add(ranking);
 			}
 
 		} catch (DBConnectException e) {
@@ -188,6 +194,7 @@ public class ResultBoImpl implements ResultBo {
 			throw new AsoLearningSystemErrException("ユーザー情報が存在しません");
 		}
 
+		rankingDto.setUserId(userEntity.getUserId());
 		rankingDto.setRank(rank);
 		rankingDto.setName(userEntity.getName());
 		rankingDto.setCourseName(userEntity.getCourseMaster().getCourseName());

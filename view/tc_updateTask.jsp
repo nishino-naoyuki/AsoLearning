@@ -139,7 +139,10 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
                 			テストケース
                 		</div>
 	                	<div class="panel-body">
-	                		<label>テストケースは最大10個までです。配点は合計50点になるようにしてください。</label>
+		                		<label>
+		                		<p>テストケースは最大10個までです。配点は合計50点になるようにしてください。</p>
+		                		<p>入力ファイルには実行時に渡したい引数を1行ずつ記載してください（最大５つ）</p>
+		                		</label>
 	                		<input type="button" value="行追加" id="addForm">
 
 	                        <div class="table-responsive">
@@ -238,7 +241,9 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                    <tr>
 	                                        <th>学科</th>
 	                                        <th>公開設定</th>
+	                                        <!--
 	                                        <th>公開時間設定</th>
+	                                         -->
 	                                        <th>締め切り設定</th>
 	                                    </tr>
 	                                </thead>
@@ -268,11 +273,13 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                                <option value="<%=TaskPublicStateId.PUBLIC.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC? "selected":""))%>><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
 	                                            </select>
 	                                		</td>
+	                                		<!--
 	                                		<td>
 	                                			<div class="form-group">
 	                                			<input type="text" name="<%=dto.getId()%>-startterm" placeholder="" id="datepicker1-<%=dto.getId()%>" value="<%= (pubDto==null? "":pubDto.getPublicDatetime()) %>">
 	                                			</div>
 	                                		</td>
+	                                		 -->
 	                                		<td>
 	                                			<div class="form-group">
 	                                			<input type="text" name="<%=dto.getId()%>-endterm" placeholder="" id="datepicker2-<%=dto.getId()%>" value="<%= (pubDto==null? "":pubDto.getEndDatetime()) %>">

@@ -94,165 +94,179 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
                 </div>
                 <!-- /.row -->
                 <div class="row">
+                    <div class="col-lg-12">
                 <%if( errors != null && errors.isHasErr() ){%>
                 	<% for( ActionError err : errors.getList() ){ %>
 							<div id="error"><%= err.getMessage() %></div>
                 	<% } %>
                 <% } %>
-                	<div class="panel panel-default">
-                		<div class="panel-heading">
-                			概要
-                		</div>
-	                	<div class="panel-body">
-	                        <div class="table-responsive">
-	                            <table class="table table-bordered table-hover" id="form">
-	                                <tbody>
-	                                	<tr>
-	                                		<th>課題名[必須]</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<input type="text" name="taskname" placeholder="課題名を記載してください" value="<%= (taskDto!=null ? taskDto.getTaskName():"") %>" >
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                	<tr>
-	                                		<th>問題文[必須]</th>
-	                                		<td>
-	                                		<div class="form-group">
-	                                			<textarea name="question" placeholder="問題文を記載してください" ><%= (taskDto!=null ? taskDto.getQuestion():"") %></textarea>
-	                                		</div>
-	                                		</td>
-	                                	</tr>
-	                                </tbody>
-	                            </table>
-	                        </div>
-						</div>
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			概要
+	                		</div>
+		                	<div class="panel-body">
+		                        <div class="table-responsive">
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <tbody>
+		                                	<tr>
+		                                		<th>課題名[必須]</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<input type="text" name="taskname" placeholder="課題名を記載してください" value="<%= (taskDto!=null ? taskDto.getTaskName():"") %>" >
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>問題文[必須]</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                			<textarea name="question" placeholder="問題文を記載してください" ><%= (taskDto!=null ? taskDto.getQuestion():"") %></textarea>
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                </tbody>
+		                            </table>
+		                        </div>
+							</div>
+	                	</div>
                 	</div>
                 </div>
                 <!-- /.row -->
 
                 <div class="row">
-                	<div class="panel panel-default">
-                		<div class="panel-heading">
-                			テストケース
-                		</div>
-	                	<div class="panel-body">
-	                		<label>テストケースは最大10個までです。配点は合計50点になるようにしてください。</label>
-	                		<input type="button" value="行追加" id="addForm">
+                    <div class="col-lg-12">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			テストケース
+	                		</div>
+		                	<div class="panel-body">
 
-	                        <div class="table-responsive">
-	                            <table class="table table-bordered table-hover" id="form">
-	                                <thead>
-	                                    <tr>
-	                                        <th>&nbsp;</th>
-	                                        <th>No.</th>
-	                                        <th>入力ファイル</th>
-	                                        <th>出力ファイル[必須]</th>
-	                                        <th>配点[必須]</th>
-	                                    </tr>
-	                                </thead>
-	                                <tbody>
-	                                	<tr id="testcase_table_tr[0]" class="testcase_table_tr">
+		                		<label>
+		                		<p>テストケースは最大10個までです。配点は合計50点になるようにしてください。</p>
+		                		<p>入力ファイルには実行時に渡したい引数を1行ずつ記載してください（最大５つ）</p>
+		                		</label>
+		                		<input type="button" value="行追加" id="addForm">
 
-	                                		<td>
-	                                			<input class="close" type="button" value="削除" id="close[0]" style="display: none;">
-	                                		</td>
-	                                		<td>
-	                                			<div id="index[0]">1</div>
-	                                		</td>
-	                                		<td>
-		                                        <input type="file" id="infile_select[0]" name="inputfile[0]" class="form-control" style="display:none;">
-		                                        <div class="input-group">
+		                        <div class="table-responsive">
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <thead>
+		                                    <tr>
+		                                        <th>&nbsp;</th>
+		                                        <th>No.</th>
+		                                        <th>入力ファイル</th>
+		                                        <th>出力ファイル[必須]</th>
+		                                        <th>配点[必須]</th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody>
+		                                	<tr id="testcase_table_tr[0]" class="testcase_table_tr">
 
-										          <span class="input-group-btn">
-										            <button type="button" id="infile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
-										          </span>
-										          <input type="text" id="inputfile_name[0]" name="inputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
+		                                		<td>
+		                                			<input class="close" type="button" value="削除" id="close[0]" style="display: none;">
+		                                		</td>
+		                                		<td>
+		                                			<div id="index[0]">1</div>
+		                                		</td>
+		                                		<td>
+			                                        <input type="file" id="infile_select[0]" name="inputfile[0]" class="form-control" style="display:none;">
+			                                        <div class="input-group">
 
-										        </div>
-	                                		</td>
-	                                		<td>
-		                                        <input type="file" id="outfile_select[0]" name="outputfile[0]" class="form-control" style="display:none;">
-		                                        <div class="input-group">
+											          <span class="input-group-btn">
+											            <button type="button" id="infile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
+											          </span>
+											          <input type="text" id="inputfile_name[0]" name="inputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
 
-										          <span class="input-group-btn">
-										            <button type="button" id="outfile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
-										          </span>
-										          <input type="text" id="outputfile_name[0]" name="outputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
+											        </div>
+		                                		</td>
+		                                		<td>
+			                                        <input type="file" id="outfile_select[0]" name="outputfile[0]" class="form-control" style="display:none;">
+			                                        <div class="input-group">
 
-										        </div>
-	                                		</td>
-	                                		<td>
-	                                			<input type="text" id="haiten[0]" name="haiten[0]" placeholder="配点を記入してください">
+											          <span class="input-group-btn">
+											            <button type="button" id="outfile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
+											          </span>
+											          <input type="text" id="outputfile_name[0]" name="outputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
 
-	                                		</td>
-	                                	</tr>
-	                                </tbody>
-	                            </table>
-	                        </div>
-						</div>
+											        </div>
+		                                		</td>
+		                                		<td>
+		                                			<input type="text" id="haiten[0]" name="haiten[0]" placeholder="配点を記入してください">
+
+		                                		</td>
+		                                	</tr>
+		                                </tbody>
+		                            </table>
+		                        </div>
+							</div>
+	                	</div>
                 	</div>
                 </div>
                 <!-- /.row -->
 
                 <div class="row">
-                	<div class="panel panel-default">
-                		<div class="panel-heading">
-                			公開設定
-                		</div>
-	                	<div class="panel-body">
-	                        <div class="table-responsive">
-	                            <table class="table table-bordered table-hover" id="form">
-	                                <thead>
-	                                    <tr>
-	                                        <th>学科</th>
-	                                        <th>公開設定</th>
-	                                        <th>公開時間設定</th>
-	                                        <th>締め切り設定</th>
-	                                    </tr>
-	                                </thead>
-	                                <tbody>
-	                                 <% List<CourseDto> list = (List<CourseDto>)request.getAttribute(RequestConst.REQUEST_COURSE_LIST); %>
-	                                 <% for(CourseDto dto : list ){ %>
-	                                 <%
-	                                 	//検索して一致するデータを採ってくる
-	                                 	TaskPublicDto pubDto = null;
-	                                 	if( taskPublicList != null ){
-	                                 		for( TaskPublicDto pubDtoWk : taskPublicList){
-		                                 		if( dto.getId() == pubDtoWk.getCourseId()){
-		                                 			pubDto = pubDtoWk;
-		                                 			break;
+                    <div class="col-lg-12">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			公開設定
+	                		</div>
+		                	<div class="panel-body">
+		                        <div class="table-responsive">
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <thead>
+		                                    <tr>
+		                                        <th>学科</th>
+		                                        <th>公開設定</th>
+		                                        <!-- 未対応
+		                                        <th>公開時間設定</th>
+		                                         -->
+		                                        <th>締め切り設定</th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody>
+		                                 <% List<CourseDto> list = (List<CourseDto>)request.getAttribute(RequestConst.REQUEST_COURSE_LIST); %>
+		                                 <% for(CourseDto dto : list ){ %>
+		                                 <%
+		                                 	//検索して一致するデータを採ってくる
+		                                 	TaskPublicDto pubDto = null;
+		                                 	if( taskPublicList != null ){
+		                                 		for( TaskPublicDto pubDtoWk : taskPublicList){
+			                                 		if( dto.getId() == pubDtoWk.getCourseId()){
+			                                 			pubDto = pubDtoWk;
+			                                 			break;
+			                                 		}
 		                                 		}
-	                                 		}
-	                                 	}
-	                                 %>
-	                                	<tr>
-	                                		<td>
-	                                			<%=dto.getName()%>
-	                                		</td>
-	                                		<td>
-	                                            <select class="form-control" name="<%=dto.getId()%>-course">
-	                                                <option value="<%=TaskPublicStateId.PRIVATE.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PRIVATE? "selected":""))%>><%=TaskPublicStateId.PRIVATE.getMsg1()%></option>
-	                                                <option value="<%=TaskPublicStateId.PUBLIC_MUST.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC_MUST? "selected":""))%>><%=TaskPublicStateId.PUBLIC_MUST.getMsg1()%></option>
-	                                                <option value="<%=TaskPublicStateId.PUBLIC.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC? "selected":""))%>><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
-	                                            </select>
-	                                		</td>
-	                                		<td>
-	                                			<div class="form-group">
-	                                			<input type="text" name="<%=dto.getId()%>-startterm" placeholder="" id="datepicker1-<%=dto.getId()%>" value="<%= (pubDto==null? "":pubDto.getPublicDatetime()) %>">
-	                                			</div>
-	                                		</td>
-	                                		<td>
-	                                			<div class="form-group">
-	                                			<input type="text" name="<%=dto.getId()%>-endterm" placeholder="" id="datepicker2-<%=dto.getId()%>" value="<%= (pubDto==null? "":pubDto.getEndDatetime()) %>">
-	                                			</div>
-	                                		</td>
-	                                	</tr>
-	                                <% }%>
-	                                </tbody>
-	                            </table>
-	                        </div>
-						</div>
+		                                 	}
+		                                 %>
+		                                	<tr>
+		                                		<td>
+		                                			<%=dto.getName()%>
+		                                		</td>
+		                                		<td>
+		                                            <select class="form-control" name="<%=dto.getId()%>-course">
+		                                                <option value="<%=TaskPublicStateId.PRIVATE.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PRIVATE? "selected":""))%>><%=TaskPublicStateId.PRIVATE.getMsg1()%></option>
+		                                                <option value="<%=TaskPublicStateId.PUBLIC_MUST.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC_MUST? "selected":""))%>><%=TaskPublicStateId.PUBLIC_MUST.getMsg1()%></option>
+		                                                <option value="<%=TaskPublicStateId.PUBLIC.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC? "selected":""))%>><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
+		                                            </select>
+		                                		</td>
+		                                        <!-- 未対応
+		                                		<td>
+		                                			<div class="form-group">
+		                                			<input type="text" name="<%=dto.getId()%>-startterm" placeholder="" id="datepicker1-<%=dto.getId()%>" value="<%= (pubDto==null? "":pubDto.getPublicDatetime()) %>">
+		                                			</div>
+		                                		</td>
+		                                         -->
+		                                		<td>
+		                                			<div class="form-group">
+		                                			<input type="text" name="<%=dto.getId()%>-endterm" placeholder="" id="datepicker2-<%=dto.getId()%>" value="<%= (pubDto==null? "":pubDto.getEndDatetime()) %>">
+		                                			</div>
+		                                		</td>
+		                                	</tr>
+		                                <% }%>
+		                                </tbody>
+		                            </table>
+		                        </div>
+							</div>
+	                	</div>
                 	</div>
                 </div>
                 <!-- /.row -->
@@ -410,6 +424,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 		$(function() {
 			    $("#datepicker2").datepicker();
 		});
+
 	</script>
 </body>
 

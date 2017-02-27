@@ -2,7 +2,7 @@ package jp.ac.asojuku.asolearning.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -52,9 +52,9 @@ public class TaskTblEntity implements Serializable {
 	 * コンストラクタ.
 	 */
 	public TaskTblEntity() {
-		this.resultTblSet = new HashSet<ResultTblEntity>();
-		this.taskPublicTblSet = new HashSet<TaskPublicTblEntity>();
-		this.testcaseTableSet = new HashSet<TestcaseTableEntity>();
+		this.resultTblSet = new LinkedHashSet<ResultTblEntity>();
+		this.taskPublicTblSet = new LinkedHashSet<TaskPublicTblEntity>();
+		this.testcaseTableSet = new LinkedHashSet<TestcaseTableEntity>();
 	}
 
 	/**
