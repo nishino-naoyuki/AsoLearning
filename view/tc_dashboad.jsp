@@ -78,9 +78,39 @@
                     </div>
                 </div>
                 <!-- /.row -->
+<%
+InfomationDto dto = (InfomationDto)request.getAttribute(RequestConst.REQUEST_INFO_DTO);
+List<String> infoList = dto.getInfoList();
+%>
+                <div class="row">
+                    <div class="col-lg-12">
+<% if( infoList.size() == 0){ %>
+お知らせはありません
+<% }else{ %>
+	                	<div class="panel panel-green">
+	                		<div class="panel-heading">
+	                			お知らせ一覧
+	                		</div>
+		                	<div class="panel-body">
+		                        <div class="table-responsive">
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <tbody>
+		                                <% for( String msg : infoList){ %>
+		                                	<tr>
+		                                		<td>
+		                                		<%= msg %>
+		                                		</td>
+		                                	</tr>
+		                                <% } %>
+		                                </tbody>
+		                            </table>
+		                        </div>
+							</div>
+						</div>
 
-                <!-- /.row -->
-
+<% } %>
+					</div>
+                </div>
             </div>
             <!-- /.container-fluid -->
         </div>

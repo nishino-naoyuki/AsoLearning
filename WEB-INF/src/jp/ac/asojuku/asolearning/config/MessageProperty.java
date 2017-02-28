@@ -27,6 +27,9 @@ public class MessageProperty extends ConfigBase{
 	public static final String LOGIN_ERR_LOGINERR = "login.err.loginerr";
 	public static final String LOGOUT_MSG = "logout.msg";
 	public static final String ERR_PROP_PREFIX = "errmsg";
+	public static final String INFO_RECENT_CREATE = "info.recent.create";
+	public static final String INFO_RECENT_UPDATE = "info.recent.update";
+	public static final String INFO_RECENT_END = "info.recent.end";
 
 	/**
 	 * インスタンスの取得

@@ -30,4 +30,5 @@ public class RequestConst {
 	public static final String REQUEST_STATUS = "status";
 	public static final String REQUEST_USER_DETAIL = "userDetail";
 	public static final String REQUEST_USER_ID = "UserId";
+	public static final String REQUEST_INFO_DTO = "InformationDto";
 }
