@@ -28,7 +28,7 @@ public class InfomationDao extends Dao {
 	//7日以内に作成された課題を表示
 	private static final String TASK_CREATE_RECNET =
 			  "select * from "
-			+ "(select *,datediff(current_date(),t.ENTRY_DATE) diff  from task_tbl t) dd "
+			+ "(select *,datediff(CURRENT_DATE(),t.ENTRY_DATE) diff  from TASK_TBL t) dd "
 			+ "LEFT JOIN TASK_PUBLIC_TBL tp ON(dd.TASK_ID = tp.TASK_ID) "
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "WHERE (dd.diff BETWEEN -7 AND 7) AND tp.STATUS_ID IN(1,2) ";
@@ -36,7 +36,7 @@ public class InfomationDao extends Dao {
 	//7日以内に更新された課題を表示
 	private static final String TASK_UPDATE_RECNET =
 			  "select * from "
-			+ "(select *,datediff(current_date(),t.UPDATE_TIM) diff  from task_tbl t) dd "
+			+ "(select *,datediff(CURRENT_DATE(),t.UPDATE_TIM) diff  from TASK_TBL t) dd "
 			+ "LEFT JOIN TASK_PUBLIC_TBL tp ON(dd.TASK_ID = tp.TASK_ID) "
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "WHERE dd.UPDATE_TIM <> dd.ENTRY_DATE AND (dd.diff BETWEEN -7 AND 7) AND tp.STATUS_ID IN(1,2) ";
@@ -54,14 +54,14 @@ public class InfomationDao extends Dao {
 			  + "    t.UPDATE_TIM,"
 			  + "    tp.COURSE_ID, "
 			  + "    tp.STATUS_ID,"
-			  + "    DATEDIFF(tp.END_DATETIME,current_date()) diff "
+			  + "    DATEDIFF(tp.END_DATETIME,CURRENT_DATE()) diff "
 			  + "  FROM TASK_TBL t "
 			  + "        LEFT JOIN TASK_PUBLIC_TBL tp ON(t.TASK_ID = tp.TASK_ID)"
 			  + "  WHERE tp.END_DATETIME is not null"
 			  + ") dd "
 			+ "WHERE (dd.diff BETWEEN 0 AND 4) AND dd.STATUS_ID IN(1,2) AND "
 			+ "COURSE_ID = ? AND "
-			+ "not exists(SELECT USER_ID FROM result_tbl r WHERE r.USER_ID=? AND r.HANDED=1 AND r.TASK_ID=dd.TASK_ID)";
+			+ "not exists(SELECT USER_ID FROM RESULT_TBL r WHERE r.USER_ID=? AND r.HANDED=1 AND r.TASK_ID=dd.TASK_ID)";
 
 	private static final String WHERE_COURSEID = "tp.COURSE_ID = ?";
 
