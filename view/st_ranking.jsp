@@ -276,13 +276,17 @@ $(function(){
     })
 })
     $(document).ready(function() {
-    	// デフォルトの設定を変更
-        $.extend( $.fn.dataTable.defaults, {
-            language: {
-                url: "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Japanese.json"
-            }
-        });
+
         $('#dataTables-example').DataTable({
+        	"oLanguage": {
+    	        "sLengthMenu": "表示行数 _MENU_ 件",
+    	        "oPaginate": {
+    	            "sNext": "次のページ",
+    	            "sPrevious": "前のページ"
+    	        },
+    	        "sInfo": "全_TOTAL_件中 _START_件から_END_件を表示",
+    	        "sSearch": "検索："
+    	    },
             responsive: true,
             // ソート機能 無効
             ordering: false,

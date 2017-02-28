@@ -47,7 +47,7 @@ public class InfomationDao extends Dao {
 			  + "("
 			  + "  SELECT "
 			  + "    t.TASK_ID,"
-			  + "    t.Name,"
+			  + "    t.NAME,"
 			  + "    t.TASK_QUESTION,"
 			  + "    t.CREATE_USER_ID,"
 			  + "    t.ENTRY_DATE,"
