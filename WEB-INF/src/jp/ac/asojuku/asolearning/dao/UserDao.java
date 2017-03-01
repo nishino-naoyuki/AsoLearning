@@ -51,8 +51,8 @@ public class UserDao extends Dao {
 	private static final String MEMBER_SEARCH_COND3 = " u.COURSE_ID = ? ";
 	private static final String MEMBER_SEARCH_COND4 = " u.ROLE_ID = ? ";
 	private static final String MEMBER_SEARCH_COND5 = " ret.HANDED = 1 ";
-	private static final String MEMBER_SEARCH_COND5_NULL1 = " (ret.HANDED = 0 OR not exists(select user_id from result_tbl r2 where r2.user_id=u.USER_ID)) ";
-	private static final String MEMBER_SEARCH_COND5_NULL2 = " (ret.HANDED = 0 OR not exists(select user_id from result_tbl r2 where t.TASK_ID=? and r2.user_id=u.USER_ID)) ";
+	private static final String MEMBER_SEARCH_COND5_NULL1 = " (ret.HANDED = 0 OR not exists(select USER_ID from RESULT_TBL r2 where r2.USER_ID=u.USER_ID)) ";
+	private static final String MEMBER_SEARCH_COND5_NULL2 = " (ret.HANDED = 0 OR not exists(select USER_ID from RESULT_TBL r2 where t.TASK_ID=? and r2.USER_ID=u.USER_ID)) ";
 	private static final String MEMBER_SEARCH_COND6 = " t.TASK_ID = ? ";
 	private static final String MEMBER_SEARCH_ORDER = " ORDER BY u.USER_ID,u.COURSE_ID,t.TASK_ID";
 
