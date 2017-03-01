@@ -4,8 +4,7 @@
 <head>
 
 <%@ page contentType="text/html; charset=utf-8" %>
-<%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
-<%@ page import="jp.ac.asojuku.asolearning.param.TaskPublicStateId" %>
+<%@ page import="jp.ac.asojuku.asolearning.param.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.err.*" %>
@@ -113,6 +112,18 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 		                                		<td>
 		                                		<div class="form-group">
 		                                			<input type="text" name="taskname" placeholder="課題名を記載してください" value="<%= (taskDto!=null ? taskDto.getTaskName():"") %>" >
+		                                		</div>
+		                                		</td>
+		                                	</tr>
+		                                	<tr>
+		                                		<th>難易度[必須]</th>
+		                                		<td>
+		                                		<div class="form-group">
+		                                            <select class="form-control" name="difficalty">
+		                                                <option value="<%=Difficalty.EASY.getId()%>" <%=(taskDto==null? "":( Difficalty.EASY.equals(taskDto.getDifficalty()) ? "selected":""))%>><%=Difficalty.EASY.getMsg()%></option>
+		                                                <option value="<%=Difficalty.NORMAL.getId()%>" <%=(taskDto==null? "":(Difficalty.NORMAL.equals(taskDto.getDifficalty()) ? "selected":""))%>><%=Difficalty.EASY.NORMAL.getMsg()%></option>
+		                                                <option value="<%=Difficalty.DIFFCAL.getId()%>" <%=(taskDto==null? "":(Difficalty.DIFFCAL.equals(taskDto.getDifficalty()) ? "selected":""))%>><%=Difficalty.EASY.DIFFCAL.getMsg()%></option>
+		                                            </select>
 		                                		</div>
 		                                		</td>
 		                                	</tr>

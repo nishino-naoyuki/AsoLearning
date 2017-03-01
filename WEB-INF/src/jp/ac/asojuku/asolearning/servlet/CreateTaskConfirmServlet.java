@@ -136,6 +136,7 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 		TaskValidator.question(dto.getQuestion(), errors);
 		TaskValidator.publicStateList(dto.getTaskPublicList(), errors);
 		TaskValidator.testcaseList(dto.getTaskTestCaseDtoList(), errors);
+		TaskValidator.diffcalty(dto.getDifficalty(), errors);
 	}
 
 	/**
@@ -154,6 +155,8 @@ public class CreateTaskConfirmServlet extends BaseServlet {
 		dto.setTaskName(getStringParamFromPart(req,"taskname"));
 		//問題文を取得
 		dto.setQuestion(getStringParamFromPart(req,"question"));
+		//難易度を取得
+		dto.setDifficalty(getIntParamFromPart(req,"difficalty"));
 
 		return dto;
 	}

@@ -4,8 +4,7 @@
 <head>
 
 <%@ page contentType="text/html; charset=utf-8" %>
-<%@ page import="jp.ac.asojuku.asolearning.param.SessionConst" %>
-<%@ page import="jp.ac.asojuku.asolearning.param.TaskPublicStateId" %>
+<%@ page import="jp.ac.asojuku.asolearning.param.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.err.*" %>
@@ -110,6 +109,14 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		<td>
 	                                		<div class="form-group">
 	                                			<%= dto.getTaskName() %>
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                	<tr>
+	                                		<th>難易度</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= Difficalty.search(dto.getDifficalty()).getMsg() %>
 	                                		</div>
 	                                		</td>
 	                                	</tr>

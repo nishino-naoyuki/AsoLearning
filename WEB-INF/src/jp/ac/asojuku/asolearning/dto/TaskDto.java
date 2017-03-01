@@ -20,6 +20,7 @@ public class TaskDto {
 	private String question;		//問題文
 	private TaskResultDto result;
 	private Integer rank;
+	private Integer difficalty;
 	private List<TaskPublicDto> taskPublicList = new ArrayList<>();
 	private List<TaskTestCaseDto> taskTestCaseDtoList = new ArrayList<>();
 
@@ -112,6 +113,18 @@ public class TaskDto {
 	}
 	public void addTaskTestCaseDtoList(TaskTestCaseDto taskTestCaseDto) {
 		this.taskTestCaseDtoList.add(taskTestCaseDto);
+	}
+	/**
+	 * @return difficalty
+	 */
+	public Integer getDifficalty() {
+		return difficalty;
+	}
+	/**
+	 * @param difficalty セットする difficalty
+	 */
+	public void setDifficalty(Integer difficalty) {
+		this.difficalty = difficalty;
 	}
 
 

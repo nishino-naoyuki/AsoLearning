@@ -80,8 +80,8 @@ public class TaskDao extends Dao {
 	//挿入SQL
 	private static final String TASK_INSERT_SQL =
 			"INSERT INTO TASK_TBL "
-			+ "(TASK_ID,NAME,TASK_QUESTION,CREATE_USER_ID,ENTRY_DATE,UPDATE_TIM) "
-			+ "VALUES(null,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ";
+			+ "(TASK_ID,NAME,TASK_QUESTION,CREATE_USER_ID,DIFFICALTY,ENTRY_DATE,UPDATE_TIM) "
+			+ "VALUES(null,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ";
 	private static final String TASKTESTCASE_INSERT_SQL =
 			"INSERT INTO TESTCASE_TABLE "
 			+ "(TASK_ID,TESTCASE_ID,ALLMOST_OF_MARKS,OUTPUT_FILE_NAME,INPUT_FILE_NAME) "
@@ -94,7 +94,7 @@ public class TaskDao extends Dao {
 	//更新SQL
 	private static final String TASK_UPDATE_SQL =
 			"UPDATE TASK_TBL SET "
-			+ "NAME=?,TASK_QUESTION=?,UPDATE_TIM=CURRENT_TIMESTAMP "
+			+ "NAME=?,TASK_QUESTION=?,DIFFICALTY=?,UPDATE_TIM=CURRENT_TIMESTAMP "
 			+ "WHERE TASK_ID=? ";
 	private static final String TASKTESTCASE_UPDATE_SQL =
 			"UPDATE TESTCASE_TABLE SET "
@@ -263,6 +263,7 @@ public class TaskDao extends Dao {
 		entity.setCreateUserId(rs.getInt("CREATE_USER_ID"));
 		entity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
 		entity.setUpdateTim(rs.getTimestamp("UPDATE_TIM"));
+		entity.setDifficalty(rs.getInt("DIFFICALTY"));
 		entity.setTerminationDate(rs.getDate("termination_date"));
 		if( isNeedNickName ){
 			entity.setCreateUserNickName(rs.getString("NICK_NAME"));
@@ -677,7 +678,8 @@ public class TaskDao extends Dao {
 
         	ps1.setString(1, entity.getName());
         	ps1.setString(2, entity.getTaskQuestion());
-        	ps1.setInt(3, entity.getTaskId());
+        	ps1.setInt(3, entity.getDifficalty());
+        	ps1.setInt(4, entity.getTaskId());
 
         	ps1.executeUpdate();
 
@@ -773,6 +775,7 @@ public class TaskDao extends Dao {
         	ps1.setString(1, entity.getName());
         	ps1.setString(2, entity.getTaskQuestion());
         	ps1.setInt(3, userId);
+        	ps1.setInt(4, entity.getDifficalty());
 
         	ps1.executeUpdate();
 

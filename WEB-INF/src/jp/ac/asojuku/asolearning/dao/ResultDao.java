@@ -65,6 +65,7 @@ public class ResultDao extends Dao {
 			+ "u.ADMISSION_YEAR,"
 			+ "u.REPEAT_YEAR_COUNT,"
 			+ "t.NAME taskname,"
+			+ "t.DIFFICALTY,"
 			+ "cm.COURSE_ID, "
 			+ "COURSE_NAME "
 			+ "FROM RESULT_TBL r "
@@ -359,6 +360,7 @@ public class ResultDao extends Dao {
 		// TASK_TBL
 		TaskTblEntity taskEntity = new TaskTblEntity();
 		taskEntity.setName(rs.getString("taskname"));
+		taskEntity.setDifficalty(rs.getInt("DIFFICALTY"));
 
 		entity.setUserTbl(userEntity);
 		entity.setTaskTbl(taskEntity);
@@ -439,6 +441,7 @@ public class ResultDao extends Dao {
     	taskEntity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
     	taskEntity.setUpdateTim(rs.getTimestamp("UPDATE_TIM"));
     	taskEntity.setTerminationDate(rs.getDate("termination_date"));
+    	taskEntity.setDifficalty(rs.getInt("DIFFICALTY"));
 
     	resultEntity.setTaskTbl(taskEntity);
 

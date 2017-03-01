@@ -153,6 +153,7 @@ public class TaskBoImpl implements TaskBo {
 		dto.setTaskId(entity.getTaskId());
 		dto.setTaskName(entity.getName());
 		dto.setQuestion(entity.getTaskQuestion());
+		dto.setDifficalty(entity.getDifficalty());
 		//公開設定
 		for( TaskPublicTblEntity publicEntity : entity.getTaskPublicTblSet()){
 
@@ -338,6 +339,7 @@ public class TaskBoImpl implements TaskBo {
 		entity.setName(dto.getTaskName());
 		entity.setTaskQuestion(dto.getQuestion());
 		entity.setTaskId(dto.getTaskId());
+		entity.setDifficalty(dto.getDifficalty());
 
 		//テストケース情報
 		for( TaskTestCaseDto testcaseDto : testCaseList){

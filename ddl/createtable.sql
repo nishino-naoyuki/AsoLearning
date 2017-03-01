@@ -63,6 +63,8 @@ CREATE TABLE HISTORY_TBL
 	USER_ID int NOT NULL COMMENT 'ユーザーID',
 	ACTION_ID int NOT NULL,
 	ACTION_DATE datetime NOT NULL,
+	-- 付加情報
+	MESSAGE varchar(2000) COMMENT '付加情報',
 	PRIMARY KEY (HISTORY_ID)
 ) COMMENT = '操作履歴テーブル
 操作履歴のテーブルです';
@@ -169,6 +171,8 @@ USERテーブルのUSER_ID',
 	UPDATE_TIM timestamp NOT NULL,
 	-- NULLの場合は締め切りなし
 	termination_date date COMMENT 'NULLの場合は締め切りなし',
+	-- 0,1,2の3段階
+	DIFFICALTY int COMMENT '0,1,2の3段階',
 	PRIMARY KEY (TASK_ID),
 	UNIQUE (NAME)
 ) COMMENT = '課題を格納するテーブル';

@@ -4,7 +4,7 @@
 <head>
 
 <%@ page contentType="text/html; charset=utf-8" %>
-<%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
+<%@ page import="jp.ac.asojuku.asolearning.param.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.TaskDto" %>
 <%@ page import="jp.ac.asojuku.asolearning.util.*" %>
@@ -99,6 +99,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
                                         <% }else{ %>
                                         	（任意）
                                         <% } %>
+                                        :難易度 <%= Difficalty.search(taskdto.getDifficalty()).getMsg() %>
                                         </th>
                                     </tr>
                                 </thead>

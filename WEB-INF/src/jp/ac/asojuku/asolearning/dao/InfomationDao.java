@@ -52,6 +52,7 @@ public class InfomationDao extends Dao {
 			  + "    t.CREATE_USER_ID,"
 			  + "    t.ENTRY_DATE,"
 			  + "    t.UPDATE_TIM,"
+			  + "    t.DIFFICALTY,"
 			  + "    tp.COURSE_ID, "
 			  + "    tp.STATUS_ID,"
 			  + "    DATEDIFF(tp.END_DATETIME,CURRENT_DATE()) diff "
@@ -277,6 +278,7 @@ public class InfomationDao extends Dao {
 		entity.setCreateUserId(rs.getInt("CREATE_USER_ID"));
 		entity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
 		entity.setUpdateTim(rs.getTimestamp("UPDATE_TIM"));
+		entity.setDifficalty(rs.getInt("DIFFICALTY"));
 
 		return entity;
 	}

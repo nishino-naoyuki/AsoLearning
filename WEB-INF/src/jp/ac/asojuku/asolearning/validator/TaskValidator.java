@@ -21,6 +21,7 @@ import jp.ac.asojuku.asolearning.dto.TaskTestCaseDto;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.err.ErrorCode;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
+import jp.ac.asojuku.asolearning.param.Difficalty;
 
 /**
  * 課題のエラーチェッククラス
@@ -29,6 +30,19 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public class TaskValidator {
 
+	/**
+	 * 難易度のチェック
+	 *
+	 * @param difficaltyId
+	 * @param errors
+	 * @throws AsoLearningSystemErrException
+	 */
+	public static void diffcalty(Integer difficaltyId,ActionErrors errors) throws AsoLearningSystemErrException{
+
+		if( !Difficalty.check(difficaltyId) ){
+			errors.add(ErrorCode.ERR_MEMBER_ENTRY_DIFFICALTY_ERR);
+		}
+	}
 	/**
 	 * 課題の結果があるか？
 	 * @param taskId

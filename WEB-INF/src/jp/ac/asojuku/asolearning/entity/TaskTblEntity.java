@@ -48,6 +48,8 @@ public class TaskTblEntity implements Serializable {
 	/** テストケーステーブル 一覧. */
 	private Set<TestcaseTableEntity> testcaseTableSet;
 
+	/** 難易度 */
+	private Integer difficalty;
 	/**
 	 * コンストラクタ.
 	 */
@@ -293,6 +295,20 @@ public class TaskTblEntity implements Serializable {
 	 */
 	public Set<TestcaseTableEntity> getTestcaseTableSet() {
 		return this.testcaseTableSet;
+	}
+
+	/**
+	 * @return difficalty
+	 */
+	public Integer getDifficalty() {
+		return difficalty;
+	}
+
+	/**
+	 * @param difficalty セットする difficalty
+	 */
+	public void setDifficalty(Integer difficalty) {
+		this.difficalty = difficalty;
 	}
 
 	/**

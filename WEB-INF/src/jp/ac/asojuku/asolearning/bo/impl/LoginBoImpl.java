@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.bo.LoginBo;
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
+import jp.ac.asojuku.asolearning.dao.HistoryDao;
 import jp.ac.asojuku.asolearning.dao.UserDao;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
@@ -19,6 +20,7 @@ import jp.ac.asojuku.asolearning.exception.AccountLockedException;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.exception.LoginFailureException;
+import jp.ac.asojuku.asolearning.param.ActionId;
 import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.util.Digest;
 import jp.ac.asojuku.asolearning.util.UserUtils;
@@ -53,6 +55,10 @@ public class LoginBoImpl implements LoginBo {
 
 			//会員テーブル→ログイン情報
 			login = MemberEntityToLogonInfoDTO(entity);
+
+			//動作ログをセット
+			HistoryDao history = new HistoryDao(dao.getConnection());
+			history.insert(entity.getUserId(), ActionId.LOGIN.getId(), "");
 
 		} catch (DBConnectException e) {
 			//ログ出力

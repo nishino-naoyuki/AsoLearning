@@ -22,6 +22,7 @@ import jp.ac.asojuku.asolearning.bo.UserBo;
 import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.csv.model.UserCSV;
+import jp.ac.asojuku.asolearning.dao.HistoryDao;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dao.UserDao;
 import jp.ac.asojuku.asolearning.dto.CSVProgressDto;
@@ -38,6 +39,7 @@ import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.err.ErrorCode;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
+import jp.ac.asojuku.asolearning.param.ActionId;
 import jp.ac.asojuku.asolearning.param.SessionConst;
 import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
@@ -69,6 +71,10 @@ public class UserBoImpl implements UserBo {
 
 			//課題リスト情報を取得
 			dao.insert(entity,hashPwd);
+
+			//動作ログをセット
+			HistoryDao history = new HistoryDao(dao.getConnection());
+			history.insert(entity.getUserId(), ActionId.USER_CREATE.getId(), "");
 
 		} catch (DBConnectException e) {
 			//ログ出力
@@ -563,8 +569,12 @@ public class UserBoImpl implements UserBo {
 			//パスワードのハッシュ値計算
 			String encNickName = Digest.encNickName(nickName, maileaddress);
 
-			//パスワード変更
+			//ニックネーム変更
 			dao.updateNickName(userId, encNickName);
+
+			//動作ログをセット
+			HistoryDao history = new HistoryDao(dao.getConnection());
+			history.insert(userId, ActionId.NICK_NAME.getId(), "");
 
 		} catch (DBConnectException e) {
 			//ログ出力

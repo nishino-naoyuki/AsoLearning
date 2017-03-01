@@ -110,6 +110,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 		                                <thead>
 		                                    <tr class="info">
 		                                        <th>課題名</th>
+		                                        <th>難易度</th>
 		                                        <th>状態</th>
 		                                        <th>締め切り</th>
 		                                        <th>必須</th>
@@ -125,7 +126,9 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 		                                        <%= taskDto.getTaskName() %>
 		                                        </a>
 		                                        </td>
-
+												<td>
+		                                        	<%= Difficalty.search(taskDto.getDifficalty()).getMsg() %>
+												</td>
 		                                        <% if( taskDto.getResult() != null ){ %>
 		                                        	<% if(  taskDto.getResult().isHanded()){ %>
 		                                        	<td>提出済み<br>（<%=taskDto.getResult().getHandedDate() %> 提出）</td>

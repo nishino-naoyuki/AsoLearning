@@ -150,6 +150,7 @@ public class UpdateTaskConfirmServlet extends BaseServlet {
 		TaskValidator.question(dto.getQuestion(), errors);
 		TaskValidator.publicStateList(dto.getTaskPublicList(), errors);
 		TaskValidator.testcaseList(dto.getTaskTestCaseDtoList(), errors);
+		TaskValidator.diffcalty(dto.getDifficalty(), errors);
 		//すでにだれかが回答している（結果がある）課題は変更不可
 		TaskValidator.isExistResult(dto.getTaskId(), errors);
 	}
@@ -172,6 +173,8 @@ public class UpdateTaskConfirmServlet extends BaseServlet {
 		dto.setTaskName(getStringParamFromPart(req,"taskname"));
 		//問題文を取得
 		dto.setQuestion(getStringParamFromPart(req,"question"));
+		//難易度を取得
+		dto.setDifficalty(getIntParamFromPart(req,"difficalty"));
 
 		return dto;
 	}
