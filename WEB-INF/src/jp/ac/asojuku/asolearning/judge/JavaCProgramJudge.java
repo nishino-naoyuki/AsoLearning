@@ -41,10 +41,12 @@ import jp.ac.asojuku.asolearning.util.XmlReader;
  * @author nishino
  *
  */
-public class JavaProgramJudge implements Judge {
+public class JavaCProgramJudge implements Judge {
 
-	Logger logger = LoggerFactory.getLogger(JavaProgramJudge.class);
-	private final String CHECK_EXT = "java";
+	Logger logger = LoggerFactory.getLogger(JavaCProgramJudge.class);
+	private final String CHECK_EXT1 = "java";
+	private final String CHECK_EXT2 = "c";
+	private final String CHECK_EXT3 = "cpp";
 	private final String RESULT = "/result";
 	private final String CLASSES = "/classes";
 	private final String CCCC = "/cccc";
@@ -62,7 +64,10 @@ public class JavaProgramJudge implements Judge {
 
 		///////////////////////////////////////
 		//ファイルの検査
-		if( !FileUtils.checkFileExt(new File(dirName+"/"+fileName), CHECK_EXT)){
+		String srcFile = dirName+"/"+fileName;
+		if( !FileUtils.checkFileExt(new File(srcFile), CHECK_EXT1) &&
+				!FileUtils.checkFileExt(new File(srcFile), CHECK_EXT2) &&
+				!FileUtils.checkFileExt(new File(srcFile), CHECK_EXT3) ){
 			throw new IllegalJudgeFileException();
 		}
 

@@ -76,6 +76,9 @@ public class UserTblEntity implements Serializable {
 	/** 結果テーブル 一覧. */
 	private Set<ResultTblEntity> resultTblSet;
 
+	/** 学年（SQLで計算） */
+	private Integer grade;
+
 	/**
 	 * コンストラクタ.
 	 */
@@ -349,6 +352,20 @@ public class UserTblEntity implements Serializable {
 	 */
 	public Integer getGraduateYear() {
 		return this.graduateYear;
+	}
+
+	/**
+	 * @return grade
+	 */
+	public Integer getGrade() {
+		return grade;
+	}
+
+	/**
+	 * @param grade セットする grade
+	 */
+	public void setGrade(Integer grade) {
+		this.grade = grade;
 	}
 
 	/**

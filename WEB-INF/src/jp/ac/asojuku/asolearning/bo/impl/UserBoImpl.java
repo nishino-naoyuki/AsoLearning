@@ -40,6 +40,7 @@ import jp.ac.asojuku.asolearning.err.ErrorCode;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.param.ActionId;
+import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.param.SessionConst;
 import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
@@ -277,7 +278,9 @@ public class UserBoImpl implements UserBo {
         		UserValidator.useNickName(userCsv.getNickName(), errors);
         		UserValidator.roleId(String.valueOf(userCsv.getRoleId()), errors);
         		//UserValidator.courseId(String.valueOf(userCsv.getRoleId()), list, errors);
-        		UserValidator.admissionYear(userCsv.getAdmissionYear(), errors);
+        		if( RoleId.STUDENT.equals(userCsv.getRoleId())){
+        			UserValidator.admissionYear(userCsv.getAdmissionYear(), errors);
+        		}
         		UserValidator.mailAddress(userCsv.getMailAddress(), errors);
         		UserValidator.password(userCsv.getPassword(), errors);
             }

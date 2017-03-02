@@ -104,11 +104,11 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 				                    <input type="text" name="taskname" >
 				                </div>
 	                        	<div class="form-group">
-			                    	作者名
+			                    	作者メールアドレス
 				                    <input type="text" name="creator" >
 				                </div>
 	                        	<div class="form-group">
-		                    		学科
+		                    		対象学科
 		                    		<select id="couse" class="form-control" name="<%=RequestConst.REQUEST_COURSE_ID%>">
 				                         <option value="" >すべて</option>
 				                     <% for(CourseDto course :courseList){ %>
@@ -230,6 +230,7 @@ $('#search').on('click', function() {
     	}
 
     	$('#dataTables-example').DataTable().destroy();
+    	$('#search_result').html("");
     	for( var i=0; i < json.length; i++){
     		var element;
     		element = json[i];

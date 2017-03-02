@@ -33,7 +33,8 @@ public class ResultDao extends Dao {
 
 	//検索SQL
 	private static final String RESULT_SEARCH_TASKID_SQL =
-			"SELECT * FROM RESULT_TBL r "
+			"SELECT * "
+			+ "FROM RESULT_TBL r "
 			+ "LEFT JOIN RESULT_TESTCASE_TBL rt ON(rt.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN RESULT_METRICS_TBL rm ON(rm.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID = t.TASK_ID) "
@@ -43,7 +44,8 @@ public class ResultDao extends Dao {
 			+ "ORDER BY r.RESULT_ID";
 	//検索SQL
 	private static final String RESULT_SEARCH_SQL =
-			"SELECT * FROM RESULT_TBL r "
+			"SELECT * "
+			+ "FROM RESULT_TBL r "
 			+ "LEFT JOIN RESULT_TESTCASE_TBL rt ON(rt.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN RESULT_METRICS_TBL rm ON(rm.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID = t.TASK_ID) "
@@ -67,6 +69,7 @@ public class ResultDao extends Dao {
 			+ "t.NAME taskname,"
 			+ "t.DIFFICALTY,"
 			+ "cm.COURSE_ID, "
+			+ "(year(now())-u.ADMISSION_YEAR-u.REPEAT_YEAR_COUNT+1) grade,"
 			+ "COURSE_NAME "
 			+ "FROM RESULT_TBL r "
 			+ "LEFT JOIN USER_TBL u ON( r.USER_ID = u.USER_ID AND u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null) "

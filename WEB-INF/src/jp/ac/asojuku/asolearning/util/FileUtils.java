@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * ファイルのユーティリティ
  * @author nishino
@@ -27,6 +29,10 @@ public class FileUtils {
 	 */
 	public static List<String> readLine(String filePath) {
 		List<String> lineList = new ArrayList<>();
+
+		if( StringUtils.isEmpty(filePath) ){
+			return lineList;
+		}
 	    FileReader fr = null;
 	    BufferedReader br = null;
 	    try {
