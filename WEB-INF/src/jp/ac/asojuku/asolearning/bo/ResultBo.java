@@ -17,6 +17,8 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public interface ResultBo {
 
+	String createRankingCSV(List<RankingDto> rankingList) throws AsoLearningSystemErrException;
+
 	/**
 	 * 結果の詳細情報の取得
 	 *

@@ -103,14 +103,14 @@ public abstract class BaseServlet extends HttpServlet {
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException,AsoLearningSystemErrException
 	{
 		//405エラーチック名画面へ遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/error/405.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("view/error/405error.jsp");
 		rd.forward(req, resp);
 	}
 
 	protected void doPostMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException,AsoLearningSystemErrException
 	{
 		//405エラーチック名画面へ遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/error/405.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("view/error/405error.jsp");
 		rd.forward(req, resp);
 
 	}

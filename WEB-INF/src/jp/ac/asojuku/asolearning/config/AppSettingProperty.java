@@ -28,6 +28,8 @@ public class AppSettingProperty extends ConfigBase {
 	private static final String NICKNAME_IV = "nickname.enc.iv";
 	private static final String PWD_EXPIRY = "password.expiry";
 	private static final String PWD_LOCK_LIMIT = "pwd.lock.limit";
+	private static final String CSV_FILE_ENCODE = "csv.file.encode";
+	private static final String CSV_DIR = "csv.directory";
 
 	//設定値
 	private final String ASP_PWD_SALT = "pwd.hash.salt";	//パスワードソルト
@@ -150,5 +152,19 @@ public class AppSettingProperty extends ConfigBase {
 	 */
 	public String getNickNameIv(){
 		return getProperty(NICKNAME_IV);
+	}
+	/**
+	 * CSVファイルの文字コード
+	 * @return
+	 */
+	public String getCsvFileEncode(){
+		return getProperty(CSV_FILE_ENCODE);
+	}
+	/**
+	 * CSVファイルの出力フォルダ
+	 * @return
+	 */
+	public String getCsvDir(){
+		return getProperty(CSV_DIR);
 	}
 }

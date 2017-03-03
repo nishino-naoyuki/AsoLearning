@@ -3,6 +3,10 @@
  */
 package jp.ac.asojuku.asolearning.bo.impl;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.bo.ResultBo;
+import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.dto.RankingDto;
 import jp.ac.asojuku.asolearning.dto.TaskResultDetailDto;
@@ -26,6 +31,8 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
+import jp.ac.asojuku.asolearning.util.FileUtils;
+import jp.ac.asojuku.asolearning.util.TimestampUtil;
 import jp.ac.asojuku.asolearning.util.UserUtils;
 
 /**
@@ -33,6 +40,7 @@ import jp.ac.asojuku.asolearning.util.UserUtils;
  *
  */
 public class ResultBoImpl implements ResultBo {
+	private final String CSV_PREFIX = "ranking_";
 
 	Logger logger = LoggerFactory.getLogger(ResultBoImpl.class);
 
@@ -271,5 +279,80 @@ public class ResultBoImpl implements ResultBo {
 		}
 
 		return list;
+	}
+
+	@Override
+	public String createRankingCSV(List<RankingDto> rankingList) throws AsoLearningSystemErrException {
+
+		String csvDir = AppSettingProperty.getInstance().getCsvDir();
+		String fileEnc = AppSettingProperty.getInstance().getCsvFileEncode();
+		String fname = "";
+		StringBuilder sb = new StringBuilder();
+		String head = "";
+
+		String timeStr =
+				TimestampUtil.formattedTimestamp(TimestampUtil.current(), "yyyyMMddHHmmssSSS");
+		fname = CSV_PREFIX+timeStr+".csv";
+
+        FileOutputStream fos = null;
+        OutputStreamWriter osw = null;
+        BufferedWriter writer = null;
+
+        try{
+        	fos = new FileOutputStream(csvDir+"/"+fname);
+        	osw = new OutputStreamWriter(fos,fileEnc);
+        	writer =new BufferedWriter(osw);
+
+        	//ファイル出力
+    		sb.append(head);
+    		sb.append("\n");
+    		osw.write(sb.toString());
+
+    		for( RankingDto rank : rankingList ){
+    			StringBuilder rankSb = new StringBuilder();
+    			rankSb.append(rank.getRank()).append(",");
+    			rankSb.append(rank.getCourseName()).append(",");
+    			rankSb.append(rank.getGrade()).append(",");
+    			rankSb.append(rank.getName()).append(",");
+    			rankSb.append(rank.getNickName()).append(",");
+    			rankSb.append(rank.getScore()).append("\n");
+    			writer.write(rankSb.toString());
+    		}
+
+    		writer.flush();
+		} catch (IOException e) {
+        	logger.warn("IOException：",e);
+        	FileUtils.delete(fname);
+			throw new AsoLearningSystemErrException(e);
+		}finally{
+			//クローズ
+        	if(fos != null){
+        		try {
+					fos.close();
+				} catch (IOException e) {
+					;//ignore
+				}
+        	}
+
+        	if(osw != null){
+        		try {
+        			osw.close();
+				} catch (IOException e) {
+					;//ignore
+				}
+        	}
+
+        	if(writer != null){
+        		try {
+        			writer.close();
+				} catch (IOException e) {
+					;//ignore
+				}
+        	}
+        }
+
+
+
+		return fname;
 	}
 }

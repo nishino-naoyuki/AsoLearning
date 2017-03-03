@@ -135,6 +135,11 @@ if( taskId == null){
 			                     <div class="col-lg-4">
 			                     	<button type="submit"  class="btn btn-default">表示</button>
 			                     </div>
+		                        <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
+			                     <div class="col-lg-4">
+			                     	<button id="create_csv" class="btn btn-default">CSV出力</button>
+			                     </div>
+			                     <% } %>
 		                     </div>
 		                </div>
 	            	</div>
@@ -237,10 +242,12 @@ if( taskId == null){
 
 <script>
 $(function(){
+	//学科の選択が変わった時
     $("#couse").change(function(){
         var value = $("#couse option:selected").val();
 		var params = "<%=RequestConst.REQUEST_COURSE_ID%>="+value;
 
+        alert("?");
 	    $.ajax({
 	        type : 'GET',
 	        url : "rankingcousechange",
@@ -273,8 +280,40 @@ $(function(){
        //         $("#task").append("<option value="+obj[i].itemValue+">"+obj[i].itemLabel+"</option>");
        //     }
        // })
-    })
+    });
+
 })
+
+<% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
+    //CSV出力ボタンをクリックした時
+    $("#create_csv").on("click",function(){
+        var couseId = $("#couse option:selected").val();
+        var taskId = $("#task option:selected").val();
+
+    	//alert("couseId:"+couseId+" taskId:"+taskId);
+	    $.ajax({
+	        type : "GET",
+	        url : "creRankCsv",
+	        data : {"couseId":couseId, "taskId":taskId },
+	        dataType : 'text',
+	        timeout : 360000, // milliseconds
+
+	    }).done(function(respText) {
+	    	alert(respText);
+	    	if( respText == "error:nothing"){
+	    		alert("出力対象がありません");
+	    	}else{
+	    		location.href = "";
+	    	}
+
+	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+
+	    	alert("err:"+textStatus);
+	        console.log( textStatus  + errorThrown);
+	    });
+
+    });
+<%}%>
     $(document).ready(function() {
 
         $('#dataTables-example').DataTable({
