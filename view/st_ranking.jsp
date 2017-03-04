@@ -299,11 +299,11 @@ $(function(){
 	        timeout : 360000, // milliseconds
 
 	    }).done(function(respText) {
-	    	alert(respText);
+	    	//alert(respText);
 	    	if( respText == "error:nothing"){
 	    		alert("出力対象がありません");
 	    	}else{
-	    		location.href = "";
+	    		location.href = "dlRankingCSV?fname="+respText;
 	    	}
 
 	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {

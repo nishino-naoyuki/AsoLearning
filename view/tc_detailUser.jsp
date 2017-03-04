@@ -47,6 +47,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 <%
 //エラー情報を取得する
 UserDetailDto userDto = (UserDetailDto)request.getAttribute(RequestConst.REQUEST_USER_DETAIL);
+LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 %>
 </head>
 
@@ -75,7 +76,6 @@ UserDetailDto userDto = (UserDetailDto)request.getAttribute(RequestConst.REQUEST
         <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid">
-				<form action="tc_insertUser"  method="post" >
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -166,6 +166,9 @@ List<TaskResultDto> retList = userDto.getResultList();
                 			課題情報
                 		</div>
 	                	<div class="panel-body">
+		                    <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
+		                    <p><button id="delete_result"  class="btn btn-default"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> このユーザーの課題情報を削除する</button></p>
+	                        <% } %>
 	                        <div class="table-responsive">
 	                            <table class="table table-bordered table-hover" id="form">
 	                                <thead>
@@ -209,10 +212,9 @@ List<TaskResultDto> retList = userDto.getResultList();
                 <!-- /.row -->
 
                 <!-- /.row -->
-                <div class="row" style="display:none">
-                	 <button type="submit" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 編集</button>
+                <div class="row">
+                	 <button id="edit" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 編集</button>
                 </div>
-                </form>
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -235,7 +237,50 @@ List<TaskResultDto> retList = userDto.getResultList();
 
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+<script>
 
+$('#edit').on('click', function() {
+	alert("この機能は未実装です");
+	//location.href="tc_createUser";
+});
+
+$('#delete_result').on('click', function() {
+
+	if( !confirm("解答情報を削除すると元に戻せません。\n実行してよろしいでしょうか？") ){
+		return;
+	}
+
+	<%
+	StringBuffer sb = new StringBuffer();
+	for(TaskResultDto result : retList ){
+		sb.append(result.getTaskId()).append(",");
+	}
+	%>
+
+	var taskid = "<%=sb.toString()%>";
+	if( taskid.length == 0){
+		alert("課題がありません");
+		return;
+	}
+
+	var params="taskIds=<%=sb.toString()%>&userId=<%=userDto.getUserId()%>";
+
+    $.ajax({
+        type : 'GET',
+        url : "delResult",
+        data :params,
+        dataType : 'text',
+        processData : false,
+        timeout : 360000, // milliseconds
+
+    }).done(function(message) {
+    	alert(message);
+    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    	alert("err:"+textStatus);
+        console.log( textStatus  + errorThrown);
+    });
+});
+</script>
 </body>
 
 </html>

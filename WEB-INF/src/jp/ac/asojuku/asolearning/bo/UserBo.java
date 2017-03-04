@@ -22,6 +22,14 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public interface UserBo {
 
+	/**
+	 * ユーザーCSVを出力する
+	 * @param userList
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	String createUserCSV(List<UserSearchResultDto> userList) throws AsoLearningSystemErrException;
+
 	public void updatePassword(Integer userId,String password,String maileaddress) throws AsoLearningSystemErrException;
 	public void updateNickName(Integer userId,String nickName,String maileaddress) throws AsoLearningSystemErrException;
 	/**

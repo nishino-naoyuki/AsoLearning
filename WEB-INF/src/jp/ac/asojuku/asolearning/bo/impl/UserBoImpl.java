@@ -1,7 +1,11 @@
 package jp.ac.asojuku.asolearning.bo.impl;
 
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,10 +48,13 @@ import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.param.SessionConst;
 import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
+import jp.ac.asojuku.asolearning.util.FileUtils;
+import jp.ac.asojuku.asolearning.util.TimestampUtil;
 import jp.ac.asojuku.asolearning.util.UserUtils;
 import jp.ac.asojuku.asolearning.validator.UserValidator;
 
 public class UserBoImpl implements UserBo {
+	private final String CSV_PREFIX = "userdata_";
 	Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
 	private static final String[] HEADER = new String[] { "roleId", "name", "mailAddress", "nickName", "courseId", "password","admissionYear" };
 	@Override
@@ -592,5 +599,80 @@ public class UserBoImpl implements UserBo {
 
 			dao.close();
 		}
+	}
+
+	@Override
+	public String createUserCSV(List<UserSearchResultDto> userList) throws AsoLearningSystemErrException {
+
+		String csvDir = AppSettingProperty.getInstance().getCsvDir();
+		String fileEnc = AppSettingProperty.getInstance().getCsvFileEncode();
+		String fname = "";
+		StringBuilder sb = new StringBuilder();
+		String head = "学科,学年,学籍番号,ニックネーム,メールアドレス";
+
+		String timeStr =
+				TimestampUtil.formattedTimestamp(TimestampUtil.current(), "yyyyMMddHHmmssSSS");
+		fname = CSV_PREFIX+timeStr+".csv";
+
+        FileOutputStream fos = null;
+        OutputStreamWriter osw = null;
+        BufferedWriter writer = null;
+
+        try{
+        	fos = new FileOutputStream(csvDir+"/"+fname);
+        	osw = new OutputStreamWriter(fos,fileEnc);
+        	writer =new BufferedWriter(osw);
+
+        	//ファイル出力
+    		sb.append(head);
+    		sb.append("\n");
+    		osw.write(sb.toString());
+
+    		for( UserSearchResultDto user : userList ){
+    			StringBuilder userSb = new StringBuilder();
+    			UserDto userDto = user.getUserDto();
+    			userSb.append(userDto.getCourseName()).append(",");
+    			userSb.append(userDto.getGrade()).append(",");
+    			userSb.append(userDto.getName()).append(",");
+    			userSb.append(userDto.getNickName()).append(",");
+    			userSb.append(userDto.getMailAdress()).append("\n");
+    			writer.write(userSb.toString());
+    		}
+
+    		writer.flush();
+		} catch (IOException e) {
+        	logger.warn("IOException：",e);
+        	FileUtils.delete(fname);
+			throw new AsoLearningSystemErrException(e);
+		}finally{
+			//クローズ
+        	if(fos != null){
+        		try {
+					fos.close();
+				} catch (IOException e) {
+					;//ignore
+				}
+        	}
+
+        	if(osw != null){
+        		try {
+        			osw.close();
+				} catch (IOException e) {
+					;//ignore
+				}
+        	}
+
+        	if(writer != null){
+        		try {
+        			writer.close();
+				} catch (IOException e) {
+					;//ignore
+				}
+        	}
+        }
+
+
+
+		return fname;
 	}
 }

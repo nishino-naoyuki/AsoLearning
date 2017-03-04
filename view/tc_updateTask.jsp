@@ -310,6 +310,10 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
                 	 <button type="submit" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 確認</button>
                 </div>
                 </form>
+                <div class="row">
+                	<br>
+                	<p><button id="delete_result"  class="btn"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> この課題の結果情報を削除する</button></p>
+				</div>
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -462,6 +466,31 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 
 		$(function() {
 			    $("#datepicker2").datepicker();
+		});
+
+
+		$('#delete_result').on('click', function() {
+
+			if( !confirm("解答情報を削除すると元に戻せません。\n実行してよろしいでしょうか？") ){
+				return;
+			}
+
+			var params="taskIds=<%=(taskDto==null?"":taskDto.getTaskId())%>";
+
+		    $.ajax({
+		        type : 'GET',
+		        url : "delResult",
+		        data :params,
+		        dataType : 'text',
+		        processData : false,
+		        timeout : 360000, // milliseconds
+
+		    }).done(function(message) {
+		    	alert(message);
+		    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+		    	alert("err:"+textStatus);
+		        console.log( textStatus  + errorThrown);
+		    });
 		});
 	</script>
 </body>

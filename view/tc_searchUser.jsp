@@ -153,6 +153,9 @@ if( taskId == null){
 				                </div>
 			                     <div class="col-lg-12">
 			                     	<button id="search"  class="btn btn-default">検索</button>
+		                        <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
+			                     	&nbsp;<button id="create_csv" class="btn btn-default">CSV出力</button>
+			                     <%} %>
 			                     </div>
 		                     </div>
 		                </div>
@@ -175,6 +178,7 @@ if( taskId == null){
 
 		                                <thead>
 		                                    <tr class="info">
+		                                        <th>&nbsp;</th>
 		                                        <th>学籍番号/社員番号</th>
 		                                        <th>学科</th>
 		                                        <th>学年</th>
@@ -293,7 +297,23 @@ $('#search').on('click', function() {
  				handedTask = str + " ";
  			}
  			if( handedTask.length ==0 ) handedTask = "&nbsp;";
-    		var str  = "<tr><td><a href='userDetail?userId="+element.userId+"'>"+element.name+"</a></td><td>"+element.courseName+"</td><td>"+element.grade+"</td><td>"+element.nickName+"</td><td>"+handedTask+"</td></tr>";
+    		var str  =
+    			"<tr>"+
+	            "  <td>"+
+	            "    <div class=\"checkbox\">"+
+	            "      <label>"+
+	            "        <input name=\"chk-"+i+"\" class=\"area\" type=\"checkbox\" value=\""+element.userId+"\">"+
+	            "      </label>"+
+	            "    </div>"+
+		        "  </td>"+
+    			"  <td>"+
+    			"    <a href='userDetail?userId="+element.userId+"'>"+element.name+"</a>"+
+    			"  </td>"+
+    			"  <td>"+element.courseName+"</td>"+
+    			"  <td>"+element.grade+"</td>"+
+    			"  <td>"+element.nickName+"</td>"+
+    			"  <td>"+handedTask+"</td>"+
+    			"</tr>";
     		//alert(str);
     		$('#search_result').append(str);
     	}
@@ -319,6 +339,69 @@ $('#search').on('click', function() {
     	alert("err:"+textStatus);
         console.log( textStatus  + errorThrown);
     });
+
+
+    <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
+
+        //CSV出力ボタンをクリックした時
+        $("#create_csv").on("click",function(){
+
+        	var params = "";
+
+        	if( $("input[name='username']").val() != ""){
+        		params += "username="+ $("input[name='username']").val();
+        	}
+        	if( $("input[name='mailaddress']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "mailaddress="+ $("input[name='mailaddress']").val();
+        	}
+        	if( $("input[name='grade']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "grade="+ $("input[name='grade']").val();
+        	}
+        	if( $("select[name='<%=RequestConst.REQUEST_ROLE_ID%>']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "<%=RequestConst.REQUEST_ROLE_ID%>="+ $("select[name='<%=RequestConst.REQUEST_ROLE_ID%>']").val();
+        	}
+        	if( $("select[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "<%=RequestConst.REQUEST_COURSE_ID%>="+ $("select[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val();
+        	}
+        	if( $("select[name='<%=RequestConst.REQUEST_TASK_ID%>']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "<%=RequestConst.REQUEST_TASK_ID%>="+ $("select[name='<%=RequestConst.REQUEST_TASK_ID%>']").val();
+        	}
+        	if( $("select[name='<%=RequestConst.REQUEST_STATUS%>']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "<%=RequestConst.REQUEST_STATUS%>="+ $("select[name='<%=RequestConst.REQUEST_STATUS%>']").val();
+        	}
+
+
+        	//alert("couseId:"+couseId+" taskId:"+taskId);
+    	    $.ajax({
+    	        type : "GET",
+    	        url : "creUserCsv",
+    	        data : params,
+    	        dataType : 'text',
+    	        timeout : 360000, // milliseconds
+
+    	    }).done(function(respText) {
+    	    	//alert(respText);
+    	    	if( respText == "error:nothing"){
+    	    		alert("出力対象がありません");
+    	    	}else{
+    	    		location.href = "dlcreUserCsv?fname="+respText;
+    	    	}
+
+    	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+
+    	    	alert("err:"+textStatus);
+    	        console.log( textStatus  + errorThrown);
+    	    });
+
+        });
+    <%}%>
+
 });
 
 </script>

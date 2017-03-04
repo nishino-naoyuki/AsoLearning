@@ -31,6 +31,17 @@ public class ResultDao extends Dao {
 		super(con);
 	}
 
+	//指定した課題の結果を削除
+	private static final String RESULT_GET_FOR_DELETE_SQL =
+			"SELECT RESULT_ID FROM RESULT_TBL r WHERE r.TASK_ID=? ";
+	private static final String RESULT_GET_FOR_DELETE_USERID_SQL = " r.USER_ID=? ";
+	private static final String RESULT_DELETE_TASKID_SQL =
+			"DELETE FROM RESULT_TBL WHERE RESULT_ID=? ";
+	private static final String RESULT_TESTCASE_DELETE_TASKID_SQL =
+			"DELETE FROM RESULT_TESTCASE_TBL WHERE RESULT_ID=? ";
+	private static final String RESULT_METRICS_DELETE_TASKID_SQL =
+			"DELETE FROM RESULT_METRICS_TBL WHERE RESULT_ID=? ";
+
 	//検索SQL
 	private static final String RESULT_SEARCH_TASKID_SQL =
 			"SELECT * "
@@ -139,6 +150,80 @@ public class ResultDao extends Dao {
 			+ "FROM RESULT_TBL r1 "
 			+ "WHERE r1.USER_ID=? AND r1.TASK_ID=?";
 
+	/**
+	 * 結果情報の削除
+	 * ※内部的にトランザクションはかけない。
+	 * 　上位側で必ずトランザクションをかけること
+	 *
+	 * @param taskId
+	 * @param userId　任意（指定しない場合はNULL）
+	 * @throws SQLException
+	 */
+	public void delete(Integer taskId,Integer userId) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		StringBuffer sb = new StringBuffer();
+		PreparedStatement psSelect = null;
+		PreparedStatement ps1 = null;
+		PreparedStatement ps2 = null;
+		PreparedStatement ps3 = null;
+		ResultSet rs = null;
+		int resultId;
+
+        try {
+
+    		// ステートメント生成
+        	sb.append(RESULT_GET_FOR_DELETE_SQL);
+        	if( userId != null ){
+        		sb.append(" AND ").append(RESULT_GET_FOR_DELETE_USERID_SQL);
+        	}
+        	psSelect = con.prepareStatement(sb.toString());
+
+        	psSelect.setInt(1, taskId);
+        	if( userId != null ){
+        		psSelect.setInt(2,userId);
+        	}
+
+	        // SQLを実行
+	        rs = psSelect.executeQuery();
+
+        	ps1 = con.prepareStatement(RESULT_DELETE_TASKID_SQL);
+        	ps2 = con.prepareStatement(RESULT_TESTCASE_DELETE_TASKID_SQL);
+        	ps3 = con.prepareStatement(RESULT_METRICS_DELETE_TASKID_SQL);
+	        while(rs.next()){
+	        	resultId = rs.getInt("RESULT_ID");
+
+	        	////////////////////////////
+	        	//RESULT_TESTCASE_TBL
+	        	ps2.setInt(1, resultId);
+	        	ps2.executeUpdate();
+
+	        	////////////////////////////
+	        	//RESULT_METRICS_TBL
+	        	ps3.setInt(1, resultId);
+	        	ps3.executeUpdate();
+
+	        	////////////////////////////
+	        	//RESULT_TBL
+	        	ps1.setInt(1, resultId);
+	        	ps1.executeUpdate();
+	        }
+
+
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+		} finally {
+			safeClose(psSelect,null);
+			safeClose(ps1,null);
+			safeClose(ps2,null);
+			safeClose(ps3,null);
+		}
+	}
 	/**
 	 * 結果情報を取得する
 	 *

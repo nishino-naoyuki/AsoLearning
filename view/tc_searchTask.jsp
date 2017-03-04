@@ -136,10 +136,12 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 	                		</div>
 		                	<div class="panel-body">
 		                        <div class="table-responsive">
+		                        	<p><button id="delete_result"  class="btn btn-default"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> チェックしたデータの解答情報を削除</button></p>
 		                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
 
 		                                <thead>
 		                                    <tr class="info">
+		                                        <th>&nbsp;</th>
 		                                        <th>課題名</th>
 		                                        <th>作者</th>
 		                                        <th>対象学科</th>
@@ -234,7 +236,21 @@ $('#search').on('click', function() {
     	for( var i=0; i < json.length; i++){
     		var element;
     		element = json[i];
-    		var str  = "<tr><td><a href='tc_updateTask?taskId="+element.taskId+"'>"+element.taskName+"</a></td><td>"+element.creator+"</td><td>"+element.targetCourseList+"</td><td>"+element.limit+"</td></tr>";
+    		var str  = "<tr>"+
+    		           "  <td>"+
+    		           "    <div class=\"checkbox\">"+
+    		           "      <label>"+
+    		           "        <input name=\"chk-"+i+"\" class=\"area\" type=\"checkbox\" value=\""+element.taskId+"\">"+
+    		           "      </label>"+
+    		           "    </div>"+
+    		           "  </td>"+
+    		           "  <td>"+
+    		           "    <a href='tc_updateTask?taskId="+element.taskId+"'>"+element.taskName+"</a>"+
+    		           "  </td>"+
+    		           "  <td>"+element.creator+"</td>"+
+    		           "  <td>"+element.targetCourseList+"</td>"+
+    		           "  <td>"+element.limit+"</td>"+
+    		           "</tr>";
     		//alert(str);
     		$('#search_result').append(str);
     	}
@@ -262,6 +278,38 @@ $('#search').on('click', function() {
     });
 });
 
+
+$('#delete_result').on('click', function() {
+
+	if( !confirm("解答情報を削除すると元に戻せません。\n実行してよろしいでしょうか？") ){
+		return;
+	}
+	var taskIds = $('.area:checked').map(function() {
+		  return $(this).val();
+		}).get();
+
+	if( taskIds.length == 0 ){
+		alert("課題を選択してください");
+		return;
+	}
+
+	var params="taskIds="+taskIds;
+
+    $.ajax({
+        type : 'GET',
+        url : "delResult",
+        data :params,
+        dataType : 'text',
+        processData : false,
+        timeout : 360000, // milliseconds
+
+    }).done(function(message) {
+    	alert(message);
+    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    	alert("err:"+textStatus);
+        console.log( textStatus  + errorThrown);
+    });
+});
 </script>
 </body>
 

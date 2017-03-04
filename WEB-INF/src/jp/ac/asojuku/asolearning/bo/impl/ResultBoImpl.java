@@ -288,7 +288,7 @@ public class ResultBoImpl implements ResultBo {
 		String fileEnc = AppSettingProperty.getInstance().getCsvFileEncode();
 		String fname = "";
 		StringBuilder sb = new StringBuilder();
-		String head = "";
+		String head = "RANK,学科,学年,学籍番号,ニックネーム,点数";
 
 		String timeStr =
 				TimestampUtil.formattedTimestamp(TimestampUtil.current(), "yyyyMMddHHmmssSSS");
@@ -354,5 +354,39 @@ public class ResultBoImpl implements ResultBo {
 
 
 		return fname;
+	}
+
+	@Override
+	public void delete(List<Integer> taskList, Integer userId) throws AsoLearningSystemErrException {
+
+
+		ResultDao dao = new ResultDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//トランザクション
+			dao.beginTranzaction();
+
+			//削除
+			for(Integer taskId:taskList){
+				dao.delete(taskId, userId);
+			}
+
+			dao.commit();
+
+		} catch (Exception e) {
+			//ロールバック
+			dao.rollback();
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} finally{
+
+			dao.close();
+		}
 	}
 }

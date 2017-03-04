@@ -19,8 +19,8 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  * @author nishino
  *
  */
-@WebServlet(name="CreateUserCSVStartServlet",urlPatterns={"/csvEntry"})
-public class CreateUserCSVStartServlet extends BaseServlet {
+@WebServlet(name="CreateUserByCSVStartServlet",urlPatterns={"/csvEntry"})
+public class CreateUserByCSVStartServlet extends BaseServlet {
 
 	private final String DISPNO = "01001";
 	@Override

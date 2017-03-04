@@ -17,6 +17,20 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public interface ResultBo {
 
+	/**
+	 * 削除する
+	 *
+	 * @param taskList
+	 * @param userId
+	 * @throws AsoLearningSystemErrException
+	 */
+	void delete(List<Integer> taskList,Integer userId) throws AsoLearningSystemErrException;
+	/**
+	 * ランキングCSVの作成
+	 * @param rankingList
+	 * @return　作成したCSVファイルの名前
+	 * @throws AsoLearningSystemErrException
+	 */
 	String createRankingCSV(List<RankingDto> rankingList) throws AsoLearningSystemErrException;
 
 	/**

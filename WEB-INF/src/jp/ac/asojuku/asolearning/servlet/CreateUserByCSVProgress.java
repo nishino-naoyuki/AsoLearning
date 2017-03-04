@@ -26,10 +26,10 @@ import jp.ac.asojuku.asolearning.param.SessionConst;
  * @author nishino
  *
  */
-@WebServlet(name="CreateUserCSVProgress",urlPatterns={"/csvprogress"})
-public class CreateUserCSVProgress extends BaseServlet {
+@WebServlet(name="CreateUserByCSVProgress",urlPatterns={"/csvprogress"})
+public class CreateUserByCSVProgress extends BaseServlet {
 
-	Logger logger = LoggerFactory.getLogger(CreateUserCSVProgress.class);
+	Logger logger = LoggerFactory.getLogger(CreateUserByCSVProgress.class);
 
 	private final String DISPNO = "01001";
 	@Override

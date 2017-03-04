@@ -8,148 +8,89 @@ import java.io.OutputStream;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jp.ac.asojuku.asolearning.bo.UserBo;
 import jp.ac.asojuku.asolearning.bo.impl.UserBoImpl;
-import jp.ac.asojuku.asolearning.config.AppSettingProperty;
-import jp.ac.asojuku.asolearning.csv.model.UserCSV;
-import jp.ac.asojuku.asolearning.dto.CSVProgressDto;
-import jp.ac.asojuku.asolearning.err.ActionError;
-import jp.ac.asojuku.asolearning.err.ActionErrors;
+import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
+import jp.ac.asojuku.asolearning.dto.UserSearchResultDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
-import jp.ac.asojuku.asolearning.param.SessionConst;
-import jp.ac.asojuku.asolearning.util.FileUtils;
+import jp.ac.asojuku.asolearning.param.RequestConst;
 
 /**
- * CSV処理を行うAJAX
+ * CSVを出力する
+ *
  * @author nishino
  *
  */
-@WebServlet(name="CreateUserCSVServlet",urlPatterns={"/userCSVProcess"})
-@MultipartConfig(location="/tmp", maxFileSize=1048576)
+@WebServlet(name="CreateUserCSVServlet",urlPatterns={"/creUserCsv"})
 public class CreateUserCSVServlet extends BaseServlet {
 
-	Logger logger = LoggerFactory.getLogger(CreateUserCSVServlet.class);
+	Logger logger = LoggerFactory.getLogger(CreateRankingCSV.class);
 
-	private final String DISPNO = "01001";
+	private final String DISPNO = "01202";
 	@Override
 	protected String getDisplayNo() {
 		return DISPNO;
 	}
-	private ActionErrors errors;
 
-	/* (非 Javadoc)
-	 * @see jp.ac.asojuku.asolearning.servlet.BaseServlet#doPostMain(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
 	@Override
-	protected void doPostMain(HttpServletRequest req, HttpServletResponse resp)
+	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, AsoLearningSystemErrException {
 
 
         OutputStream out = null;
+
         try{
-        	out = resp.getOutputStream();
-			errors = new ActionErrors();
-			////////////////////////////////////
-			//パラメータ取得
-			String type = getStringParamFromPart(req,"rdoType");
-			String uuid = getStringParamFromPart(req,"uuid");
+			//////////////////////////////
+			//パラメータを取得
+        	SearchUserCondition cond = getCondition(req);
+
+			//////////////////////////////
+			//課題一覧を取得
+			UserBo userBo = new UserBoImpl();
+
+			List<UserSearchResultDto> retDtoList = userBo.search(cond);
+
+			//ファイル名を取得
+			String fname = userBo.createUserCSV(retDtoList);
 
 			//////////////////////////////////////////////
-			//アップロードされたファイルを取得
-			Part part = req.getPart("file");
-	        String name = this.getFileName(part);
-
-	        //アップロードフォルダを作成
-	        String dir = getUploadDir(uuid);
-			FileUtils.makeDir(dir);
-			String path = dir + "/" + name;
-
-	        part.write(path);
-
-	        logger.trace("CSV fileuploaded! file={} type={}",path,type);
-
-			//////////////////////////////////////////////
-			//エラーチェック＆リスト取得
-	        UserBo userBo = new UserBoImpl();
-
-	        List<UserCSV> userList = userBo.checkForCSV(path, errors, type);
-			HttpSession session = req.getSession(false);
-
-			if( errors.isHasErr() ){
-				outputErrorResult(out,resp);
-				return;
-			}
-
-			//////////////////////////////////////////////
-			//登録処理
-			userBo.insertByCSV(userList, uuid, session, type);
-
-			//////////////////////////////////////////////
-	        //JSON出力処理を行う
-			outputResult(out,session,resp,uuid);
-
-			//セッションは不要になったので削除
-			session.removeAttribute(uuid+SessionConst.SESSION_CSV_PROGRESS);
+	        //出力処理を行う
+	        resp.setContentType("text/plain; charset=utf-8");
+	        out = resp.getOutputStream();
+	        out.write(fname.getBytes());
+	        out.flush();
 
         }finally{
         	if(out != null){
         		out.close();
         	}
         }
-
 	}
 
-	private void outputResult(OutputStream out,HttpSession session,HttpServletResponse resp,String uuid) throws IOException{
+	/**
+	 * 検索条件の取得
+	 * @param req
+	 * @return
+	 */
+	private SearchUserCondition getCondition(HttpServletRequest req){
+		SearchUserCondition cond = new SearchUserCondition();
 
-		CSVProgressDto progress = (CSVProgressDto)session.getAttribute(uuid+SessionConst.SESSION_CSV_PROGRESS);
+		cond.setName(req.getParameter("username"));
+		cond.setMailaddress(req.getParameter("mailaddress"));
+		cond.setGrade(getIntParam("grade",req));
+		cond.setRoleId(getIntParam(RequestConst.REQUEST_ROLE_ID,req));
+		cond.setCourseId(getIntParam(RequestConst.REQUEST_COURSE_ID,req));
+		cond.setTaskId(getIntParam(RequestConst.REQUEST_TASK_ID,req));
+		cond.setHanded(getIntParam(RequestConst.REQUEST_STATUS,req));
 
-		ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(progress);
-
-        logger.trace("jsonString:{}",jsonString);
-
-        resp.setContentType("application/json; charset=utf-8");
-        out.write(jsonString.getBytes());
-        out.flush();
-
-	}
-
-	private void outputErrorResult(OutputStream out,HttpServletResponse resp) throws IOException{
-		CSVProgressDto progress = new CSVProgressDto();
-		StringBuffer sb = new StringBuffer();
-
-		for( ActionError error : errors.getList() ){
-			sb.append( error.getMessage() );
-			sb.append("\n");
-		}
-		progress.setErrorMsg(sb.toString());
-
-		ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(progress);
-
-        logger.trace("jsonString:{}",jsonString);
-
-        resp.setContentType("application/json; charset=utf-8");
-        out.write(jsonString.getBytes());
-        out.flush();
-	}
-
-	private String getUploadDir(String uuid) throws AsoLearningSystemErrException{
-		String uploadDir = AppSettingProperty.getInstance().getUploadDirectory();
-
-		return uploadDir+"/"+uuid;
+		return cond;
 	}
 
 }
