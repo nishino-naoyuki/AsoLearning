@@ -77,6 +77,7 @@ public class ResultDao extends Dao {
 			+ "u.MAILADRESS,"
 			+ "u.ADMISSION_YEAR,"
 			+ "u.REPEAT_YEAR_COUNT,"
+			+ "u.REMARK,"
 			+ "t.NAME taskname,"
 			+ "t.DIFFICALTY,"
 			+ "cm.COURSE_ID, "
@@ -435,6 +436,7 @@ public class ResultDao extends Dao {
 		userEntity.setMailadress(rs.getString("MAILADRESS"));
 		userEntity.setAdmissionYear(rs.getInt("ADMISSION_YEAR"));
 		userEntity.setRepeatYearCount(rs.getInt("REPEAT_YEAR_COUNT"));
+		userEntity.setRemark(rs.getString("REMARK"));
 
 
 		//////////////////////////////////

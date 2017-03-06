@@ -249,6 +249,7 @@ public class UserBoImpl implements UserBo {
 		entity.setAccountExpryDate(dto.getAccountExpryDate());
 		entity.setPasswordExpirydate(dto.getAccountExpryDate());
 		entity.setAdmissionYear(Integer.parseInt(dto.getAdmissionYear()));
+		entity.setRemark(dto.getRemark());
 
 		CourseMasterEntity courseMaster = new CourseMasterEntity();
 

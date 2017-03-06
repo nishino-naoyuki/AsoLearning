@@ -64,6 +64,9 @@ public class UserTblEntity implements Serializable {
 	/** 退学年度. */
 	private Integer giveUpYear;
 
+	/** 備考. */
+	private String remark;
+
 	/** 登録日付. */
 	private Date entryDate;
 
@@ -502,6 +505,25 @@ public class UserTblEntity implements Serializable {
 		return this.resultTblSet;
 	}
 
+
+	/**
+	 * 備考 を設定します.
+	 *
+	 * @param remark
+	 *            備考
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	/**
+	 * 備考 を取得します.
+	 *
+	 * @return 備考
+	 */
+	public String getRemark() {
+		return this.remark;
+	}
 	/**
 	 * {@inheritDoc}
 	 */

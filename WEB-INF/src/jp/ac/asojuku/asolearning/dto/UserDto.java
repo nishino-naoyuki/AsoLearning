@@ -30,6 +30,7 @@ public class UserDto {
 	private String repeatYearCount;
 	private String password;
 	private Integer grade;
+	private String remark;
 
 	/**
 	 * @return userId
@@ -240,6 +241,18 @@ public class UserDto {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	/**
+	 * @return remark
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	/**
+	 * @param remark セットする remark
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 }

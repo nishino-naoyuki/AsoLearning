@@ -125,6 +125,7 @@ public class HistoryDao extends Dao {
 	        	userEntity.setCertifyErrCnt(rs.getInt("CERTIFY_ERR_CNT"));
 	    		userEntity.setIsLockFlg(rs.getInt("IS_LOCK_FLG"));
 	    		userEntity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
+	    		userEntity.setRemark(rs.getString("REMARK"));
 	    		userEntity.setUpdateDate(rs.getTimestamp("UPDATE_DATE"));
 	    		Integer admissionYear = fixInt(rs.getInt("ADMISSION_YEAR"),rs.wasNull());
 	    		userEntity.setAdmissionYear(admissionYear);

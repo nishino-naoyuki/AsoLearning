@@ -718,6 +718,7 @@ public class UserDao extends Dao {
 		entity.setCertifyErrCnt(rs.getInt("CERTIFY_ERR_CNT"));
 		entity.setIsLockFlg(rs.getInt("IS_LOCK_FLG"));
 		entity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
+		entity.setRemark(rs.getString("REMARK"));
 		entity.setUpdateDate(rs.getTimestamp("UPDATE_DATE"));
 		Integer admissionYear = fixInt(rs.getInt("ADMISSION_YEAR"),rs.wasNull());
 		entity.setAdmissionYear(admissionYear);
