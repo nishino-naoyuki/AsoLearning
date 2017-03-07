@@ -269,6 +269,7 @@ $('#search').on('click', function() {
 
 	//alert(params);
     $.ajax({
+    	cache: false,
         type : 'GET',
         url : "searchUserAjax",
         data :params,
@@ -376,26 +377,34 @@ $('#search').on('click', function() {
         		params += "<%=RequestConst.REQUEST_STATUS%>="+ $("select[name='<%=RequestConst.REQUEST_STATUS%>']").val();
         	}
 
-
         	//alert("couseId:"+couseId+" taskId:"+taskId);
     	    $.ajax({
+    	    	cache: false,
     	        type : "GET",
     	        url : "creUserCsv",
     	        data : params,
     	        dataType : 'text',
     	        timeout : 360000, // milliseconds
-
+    	        beforeSend : function(xhr, settings) {
+    	            // disturb double submit
+    	            $("#create_csv").attr('disabled', true);
+    	        },
+    	        complete : function(xhr, textStatus) {
+    	            // allow resubmit
+    	            $("#create_csv").attr('disabled', false);
+    	        }
     	    }).done(function(respText) {
     	    	//alert(respText);
     	    	if( respText == "error:nothing"){
     	    		alert("出力対象がありません");
     	    	}else{
     	    		location.href = "dlcreUserCsv?fname="+respText;
+
     	    	}
 
     	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
 
-    	    	alert("err:"+textStatus);
+    	    	//alert("er1r:"+errorThrown);
     	        console.log( textStatus  + errorThrown);
     	    });
 

@@ -214,6 +214,7 @@ $('#search').on('click', function() {
 
 	//alert(params);
     $.ajax({
+    	cache: false,
         type : 'GET',
         url : "searchTask",
         data :params,
@@ -296,6 +297,7 @@ $('#delete_result').on('click', function() {
 	var params="taskIds="+taskIds;
 
     $.ajax({
+    	cache: false,
         type : 'GET',
         url : "delResult",
         data :params,

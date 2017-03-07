@@ -39,7 +39,7 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css" >
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css" >
 
 <script>
 var testcase_cnt = 0;	//テストケースの数。初期値は0
@@ -235,8 +235,8 @@ List<TaskResultDto> retList = userDto.getResultList();
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+<script src="view/js/jquery-ui.min.js"></script>
+<script src="view/js/jquery.ui.datepicker-ja.min.js"></script>
 <script>
 
 $('#edit').on('click', function() {
@@ -266,6 +266,7 @@ $('#delete_result').on('click', function() {
 	var params="taskIds=<%=sb.toString()%>&userId=<%=userDto.getUserId()%>";
 
     $.ajax({
+    	cache: false,
         type : 'GET',
         url : "delResult",
         data :params,

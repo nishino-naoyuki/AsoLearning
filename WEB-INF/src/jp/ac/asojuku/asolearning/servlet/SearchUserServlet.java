@@ -84,7 +84,7 @@ public class SearchUserServlet extends BaseServlet {
 	        ObjectMapper mapper = new ObjectMapper();
 	        String jsonString = mapper.writeValueAsString(jsons);
 
-	        logger.trace("jsonString:{}",jsonString);
+	        //logger.trace("jsonString:{}",jsonString);
 			//////////////////////////////////////////////
 	        //JSON出力処理を行う
 	        resp.setContentType("application/json; charset=utf-8");

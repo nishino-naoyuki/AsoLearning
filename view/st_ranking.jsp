@@ -247,8 +247,9 @@ $(function(){
         var value = $("#couse option:selected").val();
 		var params = "<%=RequestConst.REQUEST_COURSE_ID%>="+value;
 
-        alert("?");
+        //alert("?");
 	    $.ajax({
+	    	cache: false,
 	        type : 'GET',
 	        url : "rankingcousechange",
 	        data : params,
@@ -292,6 +293,7 @@ $(function(){
 
     	//alert("couseId:"+couseId+" taskId:"+taskId);
 	    $.ajax({
+	    	cache: false,
 	        type : "GET",
 	        url : "creRankCsv",
 	        data : {"couseId":couseId, "taskId":taskId },
@@ -308,7 +310,7 @@ $(function(){
 
 	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
 
-	    	alert("err:"+textStatus);
+	    	//alert("err:"+textStatus);
 	        console.log( textStatus  + errorThrown);
 	    });
 

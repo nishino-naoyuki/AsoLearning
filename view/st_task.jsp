@@ -263,6 +263,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 
 
 	    $.ajax({
+	    	cache: false,
 	        type : 'POST',
 	        url : url,
 	        data : input_data,

@@ -478,6 +478,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 			var params="taskIds=<%=(taskDto==null?"":taskDto.getTaskId())%>";
 
 		    $.ajax({
+		    	cache: false,
 		        type : 'GET',
 		        url : "delResult",
 		        data :params,
