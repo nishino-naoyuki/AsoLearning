@@ -30,6 +30,9 @@ public class AppSettingProperty extends ConfigBase {
 	private static final String PWD_LOCK_LIMIT = "pwd.lock.limit";
 	private static final String CSV_FILE_ENCODE = "csv.file.encode";
 	private static final String CSV_DIR = "csv.directory";
+	private static final String RANKING_EASY = "ranking.offset.easy";
+	private static final String RANKING_NORAML = "ranking.offset.normal";
+	private static final String RANKING_DIFFICAL = "ranking.offset.diffical";
 
 	//設定値
 	private final String ASP_PWD_SALT = "pwd.hash.salt";	//パスワードソルト
@@ -166,5 +169,26 @@ public class AppSettingProperty extends ConfigBase {
 	 */
 	public String getCsvDir(){
 		return getProperty(CSV_DIR);
+	}
+	/**
+	 * 難易度「簡単」の点数ゲタ
+	 * @return
+	 */
+	public float getRankingEasy(){
+		return getProperty(RANKING_EASY,1.0f);
+	}
+	/**
+	 * 難易度「普通」の点数ゲタ
+	 * @return
+	 */
+	public float getRankingNormal(){
+		return getProperty(RANKING_NORAML,1.0f);
+	}
+	/**
+	 * 難易度「難しい」の点数ゲタ
+	 * @return
+	 */
+	public float getRankingDiffical(){
+		return getProperty(RANKING_DIFFICAL,1.0f);
 	}
 }

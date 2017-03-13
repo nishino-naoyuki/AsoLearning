@@ -70,7 +70,7 @@ public class ResultDao extends Dao {
 	//ランキングを求めるSQL
 	private static final String RESULT_RANKING_SQL_SELECT =
 			"SELECT "
-			+ "SUM(r.TOTAL_SCORE) as total,"
+			+ "SUM(r.total) as rank_total,"
 			+ "u.USER_ID,"
 			+ "u.NAME,"
 			+ "u.NICK_NAME,"
@@ -83,7 +83,20 @@ public class ResultDao extends Dao {
 			+ "cm.COURSE_ID, "
 			+ "(year(now())-u.ADMISSION_YEAR-u.REPEAT_YEAR_COUNT+1) grade,"
 			+ "COURSE_NAME "
-			+ "FROM RESULT_TBL r "
+			+ "FROM "
+			+ "("
+			+ "   SELECT rt.TASK_ID, rt.RESULT_ID, rt.USER_ID, rt.TOTAL_SCORE*? as total "
+			+ "   FROM RESULT_TBL rt LEFT JOIN TASK_TBL t ON( t.TASK_ID = rt.TASK_ID) "
+			+ "   WHERE t.DIFFICALTY=0 "
+			+ "UNION"
+			+ "   SELECT rt.TASK_ID, rt.RESULT_ID, rt.USER_ID, rt.TOTAL_SCORE*? as total "
+			+ "   FROM RESULT_TBL rt LEFT JOIN TASK_TBL t ON( t.TASK_ID = rt.TASK_ID) "
+			+ "   WHERE t.DIFFICALTY=1 "
+			+ "UNION"
+			+ "   SELECT rt.TASK_ID, rt.RESULT_ID, rt.USER_ID, rt.TOTAL_SCORE*? as total "
+			+ "   FROM RESULT_TBL rt LEFT JOIN TASK_TBL t ON( t.TASK_ID = rt.TASK_ID) "
+			+ "   WHERE t.DIFFICALTY=2 "
+			+ ") r "
 			+ "LEFT JOIN USER_TBL u ON( r.USER_ID = u.USER_ID AND u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null) "
 			+ "LEFT JOIN TASK_TBL t ON( t.TASK_ID = r.TASK_ID) "
 			+ "LEFT JOIN COURSE_MASTER cm ON(u.COURSE_ID = cm.COURSE_ID)";
@@ -335,7 +348,7 @@ public class ResultDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<ResultTblEntity> getRanking(Integer courseId,Integer taskId) throws SQLException{
+	public List<ResultTblEntity> getRanking(Integer courseId,Integer taskId,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
 		List<ResultTblEntity> list = new ArrayList<ResultTblEntity>();
 
 
@@ -352,7 +365,7 @@ public class ResultDao extends Dao {
 
 			ps = con.prepareStatement(sql.toString());
 
-			ps = setRankingPram(ps,courseId,taskId);
+			ps = setRankingPram(ps,courseId,taskId,easyOffset,normalOffset,difficalOffset);
 
 	        // SQLを実行
 	        rs = ps.executeQuery();
@@ -406,8 +419,12 @@ public class ResultDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	private PreparedStatement setRankingPram(PreparedStatement ps,Integer courseId,Integer taskId) throws SQLException{
+	private PreparedStatement setRankingPram(PreparedStatement ps,Integer courseId,Integer taskId,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
 		int index = 1;
+
+		ps.setFloat(index++, easyOffset);
+		ps.setFloat(index++, normalOffset);
+		ps.setFloat(index++, difficalOffset);
 
 		if( courseId != null ){
 			ps.setInt(index, courseId);
@@ -425,7 +442,7 @@ public class ResultDao extends Dao {
 
 		//////////////////////////////////
 		// RESULT_TBL
-		entity.setTotalScore(rs.getFloat("total"));
+		entity.setTotalScore(rs.getFloat("rank_total"));
 
 		//////////////////////////////////
 		// USER_TBL

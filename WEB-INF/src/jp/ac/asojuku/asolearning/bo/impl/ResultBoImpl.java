@@ -150,11 +150,14 @@ public class ResultBoImpl implements ResultBo {
 
 		try {
 
+			AppSettingProperty config = AppSettingProperty.getInstance();
+
 			//DB接続
 			dao.connect();
 
 			//ランキングを取得
-			List<ResultTblEntity> retEntityList = dao.getRanking(courseId,taskId);
+			List<ResultTblEntity> retEntityList =
+					dao.getRanking(courseId,taskId,config.getRankingEasy(),config.getRankingNormal(),config.getRankingDiffical());
 
 			int rank = 0;
 			float wkScore = Float.MAX_VALUE;

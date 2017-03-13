@@ -47,6 +47,22 @@ public abstract class ConfigBase {
 	}
 
 
+	/**
+	 * コンフィグファイルから情報取得する
+	 * @return
+	 */
+	public Float getProperty(String paramName,Float defaultVal){
+		Float retVal = defaultVal;
+
+		try{
+			retVal = Float.parseFloat(config.getProperty(paramName));
+		}catch(NumberFormatException e){
+			retVal = defaultVal;
+		}
+
+		return retVal;
+	}
+
 
 	abstract protected String getConfigName();
 }
