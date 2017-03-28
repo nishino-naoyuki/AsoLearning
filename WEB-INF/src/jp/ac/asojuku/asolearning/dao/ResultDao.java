@@ -95,11 +95,12 @@ public class ResultDao extends Dao {
 			+ "UNION"
 			+ "   SELECT rt.TASK_ID, rt.RESULT_ID, rt.USER_ID, rt.TOTAL_SCORE*? as total "
 			+ "   FROM RESULT_TBL rt LEFT JOIN TASK_TBL t ON( t.TASK_ID = rt.TASK_ID) "
-			+ "   WHERE t.DIFFICALTY=2 "
+			+ "   WHERE t.DIFFICALTY=2"
 			+ ") r "
 			+ "LEFT JOIN USER_TBL u ON( r.USER_ID = u.USER_ID AND u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null) "
 			+ "LEFT JOIN TASK_TBL t ON( t.TASK_ID = r.TASK_ID) "
-			+ "LEFT JOIN COURSE_MASTER cm ON(u.COURSE_ID = cm.COURSE_ID)";
+			+ "LEFT JOIN COURSE_MASTER cm ON(u.COURSE_ID = cm.COURSE_ID) "
+			+ "WHERE u.ROLE_ID=0 ";
 	private static final String RESULT_RANKING_SQL_WHERE_COURSE =
 			" u.COURSE_ID=?";
 	private static final String RESULT_RANKING_SQL_WHERE_TASK =
@@ -405,7 +406,8 @@ public class ResultDao extends Dao {
 		}
 
 		if( sb.length() > 0 ){
-			sb.insert(0, " WHERE ");
+			//既にWHERE条件はあるのでAND
+			sb.insert(0, " AND ");
 		}
 
 		return sb.toString();
