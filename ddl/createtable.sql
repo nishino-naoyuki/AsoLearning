@@ -130,6 +130,7 @@ CREATE TABLE RESULT_TBL
 	HANDED int DEFAULT 0,
 	-- 再提出を含む最後に提出した日時
 	HANDED_TIMESTAMP datetime COMMENT '再提出を含む最後に提出した日時',
+	ANSWER varchar(10000),
 	PRIMARY KEY (RESULT_ID)
 ) COMMENT = '結果テーブル
 判定を行った結果を格納するテーブル';
