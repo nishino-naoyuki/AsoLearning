@@ -31,6 +31,7 @@ public class ResultDao extends Dao {
 		super(con);
 	}
 
+
 	//指定した課題の結果を削除
 	private static final String RESULT_GET_FOR_DELETE_SQL =
 			"SELECT RESULT_ID FROM RESULT_TBL r WHERE r.TASK_ID=? ";
@@ -112,8 +113,8 @@ public class ResultDao extends Dao {
 	//挿入SQL
 	private static final String RESULT_INSERT_SQL =
 			"INSERT INTO RESULT_TBL "
-			+ "(RESULT_ID,USER_ID,TASK_ID,TOTAL_SCORE,HANDED,HANDED_TIMESTAMP) "
-			+ "VALUES(null,?,?,?,?,?) ";
+			+ "(RESULT_ID,USER_ID,TASK_ID,TOTAL_SCORE,HANDED,HANDED_TIMESTAMP,ANSWER) "
+			+ "VALUES(null,?,?,?,?,?,?) ";
 
 	private static final String TESTCASE_INSERT_SQL =
 			"INSERT INTO RESULT_TESTCASE_TBL "
@@ -132,7 +133,8 @@ public class ResultDao extends Dao {
 			+ "TASK_ID = ?,"
 			+ "TOTAL_SCORE = ?,"
 			+ "HANDED=?,"
-			+ "HANDED_TIMESTAMP=?  "
+			+ "HANDED_TIMESTAMP=?,"
+			+ "ANSWER=?  "
 			+ "WHERE RESULT_ID=? ";
 
 	private static final String TESTCASE_UPDATE_SQL =
@@ -541,6 +543,7 @@ public class ResultDao extends Dao {
     	resultEntity.setTotalScore(rs.getFloat("TOTAL_SCORE"));
     	resultEntity.setHanded(rs.getInt("HANDED"));
     	resultEntity.setHandedTimestamp(rs.getTimestamp("HANDED_TIMESTAMP"));
+    	resultEntity.setAnswer(rs.getString("ANSWER"));
 
     	//taskEntity
     	taskEntity.setTaskId(rs.getInt("TASK_ID"));
@@ -654,6 +657,7 @@ public class ResultDao extends Dao {
 			}else{
 				ps1.setNull(5, java.sql.Types.DATE);
 			}
+			ps1.setString(6, resultEntity.getAnswer());
 
         	ps1.executeUpdate();
 
@@ -745,7 +749,8 @@ public class ResultDao extends Dao {
 			}else{
 				ps1.setNull(5, java.sql.Types.TIMESTAMP);
 			}
-        	ps1.setInt(6, resultEntity.getResultId());
+        	ps1.setString(6, resultEntity.getAnswer());
+        	ps1.setInt(7, resultEntity.getResultId());
 
         	ps1.executeUpdate();
 

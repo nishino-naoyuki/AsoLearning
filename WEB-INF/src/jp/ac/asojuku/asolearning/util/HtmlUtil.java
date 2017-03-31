@@ -22,6 +22,7 @@ public class HtmlUtil {
 
 		text = text.replaceAll("\n", "<BR>");
 		text = text.replaceAll("\r\n", "<BR>");
+		text = text.replaceAll("\t", "&nbsp&nbsp&nbsp&nbsp");
 
 		return text;
 	}

@@ -40,6 +40,8 @@ public class ResultTblEntity implements Serializable {
 	/** 結果詳細テーブル（テストケース） 一覧. */
 	private Set<ResultTestcaseTblEntity> resultTestcaseTblSet;
 
+	/** 解答の文字列. */
+	private String answer;
 	/**
 	 * コンストラクタ.
 	 */
@@ -211,6 +213,24 @@ public class ResultTblEntity implements Serializable {
 		this.resultTestcaseTblSet.add(resultTestcaseTbl);
 	}
 
+	/**
+	 * 解答の文字列 を設定します.
+	 *
+	 * @param answer
+	 *            解答の文字列
+	 */
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+	/**
+	 * 解答の文字列 を取得します.
+	 *
+	 * @return 解答の文字列
+	 */
+	public String getAnswer() {
+		return this.answer;
+	}
 	/**
 	 * 結果詳細テーブル（テストケース） 一覧を取得します.
 	 *

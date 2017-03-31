@@ -275,6 +275,22 @@ Integer userId = (Integer)request.getAttribute(RequestConst.REQUEST_USER_ID);
                 	</div>
                 </div>
                 <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-12">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			解答
+	                		</div>
+		                	<div class="panel-body">
+		                        <button id="answer_btn" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 解答確認</button>
+		                        <div id="answer" style="display: none;" >
+		                        <%= HtmlUtil.nl2be(resultDto.getAnswerString()) %>
+		                        </div>
+							</div>
+	                	</div>
+                	</div>
+                </div>
+                <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
 <% } %>
@@ -296,6 +312,15 @@ Integer userId = (Integer)request.getAttribute(RequestConst.REQUEST_USER_ID);
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
 
+	<script>
+	$(function(){
+		$("#answer_btn").click(function(){
+	        // 「id="answer"」の表示、非表示を切り替える
+	        $("#answer").toggle();
+	    });
+
+	});
+	</script>
 
 </body>
 

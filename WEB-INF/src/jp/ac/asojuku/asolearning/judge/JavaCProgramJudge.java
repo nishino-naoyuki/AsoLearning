@@ -33,6 +33,7 @@ import jp.ac.asojuku.asolearning.exception.IllegalJudgeFileException;
 import jp.ac.asojuku.asolearning.jaxb.model.CCCC_ProjectElement;
 import jp.ac.asojuku.asolearning.jaxb.model.MemberFunction;
 import jp.ac.asojuku.asolearning.json.JudgeResultJson;
+import jp.ac.asojuku.asolearning.util.CompressUtils;
 import jp.ac.asojuku.asolearning.util.FileUtils;
 import jp.ac.asojuku.asolearning.util.XmlReader;
 
@@ -117,6 +118,10 @@ public class JavaCProgramJudge implements Judge {
 			resultEntity.setHandedTimestamp((json.allOK==true?now:null));
 
 			///////////////////////////////////////
+			//ソースファイルの内容を圧縮してセット
+			resultEntity.setAnswer(getCompressedSourceCode(srcFile));
+
+			///////////////////////////////////////
 			//DBに書き込み
 			resultEntity.setTaskTbl(taskEntity);
 			setResultToDB(con,userId,resultEntity);
@@ -138,6 +143,26 @@ public class JavaCProgramJudge implements Judge {
 		}
 
 		return json;
+	}
+
+	/**
+	 * ソースコードを読み取り圧縮してBase64文字列に変換する
+	 * @param srcFile
+	 * @return
+	 * @throws IOException
+	 */
+	private String getCompressedSourceCode(String srcFile) throws IOException{
+
+		//ソースを取得
+		List<String> srcList = FileUtils.readLine(srcFile);
+
+		StringBuilder sb = new StringBuilder();
+		for( String str : srcList ){
+			sb.append(str).append("\n");
+		}
+
+		//ソースを圧縮
+		return CompressUtils.encode(sb.toString());
 	}
 
 	/**
@@ -164,6 +189,13 @@ public class JavaCProgramJudge implements Judge {
 		return isAllOk;
 	}
 
+	/**
+	 * すでに結果データがある場合は取得する
+	 *
+	 * @param taskEntity
+	 * @param userId
+	 * @return
+	 */
 	private ResultTblEntity getResultTblEntity(TaskTblEntity taskEntity,int userId){
 
 		ResultTblEntity resultEntity = new ResultTblEntity();

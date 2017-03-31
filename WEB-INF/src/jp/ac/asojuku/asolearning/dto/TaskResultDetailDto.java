@@ -18,6 +18,7 @@ public class TaskResultDetailDto {
 	private float totalScore;
 	private boolean handed;
 	private String handedDate;
+	private String answerString;
 
 	private List<TaskResultTestCaseDto> testcase = new ArrayList<TaskResultTestCaseDto>();
 	private TaskResultMetricsDto metrics;
@@ -95,6 +96,18 @@ public class TaskResultDetailDto {
 	}
 	public void setHandedDate(String handedDate) {
 		this.handedDate = handedDate;
+	}
+	/**
+	 * @return answerString
+	 */
+	public String getAnswerString() {
+		return answerString;
+	}
+	/**
+	 * @param answerString セットする answerString
+	 */
+	public void setAnswerString(String answerString) {
+		this.answerString = answerString;
 	}
 
 

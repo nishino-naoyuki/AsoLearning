@@ -11,8 +11,8 @@
 	</page_setting>
 	<category_index>0</category_index>
 	<zoom>0.75</zoom>
-	<x>170</x>
-	<y>90</y>
+	<x>0</x>
+	<y>0</y>
 	<default_color>
 		<r>128</r>
 		<g>128</g>
@@ -138,7 +138,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2017-02-01 13:35:51</creation_date>
-			<updated_date>2017-03-31 12:23:00</updated_date>
+			<updated_date>2017-03-31 23:52:14</updated_date>
 			<model_property>
 				<name>プロジェクト名</name>
 				<value></value>
@@ -1569,7 +1569,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>56</word_id>
+					<word_id>57</word_id>
 					<id>7</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -2434,7 +2434,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>57</word_id>
+					<word_id>56</word_id>
 					<id>25</id>
 					<description></description>
 					<unique_key_name></unique_key_name>

@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.DataFormatException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
+import jp.ac.asojuku.asolearning.util.CompressUtils;
 import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
 import jp.ac.asojuku.asolearning.util.FileUtils;
@@ -74,6 +76,12 @@ public class ResultBoImpl implements ResultBo {
 			//ログ出力
 			logger.warn("SQLエラー：",e);
 			throw new AsoLearningSystemErrException(e);
+		} catch (DataFormatException e) {
+			logger.warn("DataFormatExceptionエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (IOException e) {
+			logger.warn("IOException：",e);
+			throw new AsoLearningSystemErrException(e);
 		} finally{
 
 			dao.close();
@@ -86,8 +94,10 @@ public class ResultBoImpl implements ResultBo {
 	 * entity -> DTO変換
 	 * @param entity
 	 * @return
+	 * @throws IOException
+	 * @throws DataFormatException
 	 */
-	private TaskResultDetailDto getTaskResultDetail(ResultTblEntity entity ){
+	private TaskResultDetailDto getTaskResultDetail(ResultTblEntity entity ) throws DataFormatException, IOException{
 		TaskResultDetailDto dto = new TaskResultDetailDto();
 
 		if( entity == null ){
@@ -105,6 +115,7 @@ public class ResultBoImpl implements ResultBo {
 		dto.setTotalScore(entity.getTotalScore());
 		dto.setHanded((entity.getHanded() == 1 ? true:false));
 		dto.setHandedDate(DateUtil.formattedDate(entity.getHandedTimestamp(), "yyyy/MM/dd HH:mm:ss"));
+		dto.setAnswerString(CompressUtils.decode(entity.getAnswer()));
 
 		//メトリクスデータ取得
 		Set<ResultMetricsTblEntity> retMetricsEntitySet = entity.getResultMetricsTblSet();
@@ -275,6 +286,12 @@ public class ResultBoImpl implements ResultBo {
 		} catch (SQLException e) {
 			//ログ出力
 			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (DataFormatException e) {
+			logger.warn("データエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (IOException e) {
+			logger.warn("IOエラー：",e);
 			throw new AsoLearningSystemErrException(e);
 		} finally{
 
