@@ -156,9 +156,11 @@ public class JavaCProgramJudge implements Judge {
 		//ソースを取得
 		List<String> srcList = FileUtils.readLine(srcFile);
 
+		long count = 1;
 		StringBuilder sb = new StringBuilder();
 		for( String str : srcList ){
 			sb.append(str).append("\n");
+			count++;
 		}
 
 		//ソースを圧縮

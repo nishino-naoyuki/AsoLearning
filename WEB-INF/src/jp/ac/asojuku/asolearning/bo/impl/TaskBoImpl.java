@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import jp.ac.asojuku.asolearning.bo.TaskBo;
 import jp.ac.asojuku.asolearning.condition.SearchTaskCondition;
 import jp.ac.asojuku.asolearning.config.MessageProperty;
+import jp.ac.asojuku.asolearning.dao.HistoryDao;
 import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
@@ -33,6 +34,7 @@ import jp.ac.asojuku.asolearning.json.JudgeResultJson;
 import jp.ac.asojuku.asolearning.json.TaskSearchResultJson;
 import jp.ac.asojuku.asolearning.judge.Judge;
 import jp.ac.asojuku.asolearning.judge.JudgeFactory;
+import jp.ac.asojuku.asolearning.param.ActionId;
 import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
 import jp.ac.asojuku.asolearning.util.DateUtil;
@@ -299,6 +301,10 @@ public class TaskBoImpl implements TaskBo {
 			TaskTblEntity entity = getTaskTblEntity(dto,dto.getTaskTestCaseDtoList(),dto.getTaskPublicList());
 			//課題リスト情報を取得
 			dao.insert(user.getUserId(), entity);
+
+			//動作ログをセット
+			HistoryDao history = new HistoryDao(dao.getConnection());
+			history.insert(user.getUserId(), ActionId.TASK_CREATE.getId(), "課題名："+entity.getName());
 
 		} catch (DBConnectException e) {
 			//ログ出力
@@ -578,6 +584,10 @@ public class TaskBoImpl implements TaskBo {
 			TaskTblEntity entity = getTaskTblEntity(dto,dto.getTaskTestCaseDtoList(),dto.getTaskPublicList());
 			//課題リスト情報を取得
 			dao.update(user.getUserId(), entity);
+
+			//動作ログをセット
+			HistoryDao history = new HistoryDao(dao.getConnection());
+			history.insert(user.getUserId(), ActionId.TASK_UPDATE.getId(), "課題名："+entity.getName());
 
 		} catch (DBConnectException e) {
 			//ログ出力

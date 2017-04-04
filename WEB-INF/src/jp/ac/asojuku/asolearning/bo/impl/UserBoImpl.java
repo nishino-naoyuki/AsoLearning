@@ -531,6 +531,10 @@ public class UserBoImpl implements UserBo {
 				dao.updatePassLimit(userId, DateUtil.plusDay(expDate, pwdExp));
 			}
 
+			//動作ログをセット
+			HistoryDao history = new HistoryDao(dao.getConnection());
+			history.insert(userId, ActionId.PWD_CHANGE.getId(), "");
+
 		} catch (DBConnectException e) {
 			//ログ出力
 			logger.warn("DB接続エラー：",e);

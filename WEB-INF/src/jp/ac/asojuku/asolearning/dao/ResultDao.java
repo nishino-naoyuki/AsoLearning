@@ -51,7 +51,7 @@ public class ResultDao extends Dao {
 			+ "LEFT JOIN RESULT_METRICS_TBL rm ON(rm.RESULT_ID = r.RESULT_ID) "
 			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID = t.TASK_ID) "
 			+ "LEFT JOIN USER_TBL u ON(r.USER_ID = u.USER_ID) "
-			+ "WHERE r.TASK_ID=? AND "
+			+ "WHERE r.TASK_ID=? AND u.ROLE_ID=0 AND "
 			+ "u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null "
 			+ "ORDER BY r.RESULT_ID";
 	//検索SQL
