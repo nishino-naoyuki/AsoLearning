@@ -30,6 +30,7 @@ import jp.ac.asojuku.asolearning.dao.HistoryDao;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dao.UserDao;
 import jp.ac.asojuku.asolearning.dto.CSVProgressDto;
+import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskResultDto;
 import jp.ac.asojuku.asolearning.dto.UserDetailDto;
 import jp.ac.asojuku.asolearning.dto.UserDto;
@@ -58,7 +59,7 @@ public class UserBoImpl implements UserBo {
 	Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
 	private static final String[] HEADER = new String[] { "roleId", "name", "mailAddress", "nickName", "courseId", "password","admissionYear" };
 	@Override
-	public void insert(UserDto userDto) throws AsoLearningSystemErrException {
+	public void insert(UserDto userDto,LogonInfoDTO loginInfo) throws AsoLearningSystemErrException {
 
 
 		if( userDto == null ){
@@ -82,7 +83,7 @@ public class UserBoImpl implements UserBo {
 
 			//動作ログをセット
 			HistoryDao history = new HistoryDao(dao.getConnection());
-			history.insert(entity.getUserId(), ActionId.USER_CREATE.getId(), "");
+			history.insert(loginInfo.getUserId(), ActionId.USER_CREATE.getId(), "");
 
 		} catch (DBConnectException e) {
 			//ログ出力

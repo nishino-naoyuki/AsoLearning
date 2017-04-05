@@ -34,12 +34,13 @@ public class UserUtils {
 		//現在時刻取得
 		Calendar calendar = Calendar.getInstance();
 
-
 		int adYear = userEntity.getAdmissionYear();
 		int repCount = userEntity.getRepeatYearCount();
 
 		int nendo = calendar.get(Calendar.YEAR);
-		if( calendar.get(Calendar.MONTH) < 4 ){
+
+		//Calendar.MONTHは1月は０となる
+		if( calendar.get(Calendar.MONTH) < 3 ){
 			//4月より前（3月まで）は前年度
 			nendo--;
 		}

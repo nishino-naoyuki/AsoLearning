@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import jp.ac.asojuku.asolearning.bo.UserBo;
 import jp.ac.asojuku.asolearning.bo.impl.UserBoImpl;
+import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.UserDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.RequestConst;
@@ -53,10 +54,14 @@ public class CreateUserInsertServlet extends BaseServlet {
 		}
 
 		////////////////////////////////////
+		//セッションからログイン情報取得
+		LogonInfoDTO loginInfo = getUserInfoDtoFromSession(req);
+
+		////////////////////////////////////
 		//DBへセット
 		UserBo task = new UserBoImpl();
 
-		task.insert(dto);
+		task.insert(dto,loginInfo);
 
 
 		////////////////////////////////////

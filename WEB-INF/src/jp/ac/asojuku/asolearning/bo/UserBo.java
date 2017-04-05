@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.csv.model.UserCSV;
+import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.UserDetailDto;
 import jp.ac.asojuku.asolearning.dto.UserDto;
 import jp.ac.asojuku.asolearning.dto.UserSearchResultDto;
@@ -53,7 +54,7 @@ public interface UserBo {
 	 * @param userDto
 	 * @throws AsoLearningSystemErrException
 	 */
-	public void insert(UserDto userDto) throws AsoLearningSystemErrException;
+	public void insert(UserDto userDto,LogonInfoDTO loginInfo) throws AsoLearningSystemErrException;
 
 	/**
 	 * CSVによるユーザーの登録
