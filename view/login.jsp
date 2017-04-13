@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ASO LEARNING</title>
+    <title>A-Z CAFE</title>
 
     <link href="view/css/main.css" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
