@@ -82,6 +82,9 @@ public class UserTblEntity implements Serializable {
 	/** 学年（SQLで計算） */
 	private Integer grade;
 
+	/** アバターのIDリスト */
+	private String abatarIdList;
+
 	/**
 	 * コンストラクタ.
 	 */
@@ -524,6 +527,20 @@ public class UserTblEntity implements Serializable {
 	public String getRemark() {
 		return this.remark;
 	}
+	/**
+	 * @return abatarIdList
+	 */
+	public String getAbatarIdList() {
+		return abatarIdList;
+	}
+
+	/**
+	 * @param abatarIdList セットする abatarIdList
+	 */
+	public void setAbatarIdList(String abatarIdList) {
+		this.abatarIdList = abatarIdList;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
