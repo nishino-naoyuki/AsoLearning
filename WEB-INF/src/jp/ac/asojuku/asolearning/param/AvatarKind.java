@@ -96,4 +96,15 @@ public enum AvatarKind {
 		return ACC2;
 	}
 
+	public static AvatarKind[] getList(){
+
+		AvatarKind[] kindList =
+		{
+			AvatarKind.BACK_HAIR,AvatarKind.BODY,AvatarKind.FACE,AvatarKind.EAR,
+			AvatarKind.MAYU,AvatarKind.EYE,AvatarKind.NOSE,AvatarKind.MOUTH,
+			AvatarKind.FRONT_HAIR,AvatarKind.ACC1,AvatarKind.ACC2
+		};
+
+		return kindList;
+	}
 }

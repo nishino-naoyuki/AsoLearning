@@ -167,6 +167,56 @@ public class ResultDao extends Dao {
 			+ "FROM RESULT_TBL r1 "
 			+ "WHERE r1.USER_ID=? AND r1.TASK_ID=?";
 
+	//個人の結果（ヘッダ情報）の一覧を取得する
+	private static final String RESULT_LIST_BY_USER =
+			"SELECT * FROM RESULT_TBL r WHERE r.USER_ID = ?";
+
+	/**
+	 * 結果リスト
+	 * @param userId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<ResultTblEntity> getListByUser(int userId) throws SQLException{
+
+		List<ResultTblEntity> list = new ArrayList<>();
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+        try {
+    		// ステートメント生成
+			ps = con.prepareStatement(RESULT_LIST_BY_USER);
+
+	        ps.setInt(1, userId);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        //値を取り出す
+	        ResultTblEntity resultEntity = null;
+	        while(rs.next()){
+	    		resultEntity = new ResultTblEntity();
+
+	        	resultEntity.setResultId(rs.getInt("RESULT_ID"));
+	        	resultEntity.setTotalScore(rs.getFloat("TOTAL_SCORE"));
+	        	resultEntity.setHanded(rs.getInt("HANDED"));
+	        	resultEntity.setHandedTimestamp(rs.getTimestamp("HANDED_TIMESTAMP"));
+	        	resultEntity.setAnswer(rs.getString("ANSWER"));
+
+	        	list.add(resultEntity);
+	        }
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+		return list;
+	}
 	/**
 	 * 結果情報の削除
 	 * ※内部的にトランザクションはかけない。

@@ -170,7 +170,7 @@ List<TaskResultDto> retList = userDto.getResultList();
 		                    <p><button id="delete_result"  class="btn btn-default"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> このユーザーの課題情報を削除する</button></p>
 	                        <% } %>
 	                        <div class="table-responsive">
-	                            <table class="table table-bordered table-hover" id="form">
+	                            <table class="table table-bordered table-hover" id="dataTables-example">
 	                                <thead>
 	                                    <tr class="info">
 	                                        <th>課題名</th>
@@ -237,7 +237,27 @@ List<TaskResultDto> retList = userDto.getResultList();
 
 <script src="view/js/jquery-ui.min.js"></script>
 <script src="view/js/jquery.ui.datepicker-ja.min.js"></script>
+    <script src="view/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="view/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="view/datatables-responsive/dataTables.responsive.js"></script>
 <script>
+
+$(document).ready(function() {
+
+    ddd = $('#dataTables-example').DataTable({
+    	"oLanguage": {
+	        "sLengthMenu": "表示行数 _MENU_ 件",
+	        "oPaginate": {
+	            "sNext": "次のページ",
+	            "sPrevious": "前のページ"
+	        },
+	        "sInfo": "全_TOTAL_件中 _START_件から_END_件を表示",
+	        "sSearch": "検索："
+	    },
+        responsive: true
+
+    });
+});
 
 $('#edit').on('click', function() {
 	alert("この機能は未実装です");

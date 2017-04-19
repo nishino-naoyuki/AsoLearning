@@ -268,7 +268,7 @@ $('#search').on('click', function() {
             responsive: true,
             columnDefs: [
                          // 2列目(0から始まるため1になっています)の幅を100pxにする
-                         { targets: 1, width: 100 }
+                         { targets: 0, width: 50 }
                      ]
 
         });

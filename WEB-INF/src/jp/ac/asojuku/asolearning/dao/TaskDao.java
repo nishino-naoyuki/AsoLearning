@@ -38,7 +38,7 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN COURSE_MASTER cm ON(cm.COURSE_ID=tp.COURSE_ID) ";
 	private static final String TASK_LIST_WHERE_TASKNAME = "t.name LIKE ?";
 	private static final String TASK_LIST_WHERE_CREATOR = "u.MAILADRESS LIKE ?";
-	private static final String TASK_LIST_WHERE_COURSE = "tp.COURSE_ID=?";
+	private static final String TASK_LIST_WHERE_COURSE = "tp.COURSE_ID=? AND tp.STATUS_ID in (1,2)";
 	private static final String TASK_LIST_ORDERBY = " ORDER BY t.TASK_ID,tp.COURSE_ID";
 
 	//ユーザーを指定して、課題一覧を取得するSQL
