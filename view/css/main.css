@@ -37,3 +37,11 @@ div#title h1 {
     background-repeat: no-repeat;
     font-family: "ƒƒCƒŠƒI"!important;
 }
+
+.avatar_relative {
+    position: relative;
+    width: 100px;
+}
+.avatar_absolute {
+    position: absolute;
+}

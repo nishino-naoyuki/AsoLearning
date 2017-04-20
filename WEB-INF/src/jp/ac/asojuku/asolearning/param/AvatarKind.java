@@ -23,7 +23,7 @@ package jp.ac.asojuku.asolearning.param;
  */
 public enum AvatarKind {
 
-	BACK_HAIR(0,"backhear"),//０：後ろ髪
+	BACK_HAIR(0,"backhair"),//０：後ろ髪
 	BODY(1,"body"),	//１：体
 	FACE(2,"face"),	//２：輪郭
 	EAR(3,"ear"),	//３：耳
@@ -31,7 +31,7 @@ public enum AvatarKind {
 	EYE(5,"eye"),//５：目
 	NOSE(6,"nose"),//６：鼻
 	MOUTH(7,"mouth"),//７：口
-	FRONT_HAIR(8,"fronthear"),//８：前髪
+	FRONT_HAIR(8,"fronthair"),//８：前髪
 	ACC1(9,"acc1"),	//９：アクセサリ１
 	ACC2(10,"acc2"),//１０：アクセサリ２
 	MAX(11,"")

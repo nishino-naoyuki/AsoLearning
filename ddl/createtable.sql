@@ -20,6 +20,7 @@ DROP INDEX IDX_USER_TBL_NICKNAME ON USER_TBL;
 
 DROP TABLE IF EXISTS HISTORY_TBL;
 DROP TABLE IF EXISTS ACTION_MASTER;
+DROP TABLE IF EXISTS AVATAR_MASTER;
 DROP TABLE IF EXISTS CHARACTOR;
 DROP TABLE IF EXISTS CHARACTOR_MASTER;
 DROP TABLE IF EXISTS TASK_PUBLIC_TBL;
@@ -45,6 +46,44 @@ CREATE TABLE ACTION_MASTER
 	ACTION_NAME varchar(200),
 	PRIMARY KEY (ACTION_ID)
 ) COMMENT = '操作マスター';
+
+
+CREATE TABLE AVATAR_MASTER
+(
+	AVATAR_ID int NOT NULL,
+	-- ０~１０
+	-- レイヤの後ろから若い番号
+	-- ０：後ろ髪
+	-- １：体
+	-- ２：輪郭
+	-- ３：耳
+	-- ４：眉
+	-- ５：目
+	-- ６：鼻
+	-- ７：口
+	-- ８：前髪
+	-- ９：アクセサリ１
+	-- １０：アクセサリ２
+	KIND int NOT NULL COMMENT '０~１０
+レイヤの後ろから若い番号
+０：後ろ髪
+１：体
+２：輪郭
+３：耳
+４：眉
+５：目
+６：鼻
+７：口
+８：前髪
+９：アクセサリ１
+１０：アクセサリ２',
+	-- このアバターパーツが出現するために必要な解答数
+	ANS_COND int DEFAULT 0 NOT NULL COMMENT 'このアバターパーツが出現するために必要な解答数',
+	-- このアバターパーツが出現するために必要な点数の条件
+	TOTAL_CND int DEFAULT 0 NOT NULL COMMENT 'このアバターパーツが出現するために必要な点数の条件',
+	FILE_NAME varchar(300) NOT NULL,
+	PRIMARY KEY (AVATAR_ID)
+);
 
 
 CREATE TABLE CHARACTOR
@@ -284,6 +323,8 @@ ROLEが「先生」の場合も必要
 	REMARK varchar(4000),
 	ENTRY_DATE datetime NOT NULL,
 	UPDATE_DATE datetime NOT NULL,
+	-- NULLの場合は未設定
+	AVATAR_ID_CSV varchar(100) COMMENT 'NULLの場合は未設定',
 	PRIMARY KEY (USER_ID),
 	UNIQUE (MAILADRESS)
 ) COMMENT = '利用者テーブル

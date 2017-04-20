@@ -52,6 +52,10 @@ public class AvatarDao extends Dao {
     		// ステートメント生成
 			ps = con.prepareStatement(AVATAR_LIST);
 
+			ps.setInt(1, kind);
+			ps.setInt(2, ansNum);
+			ps.setInt(3, total);
+
 	        // SQLを実行
 	        rs = ps.executeQuery();
 
