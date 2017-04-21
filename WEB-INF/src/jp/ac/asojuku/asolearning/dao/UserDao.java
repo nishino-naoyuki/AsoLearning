@@ -739,6 +739,7 @@ public class UserDao extends Dao {
 		entity.setRoleMaster(rm);
 		// entity.setHistoryTblSet(Set<HistoryTblEntity>);
 		// entity.setResultTblSet(Set<ResultTblEntity>);
+		entity.setAbatarIdList(rs.getString("AVATAR_ID_CSV"));
 
 		return entity;
 	}

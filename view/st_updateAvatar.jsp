@@ -252,7 +252,7 @@ AvatarPartsDto dto = (AvatarPartsDto)request.getAttribute(RequestConst.REQUEST_A
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                    <button type="submit" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 決定</button>
+                    <button id="updateButton" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 決定</button>
 					</div>
                 </div>
             </div>
@@ -320,6 +320,51 @@ $('.acc1').on('click', function() {
 $('.acc2').on('click', function() {
 	$('#ava_acc2').attr("src","view/img/avatar/<%=AvatarKind.ACC2.getDir()%>/"+$(this).attr("data-avatar-name"));
 	$('#ava_acc2').attr("data-avatar-id",$(this).attr("data-avatar-id"));
+});
+
+
+$('#updateButton').on('click', function() {
+
+
+	var ava_backhair = $('#ava_backhair').attr("data-avatar-id");
+	var ava_body = $('#ava_body').attr("data-avatar-id");
+	var ava_face = $('#ava_face').attr("data-avatar-id");
+	var ava_ear = $('#ava_ear').attr("data-avatar-id");
+	var ava_mayu = $('#ava_mayu').attr("data-avatar-id");
+	var ava_eye = $('#ava_eye').attr("data-avatar-id");
+	var ava_nose = $('#ava_nose').attr("data-avatar-id");
+	var ava_mouth = $('#ava_mouth').attr("data-avatar-id");
+	var ava_fronthair = $('#ava_fronthair').attr("data-avatar-id");
+	var ava_acc1 = $('#ava_acc1').attr("data-avatar-id");
+	var ava_acc2 = $('#ava_acc2').attr("data-avatar-id");
+
+	var params=	"ava_backhair="+ava_backhair+
+				"&ava_body="+ava_body+
+				"&ava_face="+ava_face+
+				"&ava_ear="+ava_ear+
+				"&ava_mayu="+ava_mayu+
+				"&ava_eye="+ava_eye+
+				"&ava_nose="+ava_nose+
+				"&ava_mouth="+ava_mouth+
+				"&ava_fronthair="+ava_fronthair+
+				"&ava_acc1="+ava_acc1+
+				"&ava_acc2="+ava_acc2;
+alert(params);
+    $.ajax({
+    	cache: false,
+        type : 'GET',
+        url : "updateavatar",
+        data :params,
+        dataType : 'text',
+        processData : false,
+        timeout : 360000, // milliseconds
+
+    }).done(function(message) {
+    	alert(message);
+    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    	alert("err:"+textStatus);
+        console.log( textStatus  + errorThrown);
+    });
 });
 </script>
 </body>

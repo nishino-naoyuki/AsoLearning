@@ -19,17 +19,26 @@ public class AvatarMasterEntity implements Serializable {
 	/** アバターの種類. */
 	private Integer kind;
 
-	/** 解答数の条件. */
-	private Integer ansCond;
+	/** 解答数の条件（簡単）. */
+	private Integer ansCondEasy;
 
-	/** 点数条件. */
-	private Integer totalCnd;
+	/** 解答数の条件（通常）. */
+	private Integer ansCondNormal;
+
+	/** 解答数の条件（難しい）. */
+	private Integer ansCondHard;
+
+	/** 点数条件（簡単）. */
+	private Integer totalCndEasy;
+
+	/** 点数条件（ふつう）. */
+	private Integer totalCndNormal;
+
+	/** 点数条件（難しい）. */
+	private Integer totalCndHard;
 
 	/** ファイル名. */
 	private String fileName;
-
-	/** ユーザーテーブル. */
-	private UserTblEntity userTbl;
 
 	/**
 	 * コンストラクタ.
@@ -76,41 +85,117 @@ public class AvatarMasterEntity implements Serializable {
 	}
 
 	/**
-	 * 解答数の条件 を設定します.
+	 * 解答数の条件（簡単） を設定します.
 	 * 
-	 * @param ansCond
-	 *            解答数の条件
+	 * @param ansCondEasy
+	 *            解答数の条件（簡単）
 	 */
-	public void setAnsCond(Integer ansCond) {
-		this.ansCond = ansCond;
+	public void setAnsCondEasy(Integer ansCondEasy) {
+		this.ansCondEasy = ansCondEasy;
 	}
 
 	/**
-	 * 解答数の条件 を取得します.
+	 * 解答数の条件（簡単） を取得します.
 	 * 
-	 * @return 解答数の条件
+	 * @return 解答数の条件（簡単）
 	 */
-	public Integer getAnsCond() {
-		return this.ansCond;
+	public Integer getAnsCondEasy() {
+		return this.ansCondEasy;
 	}
 
 	/**
-	 * 点数条件 を設定します.
+	 * 解答数の条件（通常） を設定します.
 	 * 
-	 * @param totalCnd
-	 *            点数条件
+	 * @param ansCondNormal
+	 *            解答数の条件（通常）
 	 */
-	public void setTotalCnd(Integer totalCnd) {
-		this.totalCnd = totalCnd;
+	public void setAnsCondNormal(Integer ansCondNormal) {
+		this.ansCondNormal = ansCondNormal;
 	}
 
 	/**
-	 * 点数条件 を取得します.
+	 * 解答数の条件（通常） を取得します.
 	 * 
-	 * @return 点数条件
+	 * @return 解答数の条件（通常）
 	 */
-	public Integer getTotalCnd() {
-		return this.totalCnd;
+	public Integer getAnsCondNormal() {
+		return this.ansCondNormal;
+	}
+
+	/**
+	 * 解答数の条件（難しい） を設定します.
+	 * 
+	 * @param ansCondHard
+	 *            解答数の条件（難しい）
+	 */
+	public void setAnsCondHard(Integer ansCondHard) {
+		this.ansCondHard = ansCondHard;
+	}
+
+	/**
+	 * 解答数の条件（難しい） を取得します.
+	 * 
+	 * @return 解答数の条件（難しい）
+	 */
+	public Integer getAnsCondHard() {
+		return this.ansCondHard;
+	}
+
+	/**
+	 * 点数条件（簡単） を設定します.
+	 * 
+	 * @param totalCndEasy
+	 *            点数条件（簡単）
+	 */
+	public void setTotalCndEasy(Integer totalCndEasy) {
+		this.totalCndEasy = totalCndEasy;
+	}
+
+	/**
+	 * 点数条件（簡単） を取得します.
+	 * 
+	 * @return 点数条件（簡単）
+	 */
+	public Integer getTotalCndEasy() {
+		return this.totalCndEasy;
+	}
+
+	/**
+	 * 点数条件（ふつう） を設定します.
+	 * 
+	 * @param totalCndNormal
+	 *            点数条件（ふつう）
+	 */
+	public void setTotalCndNormal(Integer totalCndNormal) {
+		this.totalCndNormal = totalCndNormal;
+	}
+
+	/**
+	 * 点数条件（ふつう） を取得します.
+	 * 
+	 * @return 点数条件（ふつう）
+	 */
+	public Integer getTotalCndNormal() {
+		return this.totalCndNormal;
+	}
+
+	/**
+	 * 点数条件（難しい） を設定します.
+	 * 
+	 * @param totalCndHard
+	 *            点数条件（難しい）
+	 */
+	public void setTotalCndHard(Integer totalCndHard) {
+		this.totalCndHard = totalCndHard;
+	}
+
+	/**
+	 * 点数条件（難しい） を取得します.
+	 * 
+	 * @return 点数条件（難しい）
+	 */
+	public Integer getTotalCndHard() {
+		return this.totalCndHard;
 	}
 
 	/**
@@ -130,25 +215,6 @@ public class AvatarMasterEntity implements Serializable {
 	 */
 	public String getFileName() {
 		return this.fileName;
-	}
-
-	/**
-	 * ユーザーテーブル を設定します.
-	 * 
-	 * @param userTbl
-	 *            ユーザーテーブル
-	 */
-	public void setUserTbl(UserTblEntity userTbl) {
-		this.userTbl = userTbl;
-	}
-
-	/**
-	 * ユーザーテーブル を取得します.
-	 * 
-	 * @return ユーザーテーブル
-	 */
-	public UserTblEntity getUserTbl() {
-		return this.userTbl;
 	}
 
 	/**

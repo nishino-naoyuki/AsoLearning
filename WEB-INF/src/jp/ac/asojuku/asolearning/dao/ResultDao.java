@@ -169,7 +169,9 @@ public class ResultDao extends Dao {
 
 	//個人の結果（ヘッダ情報）の一覧を取得する
 	private static final String RESULT_LIST_BY_USER =
-			"SELECT * FROM RESULT_TBL r WHERE r.USER_ID = ?";
+			"SELECT * FROM RESULT_TBL r "
+			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID = t.TASK_ID) "
+			+ "WHERE r.USER_ID = ?";
 
 	/**
 	 * 結果リスト
@@ -197,12 +199,26 @@ public class ResultDao extends Dao {
 	        ResultTblEntity resultEntity = null;
 	        while(rs.next()){
 	    		resultEntity = new ResultTblEntity();
+	    		TaskTblEntity taskEntity = new TaskTblEntity();
 
+	    		//ResultTblEntity
 	        	resultEntity.setResultId(rs.getInt("RESULT_ID"));
 	        	resultEntity.setTotalScore(rs.getFloat("TOTAL_SCORE"));
 	        	resultEntity.setHanded(rs.getInt("HANDED"));
 	        	resultEntity.setHandedTimestamp(rs.getTimestamp("HANDED_TIMESTAMP"));
 	        	resultEntity.setAnswer(rs.getString("ANSWER"));
+
+	        	//taskEntity
+	        	taskEntity.setTaskId(rs.getInt("TASK_ID"));
+	        	taskEntity.setName(rs.getString("NAME"));
+	        	taskEntity.setTaskQuestion(rs.getString("TASK_QUESTION"));
+	        	taskEntity.setCreateUserId(rs.getInt("CREATE_USER_ID"));
+	        	taskEntity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
+	        	taskEntity.setUpdateTim(rs.getTimestamp("UPDATE_TIM"));
+	        	taskEntity.setTerminationDate(rs.getDate("termination_date"));
+	        	taskEntity.setDifficalty(rs.getInt("DIFFICALTY"));
+
+	        	resultEntity.setTaskTbl(taskEntity);
 
 	        	list.add(resultEntity);
 	        }

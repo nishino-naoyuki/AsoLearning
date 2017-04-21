@@ -19,6 +19,7 @@ public class LogonInfoDTO {
 	private String roleName;
 	private Integer grade;
 	private String mailAddress;
+	private AvatarSettingDto avatar;
 
 
 	/**
@@ -122,6 +123,18 @@ public class LogonInfoDTO {
 	}
 	public void setMailAddress(String mailAddress) {
 		this.mailAddress = mailAddress;
+	}
+	/**
+	 * @return avatar
+	 */
+	public AvatarSettingDto getAvatar() {
+		return avatar;
+	}
+	/**
+	 * @param avatar セットする avatar
+	 */
+	public void setAvatar(AvatarSettingDto avatar) {
+		this.avatar = avatar;
 	}
 
 

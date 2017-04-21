@@ -4,6 +4,7 @@
 package jp.ac.asojuku.asolearning.bo;
 
 import jp.ac.asojuku.asolearning.dto.AvatarPartsDto;
+import jp.ac.asojuku.asolearning.dto.AvatarSettingDto;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 
@@ -15,4 +16,6 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 public interface AvatarBo {
 
 	AvatarPartsDto getParts(LogonInfoDTO userInfo) throws AsoLearningSystemErrException;
+
+	void updateAvatar(LogonInfoDTO userInfo,AvatarSettingDto avatarDto) throws AsoLearningSystemErrException;
 }

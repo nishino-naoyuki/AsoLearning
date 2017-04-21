@@ -77,10 +77,14 @@ CREATE TABLE AVATAR_MASTER
 ８：前髪
 ９：アクセサリ１
 １０：アクセサリ２',
-	-- このアバターパーツが出現するために必要な解答数
-	ANS_COND int DEFAULT 0 NOT NULL COMMENT 'このアバターパーツが出現するために必要な解答数',
+	-- このアバターパーツが出現するために必要な簡単問題の解答数
+	ANS_COND_EASY int DEFAULT 0 NOT NULL COMMENT 'このアバターパーツが出現するために必要な簡単問題の解答数',
+	ANS_COND_NORMAL int DEFAULT 0 NOT NULL,
+	ANS_COND_HARD int DEFAULT 0 NOT NULL,
 	-- このアバターパーツが出現するために必要な点数の条件
-	TOTAL_CND int DEFAULT 0 NOT NULL COMMENT 'このアバターパーツが出現するために必要な点数の条件',
+	TOTAL_CND_EASY int DEFAULT 0 NOT NULL COMMENT 'このアバターパーツが出現するために必要な点数の条件',
+	TOTAL_CND_NORMAL int DEFAULT 0 NOT NULL,
+	TOTAL_CND_HARD int DEFAULT 0 NOT NULL,
 	FILE_NAME varchar(300) NOT NULL,
 	PRIMARY KEY (AVATAR_ID)
 );
