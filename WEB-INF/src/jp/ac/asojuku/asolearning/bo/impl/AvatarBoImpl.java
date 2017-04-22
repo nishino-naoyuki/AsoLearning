@@ -55,7 +55,7 @@ public class AvatarBoImpl implements AvatarBo {
 			StringBuilder sb = new StringBuilder();
 
 			for( AvatarKind kind : kindList){
-				int id = avatarDto.getAvatar(kind);
+				int id = avatarDto.getAvatarId(kind);
 				if(sb.length() > 0){
 					sb.append(",");
 				}
@@ -104,7 +104,11 @@ public class AvatarBoImpl implements AvatarBo {
 
 		for(AvatarKind kind : kindList){
 			//設定しようとするアバターIDを取得
-			Integer avatarId = avatarDto.getAvatar(kind);
+			Integer avatarId = avatarDto.getAvatarId(kind);
+			if( avatarId == AvatarSettingDto.NODATA){
+				//デフォルトの場合
+				continue;
+			}
 			//DBよりその種類のアバター情報取得する
 			List<AvatarMasterEntity> list = dao.getAvatarList(kind.getId(), avCond);
 			//設定しようとするIDがリストにあるかをチェックする
@@ -275,4 +279,5 @@ public class AvatarBoImpl implements AvatarBo {
 
 		return avatarDto;
 	}
+
 }

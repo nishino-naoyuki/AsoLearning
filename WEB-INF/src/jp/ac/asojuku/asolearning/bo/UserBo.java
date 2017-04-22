@@ -23,6 +23,7 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public interface UserBo {
 
+	String createTaskUserCSV(SearchUserCondition cond) throws AsoLearningSystemErrException;
 	/**
 	 * ユーザーCSVを出力する
 	 * @param userList

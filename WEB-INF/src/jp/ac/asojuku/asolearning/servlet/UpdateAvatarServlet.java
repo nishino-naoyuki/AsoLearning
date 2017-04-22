@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +18,10 @@ import org.slf4j.LoggerFactory;
 import jp.ac.asojuku.asolearning.bo.AvatarBo;
 import jp.ac.asojuku.asolearning.bo.impl.AvatarBoImpl;
 import jp.ac.asojuku.asolearning.dto.AvatarSettingDto;
+import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.AvatarKind;
+import jp.ac.asojuku.asolearning.param.SessionConst;
 
 /**
  * @author nishino
@@ -62,7 +65,14 @@ public class UpdateAvatarServlet extends BaseServlet {
 			//アバター設定
 			AvatarBo avatarBo = new AvatarBoImpl();
 
+			LogonInfoDTO loginInfo = getUserInfoDtoFromSession(req);
 			avatarBo.updateAvatar(getUserInfoDtoFromSession(req), avatarDto);
+
+			////////////////////////////////
+			//セッションの情報を修正
+			loginInfo.setAvatar(avatarDto);
+			HttpSession session = req.getSession(false);
+			session.setAttribute(SessionConst.SESSION_LOGININFO, loginInfo);
 
 			//////////////////////////////////////////////
 	        //出力処理を行う

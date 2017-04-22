@@ -12,10 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.bo.LoginBo;
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
+import jp.ac.asojuku.asolearning.dao.AvatarDao;
 import jp.ac.asojuku.asolearning.dao.HistoryDao;
 import jp.ac.asojuku.asolearning.dao.UserDao;
 import jp.ac.asojuku.asolearning.dto.AvatarSettingDto;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
+import jp.ac.asojuku.asolearning.entity.AvatarMasterEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.exception.AccountLockedException;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
@@ -55,8 +57,9 @@ public class LoginBoImpl implements LoginBo {
 			//ユーザー状態チェック
 			vlidateUserState(entity,dao,mailadress,password);
 
+			AvatarDao avatarDao = new AvatarDao(dao.getConnection());
 			//会員テーブル→ログイン情報
-			login = MemberEntityToLogonInfoDTO(entity);
+			login = MemberEntityToLogonInfoDTO(avatarDao,entity);
 
 			//動作ログをセット
 			HistoryDao history = new HistoryDao(dao.getConnection());
@@ -87,8 +90,10 @@ public class LoginBoImpl implements LoginBo {
 	 * @param entity
 	 * @return
 	 * @throws AsoLearningSystemErrException
+	 * @throws SQLException
+	 * @throws NumberFormatException
 	 */
-	private LogonInfoDTO MemberEntityToLogonInfoDTO(UserTblEntity entity) throws AsoLearningSystemErrException{
+	private LogonInfoDTO MemberEntityToLogonInfoDTO(AvatarDao avatarDao,UserTblEntity entity) throws AsoLearningSystemErrException, NumberFormatException, SQLException{
 
 		if( entity == null ){
 			return null;
@@ -108,12 +113,16 @@ public class LoginBoImpl implements LoginBo {
 		//アバターのCSV→AvatarSettingDto
 		AvatarSettingDto dto = new AvatarSettingDto();
 		String avatarList = entity.getAbatarIdList();
+
 		if( StringUtils.isNotEmpty(avatarList) ){
+			//アバターのリストがあれば、カンマで区切ってIDとファイル名を取得する
 			String[] avatars = avatarList.split(",");
 			for( int i = 0; i < avatars.length; i++ ){
-				dto.setAvatarDto(AvatarKind.search(i), Integer.parseInt(avatars[i]));
+				AvatarMasterEntity avaEntity = avatarDao.getBy(Integer.parseInt(avatars[i]));
+				dto.setAvatarDto(AvatarKind.search(i), Integer.parseInt(avatars[i]),avaEntity.getFileName());
 			}
 		}
+		loginDto.setAvatar(dto);
 
 		return loginDto;
 	}

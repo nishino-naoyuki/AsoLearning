@@ -195,11 +195,7 @@ if( taskId == null){
 		                                        <td><%=ranking.getCourseName() %></td>
 		                                        <td><%=ranking.getGrade() %></td>
 		                                        <td>
-		                                        <% if( RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
-		                                        <%=ranking.getName() %>
-		                                        <% }else{ %>
 		                                        <a href='userDetail?userId=<%=ranking.getUserId()%>'><%=ranking.getName() %></a>
-		                                        <% } %>
 		                                        </td>
 		                                        <td><%=ranking.getNickName() %></td>
 		                                        <td><%=ranking.getScore() %></td>

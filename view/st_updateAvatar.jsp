@@ -82,6 +82,8 @@
                 </div>
                 <!-- /.row -->
 <%
+LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
+AvatarSettingDto avDto = loginInfo.getAvatar();
 AvatarPartsDto dto = (AvatarPartsDto)request.getAttribute(RequestConst.REQUEST_AVATAR_DTO);
 %>
                 <div class="row">
@@ -92,17 +94,17 @@ AvatarPartsDto dto = (AvatarPartsDto)request.getAttribute(RequestConst.REQUEST_A
             	<div class="row">
 					<div class="col-lg-3">
 								<div class="avatar_relative">
-									<img id="ava_backhair" src="view/img/avatar/<%=AvatarKind.BACK_HAIR.getDir()%>/hair_back001.png" alt="" class="avatar_absolute" data-avatar-id="" />
-									<img id="ava_body" src="view/img/avatar/<%=AvatarKind.BODY.getDir()%>/body001.png" class="avatar_absolute" data-avatar-id=""/>
-									<img id="ava_ear" src="view/img/avatar/<%=AvatarKind.EAR.getDir()%>/ear001.png" alt="" class="avatar_absolute" data-avatar-id="" />
-									<img id="ava_face" src="view/img/avatar/<%=AvatarKind.FACE.getDir()%>/faceline001.png" alt="" class="avatar_absolute" data-avatar-id="" />
-									<img id="ava_mayu" src="view/img/avatar/<%=AvatarKind.MAYU.getDir()%>/eyebrows001.png" alt="" class="avatar_absolute" data-avatar-id="" />
-									<img id="ava_eye" src="view/img/avatar/<%=AvatarKind.EYE.getDir()%>/eyes001.png" alt="" class="avatar_absolute" data-avatar-id="" />
-									<img id="ava_nose" src="view/img/avatar/<%=AvatarKind.NOSE.getDir()%>/nose001.png" alt="" class="avatar_absolute" data-avatar-id="" />
-									<img id="ava_mouth" src="view/img/avatar/<%=AvatarKind.MOUTH.getDir()%>/mouth001.png" alt="" class="avatar_absolute" data-avatar-id="" />
-									<img id="ava_fronthair" src="view/img/avatar/<%=AvatarKind.FRONT_HAIR.getDir()%>/hair001.png" alt="" class="avatar_absolute" data-avatar-id="" />
-									<img id="ava_acc1" src="view/img/avatar/<%=AvatarKind.ACC1.getDir()%>/mouth001.png" alt="" class="avatar_absolute" data-avatar-id="" />
-									<img id="ava_acc2" src="view/img/avatar/<%=AvatarKind.ACC2.getDir()%>/mouth001.png" alt="" class="avatar_absolute" data-avatar-id=""  />
+									<img id="ava_backhair" src="view/img/avatar/<%=AvatarKind.BACK_HAIR.getDir()%>/<%=avDto.getAvatarName(AvatarKind.BACK_HAIR) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.BACK_HAIR) %>" />
+									<img id="ava_body" src="view/img/avatar/<%=AvatarKind.BODY.getDir()%>/<%=avDto.getAvatarName(AvatarKind.BODY) %>" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.BODY) %>"/>
+									<img id="ava_ear" src="view/img/avatar/<%=AvatarKind.EAR.getDir()%>/<%=avDto.getAvatarName(AvatarKind.EAR) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.EAR) %>" />
+									<img id="ava_face" src="view/img/avatar/<%=AvatarKind.FACE.getDir()%>/<%=avDto.getAvatarName(AvatarKind.FACE) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.FACE) %>" />
+									<img id="ava_mayu" src="view/img/avatar/<%=AvatarKind.MAYU.getDir()%>/<%=avDto.getAvatarName(AvatarKind.MAYU) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.MAYU) %>" />
+									<img id="ava_eye" src="view/img/avatar/<%=AvatarKind.EYE.getDir()%>/<%=avDto.getAvatarName(AvatarKind.EYE) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.EYE) %>" />
+									<img id="ava_nose" src="view/img/avatar/<%=AvatarKind.NOSE.getDir()%>/<%=avDto.getAvatarName(AvatarKind.NOSE) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.NOSE) %>" />
+									<img id="ava_mouth" src="view/img/avatar/<%=AvatarKind.MOUTH.getDir()%>/<%=avDto.getAvatarName(AvatarKind.MOUTH) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.MOUTH) %>" />
+									<img id="ava_fronthair" src="view/img/avatar/<%=AvatarKind.FRONT_HAIR.getDir()%>/<%=avDto.getAvatarName(AvatarKind.FRONT_HAIR) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.FRONT_HAIR) %>" />
+									<img id="ava_acc1" src="view/img/avatar/<%=AvatarKind.ACC1.getDir()%>/<%=avDto.getAvatarName(AvatarKind.ACC1) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.ACC1) %>" />
+									<img id="ava_acc2" src="view/img/avatar/<%=AvatarKind.ACC2.getDir()%>/<%=avDto.getAvatarName(AvatarKind.ACC2) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.ACC2) %>"  />
 								</div>
 
 					</div>

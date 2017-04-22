@@ -41,6 +41,7 @@ div#title h1 {
 .avatar_relative {
     position: relative;
     width: 100px;
+    height: 200px;
 }
 .avatar_absolute {
     position: absolute;

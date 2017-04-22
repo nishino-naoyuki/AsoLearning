@@ -5,6 +5,7 @@ package jp.ac.asojuku.asolearning.bo;
 
 import java.util.List;
 
+import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.dto.RankingDto;
 import jp.ac.asojuku.asolearning.dto.TaskResultDetailDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
@@ -17,6 +18,7 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public interface ResultBo {
 
+	String createTaskUserList(SearchUserCondition userCond) throws AsoLearningSystemErrException;
 	/**
 	 * 削除する
 	 *

@@ -19,6 +19,8 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
             </li>
             <li><a href="nicknamechangeinput"><i class="fa fa-gear fa-fw"></i> ニックネーム変更</a>
             </li>
+            <li><a href="updateavatarinput"><i class="fa fa-heart fa-fw"></i> アバター設定</a>
+            </li>
             <li class="divider"></li>
             <li><a href="logout"><i class="fa fa-sign-out fa-fw"></i> ログアウト</a>
             </li>

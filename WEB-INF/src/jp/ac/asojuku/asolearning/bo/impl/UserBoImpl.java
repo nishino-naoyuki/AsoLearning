@@ -26,15 +26,18 @@ import jp.ac.asojuku.asolearning.bo.UserBo;
 import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.csv.model.UserCSV;
+import jp.ac.asojuku.asolearning.dao.AvatarDao;
 import jp.ac.asojuku.asolearning.dao.HistoryDao;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dao.UserDao;
+import jp.ac.asojuku.asolearning.dto.AvatarSettingDto;
 import jp.ac.asojuku.asolearning.dto.CSVProgressDto;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskResultDto;
 import jp.ac.asojuku.asolearning.dto.UserDetailDto;
 import jp.ac.asojuku.asolearning.dto.UserDto;
 import jp.ac.asojuku.asolearning.dto.UserSearchResultDto;
+import jp.ac.asojuku.asolearning.entity.AvatarMasterEntity;
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.RoleMasterEntity;
@@ -45,6 +48,7 @@ import jp.ac.asojuku.asolearning.err.ErrorCode;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.param.ActionId;
+import jp.ac.asojuku.asolearning.param.AvatarKind;
 import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.param.SessionConst;
 import jp.ac.asojuku.asolearning.util.DateUtil;
@@ -55,6 +59,7 @@ import jp.ac.asojuku.asolearning.util.UserUtils;
 import jp.ac.asojuku.asolearning.validator.UserValidator;
 
 public class UserBoImpl implements UserBo {
+	private final String CSV_PREFIX_USERTASK = "usertask_";
 	private final String CSV_PREFIX = "userdata_";
 	Logger logger = LoggerFactory.getLogger(UserBoImpl.class);
 	private static final String[] HEADER = new String[] { "roleId", "name", "mailAddress", "nickName", "courseId", "password","admissionYear" };
@@ -439,7 +444,8 @@ public class UserBoImpl implements UserBo {
 					taskdao.getTaskList(userId, userEntity.getCourseMaster().getCourseId(), 0, 10);
 
 			//Entity -> Dto
-			dto = getUserDetailDtoFromEntity(userEntity,entityList);
+			AvatarDao avatarDao = new AvatarDao(dao.getConnection());
+			dto = getUserDetailDtoFromEntity(userEntity,entityList,avatarDao);
 
 		} catch (DBConnectException e) {
 			//ログ出力
@@ -463,8 +469,10 @@ public class UserBoImpl implements UserBo {
 	 * @param entiy
 	 * @return
 	 * @throws AsoLearningSystemErrException
+	 * @throws SQLException
+	 * @throws NumberFormatException
 	 */
-	private UserDetailDto getUserDetailDtoFromEntity(UserTblEntity entiy,List<TaskTblEntity> entityList) throws AsoLearningSystemErrException{
+	private UserDetailDto getUserDetailDtoFromEntity(UserTblEntity entiy,List<TaskTblEntity> entityList,AvatarDao avatarDao) throws AsoLearningSystemErrException, NumberFormatException, SQLException{
 		UserDetailDto userDto = new UserDetailDto();
 
 		userDto.setUserId( entiy.getUserId() );
@@ -502,6 +510,21 @@ public class UserBoImpl implements UserBo {
 
 			userDto.addResultList(retDto);
 		}
+
+		///////////////////////////////////////
+		//アバターのCSV→AvatarSettingDto
+		AvatarSettingDto dto = new AvatarSettingDto();
+		String avatarList = entiy.getAbatarIdList();
+
+		if( StringUtils.isNotEmpty(avatarList) ){
+			//アバターのリストがあれば、カンマで区切ってIDとファイル名を取得する
+			String[] avatars = avatarList.split(",");
+			for( int i = 0; i < avatars.length; i++ ){
+				AvatarMasterEntity avaEntity = avatarDao.getBy(Integer.parseInt(avatars[i]));
+				dto.setAvatarDto(AvatarKind.search(i), Integer.parseInt(avatars[i]),avaEntity.getFileName());
+			}
+		}
+		userDto.setAvatar(dto);
 
 		return userDto;
 	}
@@ -680,5 +703,99 @@ public class UserBoImpl implements UserBo {
 
 
 		return fname;
+	}
+
+	@Override
+	public String createTaskUserCSV(SearchUserCondition cond) throws AsoLearningSystemErrException {
+
+		String csvStr = "";
+		UserDao dao = new UserDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//課題リスト情報を取得
+			List<UserTblEntity> useEntityList = dao.searchUserTask(cond);
+
+			//CSV情報を作成する
+			String csvDir = AppSettingProperty.getInstance().getCsvDir();
+			String fileEnc = AppSettingProperty.getInstance().getCsvFileEncode();
+			String fname = "";
+			String head = "学科,学年,学籍番号,ニックネーム,点数";
+			String timeStr =
+					TimestampUtil.formattedTimestamp(TimestampUtil.current(), "yyyyMMddHHmmssSSS");
+			fname = CSV_PREFIX_USERTASK+timeStr+".csv";
+			StringBuilder sb = new StringBuilder();
+
+	        FileOutputStream fos = null;
+	        OutputStreamWriter osw = null;
+	        BufferedWriter writer = null;
+
+	        try{
+	        	fos = new FileOutputStream(csvDir+"/"+fname);
+	        	osw = new OutputStreamWriter(fos,fileEnc);
+	        	writer =new BufferedWriter(osw);
+
+	        	//ファイル出力
+	    		sb.append(head);
+	    		sb.append("\n");
+	    		osw.write(sb.toString());
+
+	    		for( UserTblEntity user : useEntityList ){
+	    			StringBuilder rankSb = new StringBuilder();
+
+	    			//課題ごとの結果を取得する
+
+	    			writer.write(rankSb.toString());
+	    		}
+
+	    		writer.flush();
+			} catch (IOException e) {
+	        	logger.warn("IOException：",e);
+	        	FileUtils.delete(fname);
+				throw new AsoLearningSystemErrException(e);
+			}finally{
+				//クローズ
+	        	if(fos != null){
+	        		try {
+						fos.close();
+					} catch (IOException e) {
+						;//ignore
+					}
+	        	}
+
+	        	if(osw != null){
+	        		try {
+	        			osw.close();
+					} catch (IOException e) {
+						;//ignore
+					}
+	        	}
+
+	        	if(writer != null){
+	        		try {
+	        			writer.close();
+					} catch (IOException e) {
+						;//ignore
+					}
+	        	}
+	        }
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return csvStr;
 	}
 }

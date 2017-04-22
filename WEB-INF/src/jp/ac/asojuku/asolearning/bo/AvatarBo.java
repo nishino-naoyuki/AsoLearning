@@ -15,7 +15,20 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  */
 public interface AvatarBo {
 
+
+	/**
+	 * アバターのパーツを取得する
+	 * @param userInfo
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
 	AvatarPartsDto getParts(LogonInfoDTO userInfo) throws AsoLearningSystemErrException;
 
+	/**
+	 * アバター情報の更新を行う
+	 * @param userInfo
+	 * @param avatarDto
+	 * @throws AsoLearningSystemErrException
+	 */
 	void updateAvatar(LogonInfoDTO userInfo,AvatarSettingDto avatarDto) throws AsoLearningSystemErrException;
 }

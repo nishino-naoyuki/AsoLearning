@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.ac.asojuku.asolearning.bo.ResultBo;
+import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.dto.RankingDto;
@@ -371,8 +372,6 @@ public class ResultBoImpl implements ResultBo {
         	}
         }
 
-
-
 		return fname;
 	}
 
@@ -408,5 +407,11 @@ public class ResultBoImpl implements ResultBo {
 
 			dao.close();
 		}
+	}
+
+	@Override
+	public String createTaskUserList(SearchUserCondition userCond) throws AsoLearningSystemErrException {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
 	}
 }

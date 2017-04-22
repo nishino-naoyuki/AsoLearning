@@ -20,6 +20,7 @@
     <title>学生作成</title>
 
     <!-- Bootstrap Core CSS -->
+    <link href="view/css/main.css" rel="stylesheet">
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
@@ -48,6 +49,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 //エラー情報を取得する
 UserDetailDto userDto = (UserDetailDto)request.getAttribute(RequestConst.REQUEST_USER_DETAIL);
 LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
+AvatarSettingDto avDto = userDto.getAvatar();
 %>
 </head>
 
@@ -109,6 +111,26 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 	                                		<td>
 	                                		<div class="form-group">
 												<%=(userDto!=null? userDto.getRoleName():"") %>
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                	<tr>
+	                                		<th>アバター</th>
+	                                		<td>
+	                                		<div class="form-group">
+												<div class="avatar_relative">
+													<img id="ava_backhair" src="view/img/avatar/<%=AvatarKind.BACK_HAIR.getDir()%>/<%=avDto.getAvatarName(AvatarKind.BACK_HAIR) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.BACK_HAIR) %>" />
+													<img id="ava_body" src="view/img/avatar/<%=AvatarKind.BODY.getDir()%>/<%=avDto.getAvatarName(AvatarKind.BODY) %>" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.BODY) %>"/>
+													<img id="ava_ear" src="view/img/avatar/<%=AvatarKind.EAR.getDir()%>/<%=avDto.getAvatarName(AvatarKind.EAR) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.EAR) %>" />
+													<img id="ava_face" src="view/img/avatar/<%=AvatarKind.FACE.getDir()%>/<%=avDto.getAvatarName(AvatarKind.FACE) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.FACE) %>" />
+													<img id="ava_mayu" src="view/img/avatar/<%=AvatarKind.MAYU.getDir()%>/<%=avDto.getAvatarName(AvatarKind.MAYU) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.MAYU) %>" />
+													<img id="ava_eye" src="view/img/avatar/<%=AvatarKind.EYE.getDir()%>/<%=avDto.getAvatarName(AvatarKind.EYE) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.EYE) %>" />
+													<img id="ava_nose" src="view/img/avatar/<%=AvatarKind.NOSE.getDir()%>/<%=avDto.getAvatarName(AvatarKind.NOSE) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.NOSE) %>" />
+													<img id="ava_mouth" src="view/img/avatar/<%=AvatarKind.MOUTH.getDir()%>/<%=avDto.getAvatarName(AvatarKind.MOUTH) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.MOUTH) %>" />
+													<img id="ava_fronthair" src="view/img/avatar/<%=AvatarKind.FRONT_HAIR.getDir()%>/<%=avDto.getAvatarName(AvatarKind.FRONT_HAIR) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.FRONT_HAIR) %>" />
+													<img id="ava_acc1" src="view/img/avatar/<%=AvatarKind.ACC1.getDir()%>/<%=avDto.getAvatarName(AvatarKind.ACC1) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.ACC1) %>" />
+													<img id="ava_acc2" src="view/img/avatar/<%=AvatarKind.ACC2.getDir()%>/<%=avDto.getAvatarName(AvatarKind.ACC2) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.ACC2) %>"  />
+												</div>
 	                                		</div>
 	                                		</td>
 	                                	</tr>

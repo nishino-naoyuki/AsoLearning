@@ -8,6 +8,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.util.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.param.*" %>
 	<LINK REL="SHORTCUT ICON" HREF="view/ico/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -67,6 +68,7 @@
 TaskResultDetailDto resultDto = (TaskResultDetailDto)request.getAttribute(RequestConst.REQUEST_TASK_RESULT);
 String dispName = (String)request.getAttribute(RequestConst.REQUEST_DISP_NO);
 Integer userId = (Integer)request.getAttribute(RequestConst.REQUEST_USER_ID);
+LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 %>
         <!-- Page Content -->
         <div id="page-wrapper">
@@ -274,6 +276,8 @@ Integer userId = (Integer)request.getAttribute(RequestConst.REQUEST_USER_ID);
 	                	</div>
                 	</div>
                 </div>
+<% if( "user".equals(dispName) != true &&
+	   RoleId.STUDENT.equals(loginInfo.getRoleId()) != true ){ %>
                 <!-- /.row -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -290,6 +294,7 @@ Integer userId = (Integer)request.getAttribute(RequestConst.REQUEST_USER_ID);
 	                	</div>
                 	</div>
                 </div>
+<%} %>
                 <!-- /.row -->
             </div>
             <!-- /.container-fluid -->

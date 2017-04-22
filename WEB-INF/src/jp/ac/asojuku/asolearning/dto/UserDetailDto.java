@@ -32,6 +32,7 @@ public class UserDetailDto {
 	private String password;
 	private Integer grade;
 	private List<TaskResultDto> resultList = new ArrayList<>();
+	private AvatarSettingDto avatar;
 
 	public Integer getUserId() {
 		return userId;
@@ -149,6 +150,18 @@ public class UserDetailDto {
 	}
 	public void addResultList(TaskResultDto resultDto){
 		resultList.add(resultDto);
+	}
+	/**
+	 * @return avatar
+	 */
+	public AvatarSettingDto getAvatar() {
+		return avatar;
+	}
+	/**
+	 * @param avatar セットする avatar
+	 */
+	public void setAvatar(AvatarSettingDto avatar) {
+		this.avatar = avatar;
 	}
 
 

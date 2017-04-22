@@ -56,6 +56,13 @@ public class UserDao extends Dao {
 	private static final String MEMBER_SEARCH_COND6 = " t.TASK_ID = ? ";
 	private static final String MEMBER_SEARCH_ORDER = " ORDER BY u.USER_ID,u.COURSE_ID,t.TASK_ID";
 
+	private static final String MEMBER_SEARCH_SQL_FOR_TASKCSV =
+			"SELECT * FROM USER_TBL u , TASK_TBL t "
+			+ "LEFT JOIN RESULT_TBL ret ON(t.TASK_ID=ret.TASK_ID AND ret.USER_ID = u.USER_ID) "
+			+ "LEFT JOIN COURSE_MASTER c ON(c.COURSE_ID = u.COURSE_ID) "
+			+ "LEFT JOIN ROLE_MASTER r ON(r.ROLE_ID = u.ROLE_ID) "
+			+ "WHERE u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null ";
+
 	// ユーザーIDとパスワードを指定してユーザー情報を取得する
 	private static final String MEMBER_INFO_BY_UP_SQL =
 			"SELECT * FROM USER_TBL u "
@@ -142,6 +149,60 @@ public class UserDao extends Dao {
 	}
 	public UserDao(Connection con) {
 		super(con);
+	}
+
+	public List<UserTblEntity> searchUserTask(SearchUserCondition cond) throws SQLException{
+		List<UserTblEntity> list = new ArrayList<>();
+
+		if( con == null ){
+			return null;
+		}
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		UserTblEntity entity = null;
+
+        try {
+        	StringBuffer sb = new StringBuffer(MEMBER_SEARCH_SQL_FOR_TASKCSV);
+        	sb.append(getWhereString(cond));
+        	sb.append(MEMBER_SEARCH_ORDER);
+
+    		// ステートメント生成
+			ps = con.prepareStatement(sb.toString());
+
+			setWhereParameter(cond,ps);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        int wkUserId = -1;
+	        int userId;
+	        //値を取り出す
+	        while(rs.next()){
+	        	userId = rs.getInt("USER_ID");
+	        	if( userId != wkUserId ){
+	        		if( entity != null ){
+	        			list.add(entity);
+	        		}
+		        	entity = createUserTblEntityFromResultSet(rs);
+		        	wkUserId = userId;
+	        	}
+	        	entity.addResultTbl(createResultTblEntity(rs));
+	        }
+
+    		if( entity != null ){
+    			list.add(entity);
+    		}
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+		return list;
 	}
 
 	/**

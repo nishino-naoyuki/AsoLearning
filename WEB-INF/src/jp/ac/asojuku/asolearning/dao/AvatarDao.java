@@ -37,13 +37,66 @@ public class AvatarDao extends Dao {
 			+ "TOTAL_CND_NORMAL <= ? AND "
 			+ "TOTAL_CND_HARD <= ?";
 
+	private static final String AVATAR_SELECT =
+			"SELECT * FROM AVATAR_MASTER WHERE AVATAR_ID=?";
+
 	private static final String UPDATE_AVATAR =
-			"UPDATE USER_TBL "
+			"UPDATE USER_TBL SET "
 			+ "AVATAR_ID_CSV = ?, "
 			+ "UPDATE_DATE=CURRENT_TIMESTAMP "
 			+ "WHERE USER_ID = ?";
 
 
+	/**
+	 * IDを指定してアバター情報を取得する
+	 * @param avatarId
+	 * @return
+	 * @throws SQLException
+	 */
+	public AvatarMasterEntity getBy(Integer avatarId) throws SQLException{
+
+		if( con == null ){
+			return null;
+		}
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		AvatarMasterEntity entity = new AvatarMasterEntity();
+
+        try {
+    		// ステートメント生成
+			ps = con.prepareStatement(AVATAR_SELECT);
+
+			ps.setInt(1, avatarId);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        //値を取り出す
+	        while(rs.next()){
+
+	        	entity.setAvatarId(rs.getInt("AVATAR_ID"));
+	        	entity.setKind(rs.getInt("KIND"));
+	        	entity.setAnsCondEasy(rs.getInt("ANS_COND_EASY"));
+	        	entity.setAnsCondNormal(rs.getInt("ANS_COND_NORMAL"));
+	        	entity.setAnsCondHard(rs.getInt("ANS_COND_HARD"));
+	        	entity.setTotalCndEasy(rs.getInt("TOTAL_CND_EASY"));
+	        	entity.setTotalCndNormal(rs.getInt("TOTAL_CND_NORMAL"));
+	        	entity.setTotalCndHard(rs.getInt("TOTAL_CND_HARD"));
+	        	entity.setFileName(rs.getString("FILE_NAME"));
+
+	        }
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+		return entity;
+	}
 
 	/**
 	 * アバター情報の更新
