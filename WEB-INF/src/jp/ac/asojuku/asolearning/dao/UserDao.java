@@ -57,7 +57,7 @@ public class UserDao extends Dao {
 	private static final String MEMBER_SEARCH_ORDER = " ORDER BY u.USER_ID,u.COURSE_ID,t.TASK_ID";
 
 	private static final String MEMBER_SEARCH_SQL_FOR_TASKCSV =
-			"SELECT * FROM USER_TBL u , TASK_TBL t "
+			"SELECT * FROM USER_TBL u JOIN TASK_TBL t "
 			+ "LEFT JOIN RESULT_TBL ret ON(t.TASK_ID=ret.TASK_ID AND ret.USER_ID = u.USER_ID) "
 			+ "LEFT JOIN COURSE_MASTER c ON(c.COURSE_ID = u.COURSE_ID) "
 			+ "LEFT JOIN ROLE_MASTER r ON(r.ROLE_ID = u.ROLE_ID) "
@@ -822,7 +822,7 @@ public class UserDao extends Dao {
 		TaskTblEntity taskEntity = new TaskTblEntity();
 
 		taskEntity.setTaskId(rs.getInt("TASK_ID"));
-		taskEntity.setName(rs.getString("NAME"));
+		taskEntity.setName(rs.getString("t.NAME"));
 		taskEntity.setTaskQuestion(rs.getString("TASK_QUESTION"));
 		taskEntity.setCreateUserId(rs.getInt("CREATE_USER_ID"));
 		taskEntity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));

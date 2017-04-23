@@ -155,6 +155,7 @@ if( taskId == null){
 			                     	<button id="search"  class="btn btn-default">検索</button>
 		                        <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
 			                     	&nbsp;<button id="create_csv" class="btn btn-default">CSV出力</button>
+			                     	&nbsp;<button id="create_taskUsercsv" class="btn btn-default">課題状況CSV出力</button>
 			                     <%} %>
 			                     </div>
 		                     </div>
@@ -392,6 +393,73 @@ $('#search').on('click', function() {
     	        complete : function(xhr, textStatus) {
     	            // allow resubmit
     	            $("#create_csv").attr('disabled', false);
+    	        }
+    	    }).done(function(respText) {
+    	    	//alert(respText);
+    	    	if( respText == "error:nothing"){
+    	    		alert("出力対象がありません");
+    	    	}else{
+    	    		location.href = "dlcreUserCsv?fname="+respText;
+
+    	    	}
+
+    	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+
+    	    	//alert("er1r:"+errorThrown);
+    	        console.log( textStatus  + errorThrown);
+    	    });
+
+        });
+
+
+        //課題提出状況出力ボタンをクリックした時
+        $("#create_taskUsercsv").on("click",function(){
+
+        	var params = "";
+
+        	if( $("input[name='username']").val() != ""){
+        		params += "username="+ $("input[name='username']").val();
+        	}
+        	if( $("input[name='mailaddress']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "mailaddress="+ $("input[name='mailaddress']").val();
+        	}
+        	if( $("input[name='grade']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "grade="+ $("input[name='grade']").val();
+        	}
+        	if( $("select[name='<%=RequestConst.REQUEST_ROLE_ID%>']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "<%=RequestConst.REQUEST_ROLE_ID%>="+ $("select[name='<%=RequestConst.REQUEST_ROLE_ID%>']").val();
+        	}
+        	if( $("select[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "<%=RequestConst.REQUEST_COURSE_ID%>="+ $("select[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val();
+        	}
+        	if( $("select[name='<%=RequestConst.REQUEST_TASK_ID%>']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "<%=RequestConst.REQUEST_TASK_ID%>="+ $("select[name='<%=RequestConst.REQUEST_TASK_ID%>']").val();
+        	}
+        	if( $("select[name='<%=RequestConst.REQUEST_STATUS%>']").val() != ""){
+        		if(params.length>0){ params += "&";}
+        		params += "<%=RequestConst.REQUEST_STATUS%>="+ $("select[name='<%=RequestConst.REQUEST_STATUS%>']").val();
+        	}
+
+        	//alert("couseId:"+couseId+" taskId:"+taskId);
+    	    $.ajax({
+    	    	cache: false,
+    	        type : "GET",
+    	        url : "creTaskUserCsv",
+    	        data : params,
+    	        dataType : 'text',
+    	        timeout : 360000, // milliseconds
+    	        beforeSend : function(xhr, settings) {
+    	            // disturb double submit
+    	            $("#create_taskUsercsv").attr('disabled', true);
+    	        },
+    	        complete : function(xhr, textStatus) {
+    	            // allow resubmit
+    	            $("#create_taskUsercsv").attr('disabled', false);
     	        }
     	    }).done(function(respText) {
     	    	//alert(respText);

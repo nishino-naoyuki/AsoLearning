@@ -708,8 +708,8 @@ public class UserBoImpl implements UserBo {
 	@Override
 	public String createTaskUserCSV(SearchUserCondition cond) throws AsoLearningSystemErrException {
 
-		String csvStr = "";
 		UserDao dao = new UserDao();
+		String fname = "";
 
 		try {
 
@@ -722,12 +722,10 @@ public class UserBoImpl implements UserBo {
 			//CSV情報を作成する
 			String csvDir = AppSettingProperty.getInstance().getCsvDir();
 			String fileEnc = AppSettingProperty.getInstance().getCsvFileEncode();
-			String fname = "";
-			String head = "学科,学年,学籍番号,ニックネーム,点数";
 			String timeStr =
 					TimestampUtil.formattedTimestamp(TimestampUtil.current(), "yyyyMMddHHmmssSSS");
 			fname = CSV_PREFIX_USERTASK+timeStr+".csv";
-			StringBuilder sb = new StringBuilder();
+			StringBuilder header = new StringBuilder("学科,学年,学籍番号,ニックネーム,メアド");
 
 	        FileOutputStream fos = null;
 	        OutputStreamWriter osw = null;
@@ -738,17 +736,29 @@ public class UserBoImpl implements UserBo {
 	        	osw = new OutputStreamWriter(fos,fileEnc);
 	        	writer =new BufferedWriter(osw);
 
-	        	//ファイル出力
-	    		sb.append(head);
-	    		sb.append("\n");
-	    		osw.write(sb.toString());
+	    		boolean outputHeader = false;
 
 	    		for( UserTblEntity user : useEntityList ){
-	    			StringBuilder rankSb = new StringBuilder();
+	    			StringBuilder sb = new StringBuilder();
 
 	    			//課題ごとの結果を取得する
+	    			List<ResultTblEntity> retList = getResultList(user);
+	    			if( outputHeader == false){
+		    			//ヘッダー情報をセット
+		    			setTaskHeader(header,retList);
+		    			writer.write(header.toString());
+	    				outputHeader = true;
+	    			}
+	    			//ユーザー情報をStringBuilderにセット
+	    			setUserInfoForCSV(sb,user);
+	    			//結果情報をStringBuilderにセット
+	    			StringBuilder sbResult = setResultData(retList);
+	    			if( sbResult.length() > 0 ){
+	    				sb.append(sbResult);
+	    			}
+	    			sb.append("\n");
 
-	    			writer.write(rankSb.toString());
+	    			writer.write(sb.toString());
 	    		}
 
 	    		writer.flush();
@@ -796,6 +806,76 @@ public class UserBoImpl implements UserBo {
 			dao.close();
 		}
 
-		return csvStr;
+		return fname;
+	}
+
+	private void setTaskHeader(StringBuilder header,List<ResultTblEntity> retList){
+
+		for( ResultTblEntity ret : retList){
+			if( header.length() > 0 ){
+				header.append(",");
+			}
+			header.append(ret.getTaskTbl().getName());
+		}
+		header.append("\n");
+
+	}
+
+	/**
+	 * 結果データを設定
+	 * @param retList
+	 * @return
+	 */
+	private StringBuilder setResultData(List<ResultTblEntity> retList){
+		StringBuilder sbResult = new StringBuilder();
+
+		for( ResultTblEntity ret : retList){
+			if( sbResult.length() > 0 ){
+				sbResult.append(",");
+			}
+
+			if( ret.getHanded() ==  1){
+				//提出済み
+				sbResult.append(",").append(ret.getTotalScore());
+			}else{
+				sbResult.append(",");
+			}
+		}
+
+		return sbResult;
+	}
+
+	/**
+	 * CSVのユーザー情報をセット
+	 * @param sb
+	 * @param user
+	 * @throws AsoLearningSystemErrException
+	 */
+	private void setUserInfoForCSV(StringBuilder sb,UserTblEntity user) throws AsoLearningSystemErrException{
+
+		sb.append(user.getCourseMaster().getCourseName()).append(",");
+		sb.append(UserUtils.getGrade(user)).append(",");
+		sb.append(user.getName()).append(",");
+		sb.append( Digest.decNickName(user.getNickName(), user.getMailadress()) ).append(",");
+		sb.append(user.getMailadress());
+	}
+
+	/**
+	 * 結果情報を取得
+	 * @param user
+	 * @return
+	 */
+	private List<ResultTblEntity> getResultList(UserTblEntity user){
+
+
+		//課題ごとの結果を取得する
+		List<ResultTblEntity> retList = user.getResultTblSet();
+		if( CollectionUtils.isNotEmpty(retList) ){
+			retList.sort((a,b)-> a.getResultId() - b.getResultId() );
+		}else{
+			retList = new ArrayList();	//空のリスト作成
+		}
+
+		return retList;
 	}
 }

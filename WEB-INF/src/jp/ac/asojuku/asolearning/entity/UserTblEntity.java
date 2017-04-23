@@ -1,8 +1,10 @@
 package jp.ac.asojuku.asolearning.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -77,7 +79,7 @@ public class UserTblEntity implements Serializable {
 	private Set<HistoryTblEntity> historyTblSet;
 
 	/** 結果テーブル 一覧. */
-	private Set<ResultTblEntity> resultTblSet;
+	private List<ResultTblEntity> resultTblSet;
 
 	/** 学年（SQLで計算） */
 	private Integer grade;
@@ -90,7 +92,7 @@ public class UserTblEntity implements Serializable {
 	 */
 	public UserTblEntity() {
 		this.historyTblSet = new LinkedHashSet<HistoryTblEntity>();
-		this.resultTblSet = new LinkedHashSet<ResultTblEntity>();
+		this.resultTblSet = new ArrayList<ResultTblEntity>();
 	}
 
 	/**
@@ -485,7 +487,7 @@ public class UserTblEntity implements Serializable {
 	 * @param resultTblSet
 	 *            結果テーブル 一覧
 	 */
-	public void setResultTblSet(Set<ResultTblEntity> resultTblSet) {
+	public void setResultTblSet(List<ResultTblEntity> resultTblSet) {
 		this.resultTblSet = resultTblSet;
 	}
 
@@ -504,7 +506,7 @@ public class UserTblEntity implements Serializable {
 	 *
 	 * @return 結果テーブル 一覧
 	 */
-	public Set<ResultTblEntity> getResultTblSet() {
+	public List<ResultTblEntity> getResultTblSet() {
 		return this.resultTblSet;
 	}
 
