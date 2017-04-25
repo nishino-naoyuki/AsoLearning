@@ -15,6 +15,8 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jp.ac.asojuku.asolearning.config.AppSettingProperty;
+import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 
 /**
@@ -47,7 +49,7 @@ public class Dao {
 			ctx = new InitialContext();
 
         	DataSource ds =
-        		(DataSource)ctx.lookup("java:comp/env/jdbc/asolearning");
+        		(DataSource)ctx.lookup(AppSettingProperty.getInstance().getDBString());
 
 			// MySQLに接続
 	        con = ds.getConnection();
@@ -55,6 +57,8 @@ public class Dao {
 		} catch (NamingException e) {
 			throw new DBConnectException(e);
 		} catch (SQLException e) {
+			throw new DBConnectException(e);
+		} catch (AsoLearningSystemErrException e) {
 			throw new DBConnectException(e);
 		}
 
