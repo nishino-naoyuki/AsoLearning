@@ -137,6 +137,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 		                	<div class="panel-body">
 		                        <div class="table-responsive">
 		                        	<p><button id="delete_result"  class="btn btn-default"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> チェックしたデータの解答情報を削除</button></p>
+		                        	<p><button id="update_public"  class="btn btn-default"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> チェックした課題の公開情報をセット</button></p>
 		                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
 
 		                                <thead>
@@ -311,6 +312,23 @@ $('#delete_result').on('click', function() {
     	alert("err:"+textStatus);
         console.log( textStatus  + errorThrown);
     });
+});
+
+
+$('#update_public').on('click', function() {
+
+	var taskIds = $('.area:checked').map(function() {
+		  return $(this).val();
+		}).get();
+
+	if( taskIds.length == 0 ){
+		alert("課題を選択してください");
+		return;
+	}
+
+	var params="taskIds="+taskIds;
+
+	window.open("popupUpdatePublicTask?"+params,"WindowName","width=600,height=700,resizable=yes,scrollbars=yes");
 });
 </script>
 </body>

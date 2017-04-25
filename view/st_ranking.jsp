@@ -195,7 +195,7 @@ if( taskId == null){
 		                                        <td><%=ranking.getCourseName() %></td>
 		                                        <td><%=ranking.getGrade() %></td>
 		                                        <td>
-		                                        <a href='userDetail?userId=<%=ranking.getUserId()%>'><%=ranking.getName() %></a>
+		                                        <a href='userDetail?userId=<%=ranking.getUserId()%>' ><%=ranking.getName() %></a>
 		                                        </td>
 		                                        <td><%=ranking.getNickName() %></td>
 		                                        <td><%=ranking.getScore() %></td>
@@ -235,7 +235,7 @@ if( taskId == null){
 
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
-
+	<script type="text/javascript" src="view/js/thumbnail.js"></script>
 <script>
 $(function(){
 	//学科の選択が変わった時
