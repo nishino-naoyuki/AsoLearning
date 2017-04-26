@@ -363,22 +363,35 @@ public class TaskBoImpl implements TaskBo {
 
 		//公開情報
 		for( TaskPublicDto publicDto : taskPublicList){
-			TaskPublicTblEntity testPublic = new TaskPublicTblEntity();
-			CourseMasterEntity courseMaster = new CourseMasterEntity();
-			PublicStatusMasterEntity publicStatus = new PublicStatusMasterEntity();
-
-			courseMaster.setCourseId(publicDto.getCourseId());
-			courseMaster.setCourseName(publicDto.getCourseName());
-			publicStatus.setStatusId(publicDto.getStatus().getId());
-
-			testPublic.setCourseMaster(courseMaster);
-			testPublic.setPublicStatusMaster(publicStatus);
-			testPublic.setPublicDatetime(SqlDateUtil.getDateFrom(publicDto.getPublicDatetime(), "yyyy/MM/dd"));
-			testPublic.setEndDatetime(SqlDateUtil.getDateFrom(publicDto.getEndDatetime(), "yyyy/MM/dd"));
-
+			//DTO -> Entity
+			TaskPublicTblEntity testPublic = getTaskPublicTblEntityFromDto(publicDto);
 			entity.addTaskPublicTbl(testPublic);
 		}
 		return entity;
+	}
+
+	/**
+	 * 公開情報のDTOをEntityに変換する
+	 * @param publicDto
+	 * @return
+	 * @throws ParseException
+	 */
+	private TaskPublicTblEntity getTaskPublicTblEntityFromDto(TaskPublicDto publicDto) throws ParseException{
+
+		TaskPublicTblEntity testPublic = new TaskPublicTblEntity();
+		CourseMasterEntity courseMaster = new CourseMasterEntity();
+		PublicStatusMasterEntity publicStatus = new PublicStatusMasterEntity();
+
+		courseMaster.setCourseId(publicDto.getCourseId());
+		courseMaster.setCourseName(publicDto.getCourseName());
+		publicStatus.setStatusId(publicDto.getStatus().getId());
+
+		testPublic.setCourseMaster(courseMaster);
+		testPublic.setPublicStatusMaster(publicStatus);
+		testPublic.setPublicDatetime(SqlDateUtil.getDateFrom(publicDto.getPublicDatetime(), "yyyy/MM/dd"));
+		testPublic.setEndDatetime(SqlDateUtil.getDateFrom(publicDto.getEndDatetime(), "yyyy/MM/dd"));
+
+		return testPublic;
 	}
 
 	@Override
@@ -606,5 +619,51 @@ public class TaskBoImpl implements TaskBo {
 			dao.close();
 		}
 
+	}
+
+	/* (非 Javadoc)
+	 * @see jp.ac.asojuku.asolearning.bo.TaskBo#updatePublicState(java.util.List, java.util.List)
+	 */
+	public void updatePublicState(List<String> taskIdList,List<TaskPublicDto> taskPublicList) throws AsoLearningSystemErrException{
+
+		TaskDao dao = new TaskDao();
+
+		try {
+			dao.connect();
+
+			List<TaskPublicTblEntity> publicEntityList = new ArrayList<TaskPublicTblEntity>();
+			//DTO→Entity変換
+			for( TaskPublicDto publicDto : taskPublicList){
+				//DTO -> Entity
+				TaskPublicTblEntity testPublic = getTaskPublicTblEntityFromDto(publicDto);
+				publicEntityList.add(testPublic);
+			}
+
+			//IDリスト分ループ
+			for( String taskId : taskIdList){
+				Integer itaskId = Integer.parseInt(taskId);
+				//更新！
+				dao.updatePublicState(itaskId, publicEntityList);
+			}
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (NumberFormatException e) {
+			logger.warn("数値変換エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (ParseException e) {
+			logger.warn("パースエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
 	}
 }

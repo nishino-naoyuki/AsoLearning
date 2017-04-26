@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,12 +149,64 @@ public class UpdateTaskConfirmServlet extends BaseServlet {
 			TaskValidator.taskName(dto.getTaskName(), errors);
 		}
 		TaskValidator.question(dto.getQuestion(), errors);
-		TaskValidator.publicStateList(dto.getTaskPublicList(), errors);
 		TaskValidator.testcaseList(dto.getTaskTestCaseDtoList(), errors);
 		TaskValidator.diffcalty(dto.getDifficalty(), errors);
-		//すでにだれかが回答している（結果がある）課題は変更不可
-		TaskValidator.isExistResult(dto.getTaskId(), errors);
+		//公開情報以外の修正で、すでにだれかが回答している（結果がある）課題は変更不可
+		if( isChangeTaskInfoWithoutPublicState(dto,taskNow)){
+			TaskValidator.isExistResult(dto.getTaskId(), errors);
+		}
+
+		TaskValidator.publicStateList(dto.getTaskPublicList(), errors);
 	}
+
+	/**
+	 * 公開情報の課題情報を更新したかどうかを判定する
+	 * @param dto
+	 * @param taskNow
+	 * @return
+	 */
+	private boolean isChangeTaskInfoWithoutPublicState(TaskDto dto,TaskDto taskNow){
+
+		//課題名
+		if( !dto.getTaskName().equals(taskNow.getTaskName())){
+			return true;
+		}
+		//問題文
+		if( !dto.getQuestion().equals(taskNow.getQuestion())){
+			return true;
+		}
+		//難易度
+		if( !dto.getDifficalty().equals(taskNow.getDifficalty())){
+			return true;
+		}
+		//テストケース
+		List<TaskTestCaseDto> testcaseLit = dto.getTaskTestCaseDtoList();
+		List<TaskTestCaseDto> nowTestcaseLit = taskNow.getTaskTestCaseDtoList();
+		if( CollectionUtils.size(testcaseLit) !=
+				CollectionUtils.size(nowTestcaseLit)){
+			//テストケースの数が変わっている
+			return true;
+		}
+		boolean bDiffFlag = false;
+		for( int i = 0; i < testcaseLit.size();i++){
+			Integer marks = testcaseLit.get(i).getAllmostOfMarks();
+			Integer nwMarks = nowTestcaseLit.get(i).getAllmostOfMarks();
+
+			if( !marks.equals(nwMarks) ){
+				bDiffFlag = true;
+				break;
+			}
+		}
+
+		//違いがあった場合はtrueをかえす
+		if( bDiffFlag ){
+			return true;
+		}
+
+		//変更は無かった
+		return false;
+	}
+
 
 	/**
 	 * パラメータをセット

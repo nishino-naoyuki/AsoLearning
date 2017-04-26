@@ -351,7 +351,6 @@ $('#updateButton').on('click', function() {
 				"&ava_fronthair="+ava_fronthair+
 				"&ava_acc1="+ava_acc1+
 				"&ava_acc2="+ava_acc2;
-alert(params);
     $.ajax({
     	cache: false,
         type : 'GET',

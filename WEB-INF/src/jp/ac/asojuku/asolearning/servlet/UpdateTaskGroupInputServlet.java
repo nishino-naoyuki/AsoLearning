@@ -22,6 +22,7 @@ import jp.ac.asojuku.asolearning.bo.impl.CourseBoImpl;
 import jp.ac.asojuku.asolearning.dto.CourseDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.RequestConst;
+import jp.ac.asojuku.asolearning.util.Digest;
 import jp.ac.asojuku.asolearning.util.TimestampUtil;
 
 /**
@@ -58,8 +59,9 @@ public class UpdateTaskGroupInputServlet extends BaseServlet {
 		String[] arryTaskId = taskIds.split(",");
 		//タスクをListに変換
 		List<String> taskList = Arrays.asList(arryTaskId);
-		String name = RequestConst.REQUEST_TASKGRP_ID+TimestampUtil.currentString();
-		//セッションからログイン情報を取得
+		//セッションに保存する際に、値が被らないように現在時刻のハッシュ値をキーとして保存する
+		String name = Digest.create(RequestConst.REQUEST_TASKGRP_ID+TimestampUtil.currentString());
+		//セッションへタスクIDをセット
 		HttpSession session = req.getSession(false);
 		if( session != null ){
 			session.setAttribute(name, taskList);

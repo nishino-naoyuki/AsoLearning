@@ -99,7 +99,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                		</td>
 	                                		<td>
 	                                            <select class="form-control" name="<%=dto.getId()%>-course">
-	                                                <option value="<%=TaskPublicStateId.PRIVATE.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PRIVATE? "selected":""))%>><%=TaskPublicStateId.PRIVATE.getMsg1()%></option>
+	                                                <option value="<%=TaskPublicStateId.PRIVATE.getId()%>" <%=(pubDto==null? "selected":(pubDto.getStatus()==TaskPublicStateId.PRIVATE? "selected":""))%>><%=TaskPublicStateId.PRIVATE.getMsg1()%></option>
 	                                                <option value="<%=TaskPublicStateId.PUBLIC_MUST.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC_MUST? "selected":""))%>><%=TaskPublicStateId.PUBLIC_MUST.getMsg1()%></option>
 	                                                <option value="<%=TaskPublicStateId.PUBLIC.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC? "selected":""))%>><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
 	                                            </select>
@@ -172,7 +172,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 			}
 			<% for(CourseDto dto : list ){ %>
 			if(param.length>0){ param += "&";}
-			param += "<%=dto.getId()%>-course=" + $("input[name='<%=dto.getId()%>-course']").val();
+			param += "<%=dto.getId()%>-course=" + $("[name='<%=dto.getId()%>-course']").val();
 			param += "&<%=dto.getId()%>-endterm=" + $("input[name='<%=dto.getId()%>-endterm']").val();
 			<%}%>
 
@@ -180,7 +180,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 		    $.ajax({
 		    	cache: false,
 		        type : 'GET',
-		        url : "s",
+		        url : "updateTaskGrpUpd",
 		        data :param,
 		        dataType : 'text',
 		        processData : false,

@@ -61,7 +61,7 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN TESTCASE_TABLE tc ON(t.TASK_ID = tc.TASK_ID) "
 			+ "LEFT JOIN RESULT_TBL r ON(t.TASK_ID = r.TASK_ID AND r.user_ID=?) "
 			+ "WHERE tp.COURSE_ID=? AND tp.STATUS_ID IN(1,2) "
-			+ "ORDER BY t.TASK_ID";
+			+ "ORDER BY t.NAME,t.TASK_ID";
 	private static final int TASK_LIST_SQL_USER_IDX = 1;
 	private static final int TASK_LIST_SQL_COURCE_IDX = 2;
 
@@ -134,6 +134,55 @@ public class TaskDao extends Dao {
 		super(con);
 	}
 
+	/**
+	 * 公開状況を更新する
+	 * @param taskId
+	 * @param taskPublicSet
+	 * @throws SQLException
+	 */
+	public void updatePublicState(Integer taskId,List<TaskPublicTblEntity> taskPublicSet) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+        	this.beginTranzaction();
+			ps = con.prepareStatement(TASKPUBLIC_UPDATE_SQL);
+
+			for(TaskPublicTblEntity pub : taskPublicSet){
+
+				ps.setInt(1, pub.getPublicStatusMaster().getStatusId());
+				if( pub.getPublicDatetime() != null){
+					ps.setDate(2, parseSQLLDateFromUtilData(pub.getPublicDatetime()) );
+				}else{
+					ps.setNull(2, java.sql.Types.DATE);
+				}
+				if( pub.getEndDatetime() != null){
+					ps.setDate(3, parseSQLLDateFromUtilData(pub.getEndDatetime()) );
+				}else{
+					ps.setNull(3, java.sql.Types.DATE);
+				}
+				ps.setInt(4, taskId);
+				ps.setInt(5, pub.getCourseMaster().getCourseId());
+
+				ps.addBatch();
+			}
+			ps.executeBatch();
+			//System.out.println("ret3"+ret3.length);
+
+	        //コミット
+	        this.commit();
+        } catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			this.rollback();
+			throw e;
+		} finally {
+			safeClose(ps,null);
+		}
+	}
 	/**
 	 * 学科を指定して、課題の一覧を取得する
 	 * 指定が無い場合は全部の課題を取得する

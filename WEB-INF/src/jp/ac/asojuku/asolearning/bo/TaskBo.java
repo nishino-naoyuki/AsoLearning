@@ -8,6 +8,7 @@ import java.util.List;
 import jp.ac.asojuku.asolearning.condition.SearchTaskCondition;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
+import jp.ac.asojuku.asolearning.dto.TaskPublicDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.json.JudgeResultJson;
 import jp.ac.asojuku.asolearning.json.TaskSearchResultJson;
@@ -19,6 +20,13 @@ import jp.ac.asojuku.asolearning.json.TaskSearchResultJson;
  */
 public interface TaskBo {
 
+	/**
+	 * 課題の一括更新
+	 * @param taskIdList
+	 * @param taskPublicList
+	 * @throws AsoLearningSystemErrException
+	 */
+	public void updatePublicState(List<String> taskIdList,List<TaskPublicDto> taskPublicList) throws AsoLearningSystemErrException;
 	/**
 	 * 課題の検索処理
 	 *
