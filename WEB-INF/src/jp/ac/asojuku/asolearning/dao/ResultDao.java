@@ -109,7 +109,7 @@ public class ResultDao extends Dao {
 	private static final String RESULT_RANKING_SQL_GROUPBY =
 			" GROUP BY r.USER_ID ";
 	private static final String RESULT_RANKING_SQL_ORDERBY =
-			" ORDER BY total DESC";
+			" ORDER BY rank_total DESC";
 	//挿入SQL
 	private static final String RESULT_INSERT_SQL =
 			"INSERT INTO RESULT_TBL "

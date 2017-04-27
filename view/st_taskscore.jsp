@@ -283,10 +283,10 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
                     <div class="col-lg-12">
 	                	<div class="panel panel-default">
 	                		<div class="panel-heading">
-	                			解答
+	                			提出した解答
 	                		</div>
 		                	<div class="panel-body">
-		                        <button id="answer_btn" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 解答確認</button>
+		                        <button id="answer_btn" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 提出した解答の確認</button>
 		                        <div id="answer" style="display: none;" >
 		                        <%= HtmlUtil.nl2be(resultDto.getAnswerString()) %>
 		                        </div>
