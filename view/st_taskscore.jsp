@@ -276,7 +276,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 	                	</div>
                 	</div>
                 </div>
-<% if( "user".equals(dispName) != true &&
+<% if( "user".equals(dispName) != true ||
 	   RoleId.STUDENT.equals(loginInfo.getRoleId()) != true ){ %>
                 <!-- /.row -->
                 <div class="row">
