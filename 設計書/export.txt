@@ -1,0 +1,1 @@
+mysqldump -uroot -r /home/ec2-user/staslearning.bakcup --single-transaction stasolearning
