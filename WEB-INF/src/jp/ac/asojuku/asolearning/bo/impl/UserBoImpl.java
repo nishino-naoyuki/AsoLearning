@@ -741,24 +741,27 @@ public class UserBoImpl implements UserBo {
 	    		for( UserTblEntity user : useEntityList ){
 	    			StringBuilder sb = new StringBuilder();
 
-	    			//課題ごとの結果を取得する
-	    			List<ResultTblEntity> retList = getResultList(user);
-	    			if( outputHeader == false){
-		    			//ヘッダー情報をセット
-		    			setTaskHeader(header,retList);
-		    			writer.write(header.toString());
-	    				outputHeader = true;
-	    			}
-	    			//ユーザー情報をStringBuilderにセット
-	    			setUserInfoForCSV(sb,user);
-	    			//結果情報をStringBuilderにセット
-	    			StringBuilder sbResult = setResultData(retList);
-	    			if( sbResult.length() > 0 ){
-	    				sb.append(sbResult);
-	    			}
-	    			sb.append("\n");
+	    			//学年の検索条件はここでは軸
+	    			if( isNotSettingCondition(cond) ||	isMatchGrade(cond,UserUtils.getGrade(user)) ){
+		    			//課題ごとの結果を取得する
+		    			List<ResultTblEntity> retList = getResultList(user);
+		    			if( outputHeader == false){
+			    			//ヘッダー情報をセット
+			    			setTaskHeader(header,retList);
+			    			writer.write(header.toString());
+		    				outputHeader = true;
+		    			}
+		    			//ユーザー情報をStringBuilderにセット
+		    			setUserInfoForCSV(sb,user);
+		    			//結果情報をStringBuilderにセット
+		    			StringBuilder sbResult = setResultData(retList);
+		    			if( sbResult.length() > 0 ){
+		    				sb.append(sbResult);
+		    			}
+		    			sb.append("\n");
 
-	    			writer.write(sb.toString());
+		    			writer.write(sb.toString());
+	    			}
 	    		}
 
 	    		writer.flush();
@@ -830,9 +833,6 @@ public class UserBoImpl implements UserBo {
 		StringBuilder sbResult = new StringBuilder();
 
 		for( ResultTblEntity ret : retList){
-			if( sbResult.length() > 0 ){
-				sbResult.append(",");
-			}
 
 			if( ret.getHanded() ==  1){
 				//提出済み
@@ -871,7 +871,7 @@ public class UserBoImpl implements UserBo {
 		//課題ごとの結果を取得する
 		List<ResultTblEntity> retList = user.getResultTblSet();
 		if( CollectionUtils.isNotEmpty(retList) ){
-			retList.sort((a,b)-> a.getResultId() - b.getResultId() );
+			retList.sort((a,b)-> a.getTaskTbl().getTaskId() - b.getTaskTbl().getTaskId() );
 		}else{
 			retList = new ArrayList();	//空のリスト作成
 		}

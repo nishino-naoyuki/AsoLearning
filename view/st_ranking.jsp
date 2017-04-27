@@ -295,6 +295,14 @@ $(function(){
 	        data : {"couseId":couseId, "taskId":taskId },
 	        dataType : 'text',
 	        timeout : 360000, // milliseconds
+	        beforeSend : function(xhr, settings) {
+	            // disturb double submit
+	            $("#create_csv").attr('disabled', true);
+	        },
+	        complete : function(xhr, textStatus) {
+	            // allow resubmit
+	            $("#create_csv").attr('disabled', false);
+	        }
 
 	    }).done(function(respText) {
 	    	//alert(respText);
@@ -305,11 +313,11 @@ $(function(){
 	    	}
 
 	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
-
-	    	//alert("err:"+textStatus);
+	    	//alert(errorThrown);
 	        console.log( textStatus  + errorThrown);
 	    });
 
+	    return false;
     });
 <%}%>
     $(document).ready(function() {

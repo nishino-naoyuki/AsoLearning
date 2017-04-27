@@ -77,6 +77,9 @@ public class UpdateTaskGroupUpdateServlet extends BaseServlet {
 			//更新処理
 			taskBo.updatePublicState(taskList, taskPublicList);
 
+			//取得後は不要なのでセッションから削除
+			session.removeAttribute(taskIdsSessionName);
+
 		}catch(Exception e){
 			errMsg = "処理に失敗しました";
 		}
