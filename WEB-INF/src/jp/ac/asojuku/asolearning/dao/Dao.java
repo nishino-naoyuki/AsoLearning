@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -124,6 +125,9 @@ public class Dao {
 		return new java.sql.Date(jDate.getTime());
 	}
 
+	protected Timestamp parseTimeStampFromUtilData(java.util.Date jDate){
+		return new Timestamp(jDate.getTime());
+	}
 	protected Integer fixInt(int value, boolean isNull) {
 	    return isNull ? null : value;
 	}
