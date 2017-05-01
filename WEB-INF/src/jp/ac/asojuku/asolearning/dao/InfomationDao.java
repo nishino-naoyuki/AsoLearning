@@ -105,7 +105,7 @@ public class InfomationDao extends Dao {
         try {
     		// ステートメント生成
         	StringBuffer sb = new StringBuffer(INFO_SEARCH);
-        	createWhereString(sb,cond);
+        	sb.append(createWhereString(cond)) ;
         	sb.append(INFO_SEARCH_ORDER_BY);
 
 			ps = con.prepareStatement(sb.toString());
@@ -208,7 +208,9 @@ public class InfomationDao extends Dao {
 	 * @param sb
 	 * @param cond
 	 */
-	private void createWhereString(StringBuffer sb,SearchInfomationCondition cond){
+	private StringBuffer createWhereString(SearchInfomationCondition cond){
+
+		StringBuffer sb = new StringBuffer();
 
 		//・作成者のメールアドレス（部分一致）
 		if( StringUtils.isNotEmpty(cond.getMailAddress() ) ){
@@ -233,6 +235,8 @@ public class InfomationDao extends Dao {
 		if( sb.length() > 0 ){
 			sb.insert(0, " WHERE ");
 		}
+
+		return sb;
 	}
 
 	/**

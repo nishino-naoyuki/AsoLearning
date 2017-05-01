@@ -3,7 +3,11 @@
  */
 package jp.ac.asojuku.asolearning.bo;
 
+import java.util.List;
+
+import jp.ac.asojuku.asolearning.condition.SearchInfomationCondition;
 import jp.ac.asojuku.asolearning.dto.InfomationDto;
+import jp.ac.asojuku.asolearning.dto.InfomationSearchResultDto;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 
@@ -13,6 +17,14 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  *
  */
 public interface InfomationBo {
+
+	/**
+	 * 検索処理
+	 * @param cond
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	public List<InfomationSearchResultDto> search(SearchInfomationCondition cond) throws AsoLearningSystemErrException;
 
 	InfomationDto get(LogonInfoDTO logon) throws AsoLearningSystemErrException;
 }
