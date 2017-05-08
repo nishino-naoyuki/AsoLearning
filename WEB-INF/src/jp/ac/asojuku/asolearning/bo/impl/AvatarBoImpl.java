@@ -60,6 +60,10 @@ public class AvatarBoImpl implements AvatarBo {
 					sb.append(",");
 				}
 				sb.append(id);
+				//アバターのファイル名をセットする
+				AvatarMasterEntity avaEntity = dao.getBy(id);
+				avatarDto.setAvatarDto(kind, id, avaEntity.getFileName());
+
 			}
 
 			//アバターの設定を行う

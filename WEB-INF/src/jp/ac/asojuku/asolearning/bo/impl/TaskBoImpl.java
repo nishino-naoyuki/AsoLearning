@@ -115,7 +115,7 @@ public class TaskBoImpl implements TaskBo {
 
 			//課題リスト情報を取得
 			List<TaskTblEntity> entityList =
-					dao.getTaskList(user.getUserId(), user.getCourseId(), 0, 10);
+					dao.getTaskList(user.getUserId(), user.getCourseId(), user.getRoleId());
 
 
 			//会員テーブル→ログイン情報

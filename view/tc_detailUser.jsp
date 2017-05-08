@@ -128,8 +128,12 @@ AvatarSettingDto avDto = userDto.getAvatar();
 													<img id="ava_nose" src="view/img/avatar/<%=AvatarKind.NOSE.getDir()%>/<%=avDto.getAvatarName(AvatarKind.NOSE) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.NOSE) %>" />
 													<img id="ava_mouth" src="view/img/avatar/<%=AvatarKind.MOUTH.getDir()%>/<%=avDto.getAvatarName(AvatarKind.MOUTH) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.MOUTH) %>" />
 													<img id="ava_fronthair" src="view/img/avatar/<%=AvatarKind.FRONT_HAIR.getDir()%>/<%=avDto.getAvatarName(AvatarKind.FRONT_HAIR) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.FRONT_HAIR) %>" />
+													<% if( avDto.getAvatarName(AvatarKind.ACC1) != null ){ %>
 													<img id="ava_acc1" src="view/img/avatar/<%=AvatarKind.ACC1.getDir()%>/<%=avDto.getAvatarName(AvatarKind.ACC1) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.ACC1) %>" />
+													<% } %>
+													<% if( avDto.getAvatarName(AvatarKind.ACC2) != null ){ %>
 													<img id="ava_acc2" src="view/img/avatar/<%=AvatarKind.ACC2.getDir()%>/<%=avDto.getAvatarName(AvatarKind.ACC2) %>" alt="" class="avatar_absolute" data-avatar-id="<%=avDto.getAvatarId(AvatarKind.ACC2) %>"  />
+													<% } %>
 												</div>
 	                                		</div>
 	                                		</td>

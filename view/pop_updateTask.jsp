@@ -176,7 +176,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 			param += "&<%=dto.getId()%>-endterm=" + $("input[name='<%=dto.getId()%>-endterm']").val();
 			<%}%>
 
-			alert(param);
+			//alert(param);
 		    $.ajax({
 		    	cache: false,
 		        type : 'GET',

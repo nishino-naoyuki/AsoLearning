@@ -46,3 +46,25 @@ div#title h1 {
 .avatar_absolute {
     position: absolute;
 }
+
+
+.avatar_relative_small {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+.avatar_absolute_small {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+}
+
+.avatar_relative_mini {
+    position: relative;
+    width: 50px;
+}
+.avatar_absolute_mini {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+}

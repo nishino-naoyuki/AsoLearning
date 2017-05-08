@@ -46,7 +46,7 @@
     	<copy todir="war/build/classes">
     		 <fileset dir="WEB-INF/src/" includes="message.properties"/>
    		 	 <fileset dir="linux_setting/" includes="app.properties"/>
-   		 	 <fileset dir="WEB-INF/src/" includes="*.xml"/>
+  		 	 <fileset dir="linux_setting/" includes="logback.xml"/>
     	</copy>
     	<copy todir="war/build/view">
     		 <fileset dir="view" includes="**/*.*"/>

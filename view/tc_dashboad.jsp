@@ -7,6 +7,8 @@
 <%@ page import="jp.ac.asojuku.asolearning.param.RequestConst" %>
 <%@ page import="java.util.List" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.err.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.param.*" %>
 	<link rel="shortcut icon" href="view/ico/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,6 +19,7 @@
     <title>ダッシュボード</title>
 
     <!-- Bootstrap Core CSS -->
+    <link href="view/css/main.css" rel="stylesheet">
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
@@ -59,7 +62,9 @@
 
             <!-- /.navbar-static-side -->
         </nav>
-
+<%
+LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
+%>
         <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid">

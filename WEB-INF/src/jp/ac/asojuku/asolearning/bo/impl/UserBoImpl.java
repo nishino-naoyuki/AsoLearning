@@ -441,7 +441,7 @@ public class UserBoImpl implements UserBo {
 			UserTblEntity userEntity = dao.detail(userId);
 			//課題リスト情報を取得
 			List<TaskTblEntity> entityList =
-					taskdao.getTaskList(userId, userEntity.getCourseMaster().getCourseId(), 0, 10);
+					taskdao.getTaskList(userId, userEntity.getCourseMaster().getCourseId(), userEntity.getRoleMaster().getRoleId());
 
 			//Entity -> Dto
 			AvatarDao avatarDao = new AvatarDao(dao.getConnection());

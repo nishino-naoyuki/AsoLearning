@@ -21,6 +21,7 @@ import jp.ac.asojuku.asolearning.entity.TaskPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.TestcaseTableEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
+import jp.ac.asojuku.asolearning.param.RoleId;
 
 /**
  * 課題DAO
@@ -60,8 +61,9 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "LEFT JOIN TESTCASE_TABLE tc ON(t.TASK_ID = tc.TASK_ID) "
 			+ "LEFT JOIN RESULT_TBL r ON(t.TASK_ID = r.TASK_ID AND r.user_ID=?) "
-			+ "WHERE tp.COURSE_ID=? AND tp.STATUS_ID IN(1,2) "
-			+ "ORDER BY t.NAME,t.TASK_ID";
+			+ "WHERE tp.COURSE_ID=? ";
+	private static final String TASK_LIST_WHERE = " AND tp.STATUS_ID IN(1,2) ";
+	private static final String TASK_LIST_ORDERBY2 = " ORDER BY t.NAME,t.TASK_ID ";
 	private static final int TASK_LIST_SQL_USER_IDX = 1;
 	private static final int TASK_LIST_SQL_COURCE_IDX = 2;
 
@@ -104,6 +106,10 @@ public class TaskDao extends Dao {
 			"UPDATE TASK_PUBLIC_TBL SET "
 			+ "STATUS_ID=?,PUBLIC_DATETIME=?,END_DATETIME=? "
 			+ "WHERE TASK_ID=? AND COURSE_ID=?";
+	private static final String TASKTESTCASE_SELECT_SQL =
+			"SELECT COUNT(TASK_ID) as c "
+			+ "FROM TESTCASE_TABLE tc "
+			+ "WHERE tc.TASK_ID = ? AND tc.TESTCASE_ID=?";
 
 	private static final String TASK_NAME_SQL =
 			"SELECT * FROM TASK_TBL t "
@@ -536,7 +542,7 @@ public class TaskDao extends Dao {
 		}
 	}
 
-	public List<TaskTblEntity> getTaskList(Integer studentId,Integer courseId,Integer offset,Integer count) throws SQLException{
+	public List<TaskTblEntity> getTaskList(Integer studentId,Integer courseId,Integer roleId) throws SQLException{
 
 		if( con == null ){
 			return null;
@@ -549,14 +555,19 @@ public class TaskDao extends Dao {
 
         try {
     		// ステートメント生成
-			ps = con.prepareStatement(TASK_LIST_SQL);
+        	StringBuilder sb = new StringBuilder(TASK_LIST_SQL);
 
+			if( RoleId.STUDENT.equals(roleId)){
+				sb.append(TASK_LIST_WHERE);
+			}
+			sb.append(TASK_LIST_ORDERBY2);
+
+			ps = con.prepareStatement(sb.toString());
 	        ps.setInt(TASK_LIST_SQL_USER_IDX, studentId);
 	        ps.setInt(TASK_LIST_SQL_COURCE_IDX, courseId);
 
 	        // SQLを実行
 	        rs = ps.executeQuery();
-
 
 	        //値を取り出す
 	        int taskId = -1;
@@ -717,6 +728,7 @@ public class TaskDao extends Dao {
 		PreparedStatement ps1 = null;
 		PreparedStatement ps2 = null;
 		PreparedStatement ps3 = null;
+		PreparedStatement ps4 = null;
 
         try {
         	this.beginTranzaction();
@@ -734,29 +746,7 @@ public class TaskDao extends Dao {
 
         	////////////////////////////
         	//TASKTESTCASE_INSERT_SQL
-			Set<TestcaseTableEntity> testCaseSet = entity.getTestcaseTableSet();
-
-			ps2 = con.prepareStatement(TASKTESTCASE_UPDATE_SQL);
-
-			int caseId = 1;
-			for(TestcaseTableEntity testCase : testCaseSet){
-
-				ps2.setInt(1, testCase.getAllmostOfMarks());
-				ps2.setString(2, testCase.getOutputFileName());
-				if( StringUtils.isNotEmpty(testCase.getInputFileName())){
-					ps2.setString(3, testCase.getInputFileName());
-				}else{
-					ps2.setNull(3, java.sql.Types.DATE);
-				}
-				ps2.setInt(4, entity.getTaskId());
-				ps2.setInt(5, caseId);
-
-				ps2.addBatch();
-				caseId++;
-			}
-
-			ps2.executeBatch();
-			//System.out.println("ret2"+ret2.length);
+        	updateTestcase(entity);
 
         	////////////////////////////
         	//TASK_PUBLIC_TBL
@@ -797,6 +787,87 @@ public class TaskDao extends Dao {
 			safeClose(ps2,null);
 			safeClose(ps3,null);
 		}
+	}
+
+	/**
+	 * テストケースの更新
+	 * @param entity
+	 * @throws SQLException
+	 */
+	private void updateTestcase(TaskTblEntity entity) throws SQLException{
+
+		PreparedStatement ps2 = null;
+		PreparedStatement ps4 = null;
+
+		Set<TestcaseTableEntity> testCaseSet = entity.getTestcaseTableSet();
+
+		ps2 = con.prepareStatement(TASKTESTCASE_UPDATE_SQL);
+		ps4 = con.prepareStatement(TASKTESTCASE_INSERT_SQL);
+
+		int caseId = 1;
+		for(TestcaseTableEntity testCase : testCaseSet){
+
+			if( isExistTestcase(entity.getTaskId(),caseId) ){
+				//テストケースがある場合はUPDATE文を実行
+				ps2.setInt(1, testCase.getAllmostOfMarks());
+				ps2.setString(2, testCase.getOutputFileName());
+				if( StringUtils.isNotEmpty(testCase.getInputFileName())){
+					ps2.setString(3, testCase.getInputFileName());
+				}else{
+					ps2.setNull(3, java.sql.Types.DATE);
+				}
+				ps2.setInt(4, entity.getTaskId());
+				ps2.setInt(5, caseId);
+
+				ps2.addBatch();
+			}else{
+				//テストケースが無い場合はINSERT文を実行
+				ps4.setInt(1, entity.getTaskId());
+				ps4.setInt(2, caseId);
+				ps4.setInt(3, testCase.getAllmostOfMarks());
+				ps4.setString(4, testCase.getOutputFileName());
+				if( StringUtils.isNotEmpty(testCase.getInputFileName())){
+					ps4.setString(5, testCase.getInputFileName());
+				}else{
+					ps4.setNull(5, java.sql.Types.DATE);
+				}
+
+				ps4.addBatch();
+			}
+			caseId++;
+		}
+
+		ps2.executeBatch();
+		ps4.executeBatch();
+	}
+
+	/**
+	 * テストケースが存在するかどうかのチェック
+	 * @param taskId
+	 * @param testcaseId
+	 * @return
+	 * @throws SQLException
+	 */
+	private boolean isExistTestcase(int taskId,int testcaseId) throws SQLException{
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean isExist = false;
+
+		ps = con.prepareStatement(TASKTESTCASE_SELECT_SQL );
+
+		ps.setInt(1, taskId);
+		ps.setInt(2, testcaseId);
+
+		rs = ps.executeQuery();
+
+        while(rs.next()){
+        	if( rs.getInt("c") > 0 ){
+        		isExist = true;
+        	}
+        }
+
+        return isExist;
 	}
 
 	/**
