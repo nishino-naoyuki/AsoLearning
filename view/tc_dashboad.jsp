@@ -84,7 +84,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
                 </div>
                 <!-- /.row -->
 <%
-InfomationDto dto = (InfomationDto)request.getAttribute(RequestConst.REQUEST_INFO_DTO);
+InfomationListDto dto = (InfomationListDto)request.getAttribute(RequestConst.REQUEST_INFO_DTO);
 List<String> infoList = dto.getInfoList();
 %>
                 <div class="row">

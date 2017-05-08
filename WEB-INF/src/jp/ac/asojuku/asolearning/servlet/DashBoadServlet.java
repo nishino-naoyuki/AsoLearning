@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import jp.ac.asojuku.asolearning.bo.InfomationBo;
 import jp.ac.asojuku.asolearning.bo.impl.InfomationBoImpl;
-import jp.ac.asojuku.asolearning.dto.InfomationDto;
+import jp.ac.asojuku.asolearning.dto.InfomationListDto;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.RequestConst;
@@ -40,7 +40,7 @@ public class DashBoadServlet extends BaseServlet {
 
 		InfomationBo infoBo = new InfomationBoImpl();
 
-		InfomationDto dto = infoBo.get(loginInfo);
+		InfomationListDto dto = infoBo.get(loginInfo);
 
 		//リクエストにセット
 		req.setAttribute(RequestConst.REQUEST_INFO_DTO, dto);

@@ -111,7 +111,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 		                                		<th>課題名[必須]</th>
 		                                		<td>
 		                                		<div class="form-group">
-		                                			<input type="text" name="taskname" placeholder="課題名を記載してください" value="<%= (taskDto!=null ? taskDto.getTaskName():"") %>" >
+		                                			<input type="text" name="taskname" placeholder="課題名を記載してください" value="<%= (taskDto!=null ? taskDto.getTaskName():"") %>" class="form-control" >
 		                                		</div>
 		                                		</td>
 		                                	</tr>
@@ -131,7 +131,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 		                                		<th>問題文[必須]</th>
 		                                		<td>
 		                                		<div class="form-group">
-		                                			<textarea name="question" placeholder="問題文を記載してください" ><%= (taskDto!=null ? taskDto.getQuestion():"") %></textarea>
+		                                			<textarea name="question" placeholder="問題文を記載してください" class="form-control"><%= (taskDto!=null ? taskDto.getQuestion():"") %></textarea>
 		                                		</div>
 		                                		</td>
 		                                	</tr>

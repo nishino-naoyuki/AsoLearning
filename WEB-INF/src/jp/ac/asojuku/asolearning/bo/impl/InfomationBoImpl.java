@@ -15,7 +15,7 @@ import jp.ac.asojuku.asolearning.bo.InfomationBo;
 import jp.ac.asojuku.asolearning.condition.SearchInfomationCondition;
 import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dao.InfomationDao;
-import jp.ac.asojuku.asolearning.dto.InfomationDto;
+import jp.ac.asojuku.asolearning.dto.InfomationListDto;
 import jp.ac.asojuku.asolearning.dto.InfomationSearchResultDto;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.entity.InfoPublicTblEntity;
@@ -101,9 +101,9 @@ public class InfomationBoImpl implements InfomationBo {
 	 * @see jp.ac.asojuku.asolearning.bo.InfomationBo#get(jp.ac.asojuku.asolearning.dto.LogonInfoDTO)
 	 */
 	@Override
-	public InfomationDto get(LogonInfoDTO logon) throws AsoLearningSystemErrException {
+	public InfomationListDto get(LogonInfoDTO logon) throws AsoLearningSystemErrException {
 
-		InfomationDto dto = new InfomationDto();
+		InfomationListDto dto = new InfomationListDto();
 		InfomationDao dao = new InfomationDao();
 
 		try {

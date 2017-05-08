@@ -17,7 +17,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>課題作成</title>
+    <title>課題更新</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
@@ -84,11 +84,11 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            課題作成</small>
+                            課題更新</small>
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-pencil-square"></i> 課題作成
+                                <i class="fa fa-pencil-square"></i> 課題更新
                             </li>
                         </ol>
                     </div>

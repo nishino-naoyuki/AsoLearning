@@ -81,7 +81,7 @@
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-pencil-square"></i> お知らせ検索
+                                <i class="fa fa-search"></i> お知らせ検索
                             </li>
                         </ol>
                     </div>
@@ -126,6 +126,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 				                </div>
 			                     <div class="col-lg-12">
 			                     	<button id="search"  class="btn btn-default">検索</button>
+                 					<button id="create"  class="btn btn-default">新規作成</button>
 			                     </div>
 		                     </div>
 		                </div>
@@ -133,9 +134,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
                 </div>
 
                 <div class="row" id="search_nodata" style="display:none">
-                <div class="col-lg-12">
-                 	<button id="create"  class="btn btn-default">新規作成</button>
-                 </div>
+
                 検索結果０件
                 </div>
 
@@ -146,7 +145,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 	                			検索結果
 	                		</div>
 		                	<div class="panel-body">
-		                		<button id="create"  class="btn btn-default">新規作成</button>
+
 		                        <div class="table-responsive">
 		                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
 
@@ -210,6 +209,9 @@ $(document).ready(function() {
     });
 });
 
+$('#create').on('click', function() {
+	location.href = "tc_createInfo";
+});
 
 $('#search').on('click', function() {
 	var params = "";

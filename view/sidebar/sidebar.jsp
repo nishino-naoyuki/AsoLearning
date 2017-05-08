@@ -24,27 +24,27 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 if( PermissionChecker.check("00201", loginInfo.getRoleId())){
 %>
              <li>
-                 <a href="ranking"><i class="fa fa-graduation-cap fa-fw"></i>ランキング</a>
+                 <a href="ranking"><i class="fa fa-graduation-cap fa-fw"></i> ランキング</a>
              </li>
 <% }
   if( PermissionChecker.check("00501", loginInfo.getRoleId()) ){ %>
              <li>
-                 <a href="tc_createTask"><i class="fa fa-graduation-cap fa-fw"></i>課題作成</a>
+                 <a href="tc_createTask"><i class="fa fa-graduation-cap fa-fw"></i> 課題作成</a>
              </li>
 <% }
   if( PermissionChecker.check("00604", loginInfo.getRoleId()) ){ %>
              <li>
-                 <a href="tasksearch"><i class="fa fa-graduation-cap fa-fw"></i>課題検索（編集）</a>
+                 <a href="tasksearch"><i class="fa fa-search"></i> 課題検索（編集）</a>
              </li>
 <% }
   if( PermissionChecker.check("00802", loginInfo.getRoleId()) ){ %>
              <li>
-                 <a href="tc_createUser"><i class="fa fa-user fa-fw"></i>ユーザー作成</a>
+                 <a href="tc_createUser"><i class="fa fa-user fa-fw"></i> ユーザー作成</a>
              </li>
 <% }
   if( PermissionChecker.check("00801", loginInfo.getRoleId()) ){ %>
              <li>
-                 <a href="usersearch"><i class="fa fa-user fa-fw"></i>ユーザー検索</a>
+                 <a href="usersearch"><i class="fa fa-search"></i> ユーザー検索</a>
              </li>
 <% }
   if( PermissionChecker.check("01001", loginInfo.getRoleId()) ){ %>
