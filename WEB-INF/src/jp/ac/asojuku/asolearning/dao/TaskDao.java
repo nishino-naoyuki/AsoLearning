@@ -40,7 +40,7 @@ public class TaskDao extends Dao {
 	private static final String TASK_LIST_WHERE_TASKNAME = "t.name LIKE ?";
 	private static final String TASK_LIST_WHERE_CREATOR = "u.MAILADRESS LIKE ?";
 	private static final String TASK_LIST_WHERE_COURSE = "tp.COURSE_ID=? AND tp.STATUS_ID in (1,2)";
-	private static final String TASK_LIST_ORDERBY = " ORDER BY t.TASK_ID,tp.COURSE_ID";
+	private static final String TASK_LIST_ORDERBY = " ORDER BY t.NAME,t.TASK_ID,tp.COURSE_ID";
 
 	//ユーザーを指定して、課題一覧を取得するSQL
 	private static final String TASK_COURSE_LIST_SQL =
@@ -75,7 +75,8 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "LEFT JOIN TESTCASE_TABLE tc ON(t.TASK_ID = tc.TASK_ID) "
 			+ "LEFT JOIN RESULT_TBL r ON(t.TASK_ID = r.TASK_ID AND r.user_ID=?) "
-			+ "WHERE tp.COURSE_ID=? AND tp.STATUS_ID IN(1,2) AND t.TASK_ID = ? ";
+			+ "WHERE tp.COURSE_ID=? AND t.TASK_ID = ? ";
+	private static final String TASK_DETAIL_WHERE_SQL = " AND tp.STATUS_ID IN(1,2) ";
 	private static final int TASK_DETAIL_SQL_USER_IDX = 1;
 	private static final int TASK_DETAIL_SQL_COURCE_IDX = 2;
 	private static final int TASK_DETAIL_SQL_TASKID_IDX = 3;
@@ -618,7 +619,7 @@ public class TaskDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public TaskTblEntity getTaskDetal(int studentId,int courseId,int taskid) throws SQLException{
+	public TaskTblEntity getTaskDetal(int studentId,int courseId,int taskid,int roleId) throws SQLException{
 
 		if( con == null ){
 			return null;
@@ -630,7 +631,12 @@ public class TaskDao extends Dao {
 
         try {
     		// ステートメント生成
-			ps = con.prepareStatement(TASK_DETAIL_SQL);
+        	StringBuilder sb = new StringBuilder(TASK_DETAIL_SQL);
+			if( RoleId.STUDENT.equals(roleId)){
+				sb.append(TASK_DETAIL_WHERE_SQL);
+			}
+
+			ps = con.prepareStatement(sb.toString());
 
 	        ps.setInt(TASK_DETAIL_SQL_USER_IDX, studentId);
 	        ps.setInt(TASK_DETAIL_SQL_COURCE_IDX, courseId);

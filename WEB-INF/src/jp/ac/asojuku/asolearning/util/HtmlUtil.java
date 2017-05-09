@@ -20,6 +20,10 @@ public class HtmlUtil {
 			return "";
 		}
 
+		text = text.replaceAll("&", "&amp;");
+		text = text.replaceAll("<", "&lt;");
+		text = text.replaceAll(">", "&gt;");
+		text = text.replaceAll("\"", "&quot;");
 		text = text.replaceAll("\n", "<BR>");
 		text = text.replaceAll("\r\n", "<BR>");
 		text = text.replaceAll("\t", "&nbsp&nbsp&nbsp&nbsp");

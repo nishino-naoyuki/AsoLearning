@@ -64,7 +64,7 @@ public class TaskBoImpl implements TaskBo {
 
 			//課題リスト情報を取得
 			TaskTblEntity entity =
-					dao.getTaskDetal(user.getUserId(), user.getCourseId(), taskId);
+					dao.getTaskDetal(user.getUserId(), user.getCourseId(), taskId,user.getRoleId());
 
 			if( entity == null ){
 				//ここで、EntityがNULLということは、課題IDが改ざんされたか、途中で設定が帰られたか
@@ -251,7 +251,7 @@ public class TaskBoImpl implements TaskBo {
 
 			//課題リスト情報を取得
 			TaskTblEntity entity =
-					dao.getTaskDetal(user.getUserId(), user.getCourseId(), taskId);
+					dao.getTaskDetal(user.getUserId(), user.getCourseId(), taskId,user.getRoleId());
 			if( entity == null ){
 				//ここで、EntityがNULLということは、課題IDが改ざんされたか、途中で設定が帰られたか
 				//戻値理にNULLを入れて上位に伝える
