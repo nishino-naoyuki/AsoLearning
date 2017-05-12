@@ -173,14 +173,16 @@ public class ResultBoImpl implements ResultBo {
 
 			int rank = 0;
 			float wkScore = Float.MAX_VALUE;
+			int count = 1;
 			for( ResultTblEntity retEntity : retEntityList){
 				//ランクはここでセット
 				if( wkScore > retEntity.getTotalScore()){
 					wkScore = retEntity.getTotalScore();
-					rank++;
+					rank = count;
 				}
 				RankingDto ranking = createRankingDto(retEntity,rank);
 				list.add(ranking);
+				count++;
 			}
 
 		} catch (DBConnectException e) {
