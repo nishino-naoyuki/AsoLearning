@@ -47,6 +47,13 @@ if( PermissionChecker.check("00201", loginInfo.getRoleId())){
                  <a href="usersearch"><i class="fa fa-search"></i> ユーザー検索</a>
              </li>
 <% }
+  if( PermissionChecker.check("01601", loginInfo.getRoleId()) ){ %>
+  <!--
+             <li>
+                 <a href="searchInfo"><i class="fa fa-desktop"></i> お知らせ情報</a>
+             </li>
+    -->
+<% }
   if( PermissionChecker.check("01001", loginInfo.getRoleId()) ){ %>
              <li>
                  <a href="csvEntry"><i class="fa fa-file fa-fw"></i>CSV処理</a>
