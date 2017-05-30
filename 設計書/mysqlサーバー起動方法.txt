@@ -1,0 +1,14 @@
+MySQL起動方法
+
+（１）PATHを設定する
+mysqldがある場所にPATHを設定する
+/usr/libexec
+#PATH=$PATH:/usr/libexec
+
+（２）mysqlサーバーを起動する
+sudo mysqld --user=root
+
+参考）
+http://qiita.com/akito1986/items/e9ca48cfcd56fdbf4c9d
+http://pocketstudio.jp/linux/?%A5%D1%A5%B9(PATH)%A4%CE%B3%CE%C7%A7%A4%C8%C0%DF%C4%EA%CA%FD%CB%A1%A4%CF%A1%A9
+http://worldofpillow.net/error-mysqld-root/

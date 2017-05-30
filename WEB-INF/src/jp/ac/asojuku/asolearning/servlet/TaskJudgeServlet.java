@@ -96,6 +96,8 @@ public class TaskJudgeServlet extends BaseServlet {
 			logger.error("IllegalStateException：",e);
 		} catch (ServletException e) {
 			logger.error("ServletException：",e);
+		} catch (Exception e) {
+			logger.error("Exception：",e);
         }finally{
         	if(out != null){
         		out.close();
