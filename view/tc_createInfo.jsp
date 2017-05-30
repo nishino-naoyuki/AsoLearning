@@ -76,7 +76,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
         <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid">
-				<form action="tc_confirmTask" enctype="multipart/form-data" method="post" >
+				<form action="tc_confirmInfo" enctype="multipart/form-data" method="post" >
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">

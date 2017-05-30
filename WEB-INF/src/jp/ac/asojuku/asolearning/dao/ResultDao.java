@@ -719,7 +719,8 @@ public class ResultDao extends Dao {
         	ps1.setFloat(3, resultEntity.getTotalScore());
         	ps1.setInt(4, resultEntity.getHanded());
 			if( resultEntity.getHandedTimestamp() != null){
-				ps1.setDate(5, parseSQLLDateFromUtilData(resultEntity.getHandedTimestamp()) );
+				//ps1.setDate(5, parseSQLLDateFromUtilData(resultEntity.getHandedTimestamp()) );
+				ps1.setTimestamp(5,new Timestamp(resultEntity.getHandedTimestamp().getTime())  );
 			}else{
 				ps1.setNull(5, java.sql.Types.DATE);
 			}
