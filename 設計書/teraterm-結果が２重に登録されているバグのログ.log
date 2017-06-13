@@ -1,0 +1,68 @@
+33U;S;E;R;_;T;B;L;
++---------+--------------------------+----------------------------------+-----------+--------------------------+--------------------+---------------------+-----------+---------+--------------+-----------------+-------------+----------------+---------------+-------------------+--------------+--------+---------------------+---------------------+
+| USER_ID | MAILADRESS               | PASSWORD                         | NAME      | NICK_NAME                | ACCOUNT_EXPRY_DATE | PASSWORD_EXPIRYDATE | COURSE_ID | ROLE_ID | IS_FIRST_FLG | CERTIFY_ERR_CNT | IS_LOCK_FLG | ADMISSION_YEAR | GRADUATE_YEAR | REPEAT_YEAR_COUNT | GIVE_UP_YEAR | REMARK | ENTRY_DATE          | UPDATE_DATE         |
++---------+--------------------------+----------------------------------+-----------+--------------------------+--------------------+---------------------+-----------+---------+--------------+-----------------+-------------+----------------+---------------+-------------------+--------------+--------+---------------------+---------------------+
+|       1 | nishino@asojuku.ac.jp    | cbf9365f1b0e0c9b6984baf4bb7d9416 | 123456789 | IC8sCCKBJVYdfMPLTzl7Gg== | NULL               | NULL                |         0 |       2 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 00:00:00 | 2017-03-06 00:00:00 |
+|       2 | himeno@asojuku.ac.jp     | f4c92c57d4f60e7f04e65566a322bfc4 | 01000001  | WSSSH8/KgecIeZEVO1xa4A== | NULL               | NULL                |         1 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|       3 | imamura@asojuku.ac.jp    | c49e91f0b8dd46cc6fdf14e041c0fdcb | 01000002  | ABonsYldnxZp9c2TG4nEKA== | NULL               | NULL                |         1 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|       4 | yoko_k@asojuku.ac.jp     | 1929a536c2b8018334f7a0574f029d11 | 01000003  | 9XSRPDYBjZdfLdLJ0Syi1w== | NULL               | NULL                |         1 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|       5 | kihara@asojuku.ac.jp     | b708e1e8229c70af55ce7d7bf9999c68 | 01000004  | gMnlNhePuJ80dlvN8I9Z1g== | NULL               | NULL                |         1 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|       6 | masatokg@asojuku.ac.jp   | f4253159a9f72ae08843e93937e14c2a | 02000001  | 8Rn8TTbV8RJW5saeWzSwEQ== | NULL               | NULL                |         2 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|       7 | nakahara@asojuku.ac.jp   | 5838b323540fe1993a8bafa17ff1900b | 02000002  | fuNzHmElEpBKTrBvJQawDA== | NULL               | NULL                |         2 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|       8 | m-motoda@asojuku.ac.jp   | ba7a4c0d876e58191d894999b335b5ba | 02000003  | 0U6fRrmNRfIjLhKL6x0yCw== | NULL               | NULL                |         2 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|       9 | fujisawa@asojuku.ac.jp   | 3f97e470203ac30f5fbaefeb6551dce1 | 02000004  | gCUq7YRwKLfCaN+xJJ+beQ== | NULL               | NULL                |         2 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      10 | kawano-k@asojuku.ac.jp   | 0aebc137a8293b9698893f8ccb623dcd | 00000001  | BmADyF7WbEVxCiFdqWUXUw== | NULL               | NULL                |         0 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      11 | y-kitaji@asojuku.ac.jp   | b013a1cc802090323e07df72b318c289 | 00000002  | +KdW9/t2CK5uBOJEeVhwmA== | NULL               | NULL                |         0 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      12 | tshimizu@asojuku.ac.jp   | ca3c713491e4208703a8d573a9926298 | 00000003  | epW0Q6HhGnRoOj01sJzdyQ== | NULL               | NULL                |         0 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      13 | fyamashi@asojuku.ac.jp   | f1a59e39df9e0b2af98d6a7f3d7deaeb | 03000001  | 2thUK35cXv875vG6RLbQ4w== | NULL               | NULL                |         3 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      14 | mtaka@asojuku.ac.jp      | ffb9af6c67b05008d23095aaa4890ef6 | 03000002  | pDso/npbJ/bW1XTgeKAWTQ== | NULL               | NULL                |         3 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      15 | kita@asojuku.ac.jp       | 7c91380076fb02ef1904df93cbb87c95 | 04000001  | Ap/s7b8z6kFE28FAENjkfA== | NULL               | NULL                |         4 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      16 | yoshiya@asojuku.ac.jp    | 93ac1abfc7fb70d101b8384737555a3d | 04000002  | +nnFEOL9QfQrC37Spfc8iQ== | NULL               | NULL                |         4 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      17 | kuboyama@asojuku.ac.jp   | 9637cc9fdae8598f8d73507027946a02 | 04000003  | 2bZ/VRDl7JVzT7G+bBling== | NULL               | NULL                |         4 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      18 | uchikosh@asojuku.ac.jp   | d2d7e471e1654ae48b722ea4d9d29af9 | 04000004  | jFEKyhVlrJLHzAePQLmVJA== | NULL               | NULL                |         4 |       1 |            1 |               0 |           0 |           NULL |          NULL |                 0 |         NULL | NULL   | 2017-03-06 09:17:24 | 2017-03-06 09:17:24 |
+|      19 | 1601227@st.asojuku.ac.jp | 6ea9832669001e0dcd828bd68ee47d44 | 1601227   | wT7aXIMzGBNLVbH038PLlA== | NULL               | NULL                |         0 |       0 |            1 |               0 |           0 |           2016 |          NULL |                 0 |         NULL | NULL   | 2017-03-28 04:05:33 | 2017-03-28 04:05:33 |
++---------+--------------------------+----------------------------------+-----------+--------------------------+--------------------+---------------------+-----------+---------+--------------+-----------------+-------------+----------------+---------------+-------------------+--------------+--------+---------------------+---------------------+
+19 rows in set (0.00 sec)
+
+MariaDB [asolearning]> select * from USER_TBL;HISTORY_TBL;
++------------+---------+-----------+---------------------+---------+
+| HISTORY_ID | USER_ID | ACTION_ID | ACTION_DATE         | MESSAGE |
++------------+---------+-----------+---------------------+---------+
+|          1 |       1 |         0 | 2017-03-06 08:48:35 |         |
+|          2 |       2 |         0 | 2017-03-06 09:19:05 |         |
+|          3 |       1 |         0 | 2017-03-07 05:15:58 |         |
+|          4 |       1 |         0 | 2017-03-07 08:10:53 |         |
+|          5 |       1 |         0 | 2017-03-13 03:26:32 |         |
+|          6 |       1 |         0 | 2017-03-15 08:50:09 |         |
+|          7 |       1 |         0 | 2017-03-21 06:30:00 |         |
+|          8 |       1 |         0 | 2017-03-23 04:19:33 |         |
+|          9 |       5 |         0 | 2017-03-23 04:35:11 |         |
+|         10 |       1 |         0 | 2017-03-23 05:44:46 |         |
+|         11 |       6 |         0 | 2017-03-27 07:37:30 |         |
+|         12 |       1 |         0 | 2017-03-28 03:37:01 |         |
+|         13 |       2 |         0 | 2017-03-28 03:49:16 |         |
+|         14 |       1 |         0 | 2017-03-28 03:49:37 |         |
+|         15 |       2 |         0 | 2017-03-28 04:06:08 |         |
+|         16 |      19 |         0 | 2017-03-28 04:13:27 |         |
+|         17 |       2 |         0 | 2017-03-28 04:18:36 |         |
+|         18 |      19 |         0 | 2017-03-28 04:28:18 |         |
+|         19 |       1 |         0 | 2017-03-28 04:38:50 |         |
+|         20 |       2 |         0 | 2017-03-28 05:54:09 |         |
+|         21 |       2 |         0 | 2017-03-28 05:54:40 |         |
++------------+---------+-----------+---------------------+---------+
+21 rows in set (0.00 sec)
+
+MariaDB [asolearning]> select u.USER_ID,r.TASK_ID,u.NAME,t.NAME,COUNT(u.USER_ID) from RESULT_TBL r  LEFT JOIN USER_TBL u ON(u.USER_ID=r.USER_ID)  LEFT JOIN TASK_TBL t  ON(t.TASK_ID=r.TASK_ID) GROUP BY u.USER_ID,r.TASK_ID HAVING COUNT(u.USER_ID)>=2;
++---------+---------+---------+----------------------------------------------+------------------+
+| USER_ID | TASK_ID | NAME    | NAME                                         | COUNT(u.USER_ID) |
++---------+---------+---------+----------------------------------------------+------------------+
+|      27 |      59 | 1701133 | [JSS-ST02-08]“V‹C—\•ñ                        |                2 |
+|      37 |      59 | 1701167 | [JSS-ST02-08]“V‹C—\•ñ                        |                2 |
+|      42 |      77 | 1701163 | [JSS-ST03-11]2i”‚ð•\Ž¦‚µ‚Ä‚Ý‚æ‚¤           |                3 |
+|      50 |      43 | 1701132 | [JSS-JK03-09]˜_—‰‰ŽZŽq‚X                    |                2 |
+|      53 |      38 | 1701138 | [JSS-JK03-04]˜_—‰‰ŽZŽq‚S                    |                2 |
+|      67 |      59 | 1701168 | [JSS-ST02-08]“V‹C—\•ñ                        |                2 |
++---------+---------+---------+----------------------------------------------+------------------+
+6 rows in set (0.01 sec)
+
+MariaDB [asolearning]> 

@@ -1,14 +1,14 @@
-MySQL‹N“®•û–@
+MySQLèµ·å‹•æ–¹æ³•
 
-i‚PjPATH‚ğİ’è‚·‚é
-mysqld‚ª‚ ‚éêŠ‚ÉPATH‚ğİ’è‚·‚é
+ï¼ˆï¼‘ï¼‰PATHã‚’è¨­å®šã™ã‚‹
+mysqldãŒã‚ã‚‹å ´æ‰€ã«PATHã‚’è¨­å®šã™ã‚‹
 /usr/libexec
 #PATH=$PATH:/usr/libexec
 
-i‚QjmysqlƒT[ƒo[‚ğ‹N“®‚·‚é
+ï¼ˆï¼’ï¼‰mysqlã‚µãƒ¼ãƒãƒ¼ã‚’èµ·å‹•ã™ã‚‹
 sudo mysqld --user=root
 
-Qlj
+å‚è€ƒï¼‰
 http://qiita.com/akito1986/items/e9ca48cfcd56fdbf4c9d
 http://pocketstudio.jp/linux/?%A5%D1%A5%B9(PATH)%A4%CE%B3%CE%C7%A7%A4%C8%C0%DF%C4%EA%CA%FD%CB%A1%A4%CF%A1%A9
 http://worldofpillow.net/error-mysqld-root/
