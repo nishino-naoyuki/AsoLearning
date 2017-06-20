@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBException;
 
@@ -59,7 +58,7 @@ public class JavaCProgramJudge implements Judge {
 	private final int MAX_LOC_SCORE_MAX = 100;
 	private final int AVR_MVG_SCORE_MAX = 5;
 	private final int AVR_LOC_SCORE_MAX = 50;
-	private final int PROCESS_TIMEOUT = 15;
+	private final int PROCESS_TIMEOUT = 10;
 
 	@Override
 	public JudgeResultJson judge(TaskTblEntity taskEntity,String dirName, String fileName,int userId,Connection con) throws IllegalJudgeFileException, AsoLearningSystemErrException {
@@ -247,7 +246,7 @@ public class JavaCProgramJudge implements Judge {
 	 */
 	private void execShell(TestcaseTableEntity testcase,String dirName, String fileName,String resultDir,String classDir) throws AsoLearningSystemErrException, IOException, InterruptedException{
 
-		boolean ret;
+		int ret;
 
 		String shellPath = AppSettingProperty.getInstance().getShellPath();
 
@@ -271,19 +270,18 @@ public class JavaCProgramJudge implements Judge {
 		//引数は常に5個渡す
 		ProcessBuilder pb =
 				new ProcessBuilder(shellPath,dirName,fileName,resultDir,className,
-						args[0],args[1],args[2],args[3],args[4]);
+						args[0],args[1],args[2],args[3],args[4],String.valueOf(PROCESS_TIMEOUT));
 		Process process = pb.start();
 
 		logger.trace("バッチ実行開始：");
 
 		//バッチ実行タイムアウトは１０秒
-		ret = process.waitFor(PROCESS_TIMEOUT,TimeUnit.SECONDS);
+		ret = process.waitFor();
 
-		if( !ret ){
-			//タイムアウトが発生
-			process.destroy(); // プロセスを強制終了
-			logger.warn("プロセスの実行がタイムアウトしました。強制終了しました。[" + dirName+"/"+fileName+"]");
-			throw new AsoLearningSystemErrException("プロセスの実行がタイムアウトしました");
+		if( ret != 0){
+			//処理失敗
+			logger.warn("実行に失敗しました。[" + dirName+"/"+fileName+"]");
+			throw new AsoLearningSystemErrException("実行に失敗しました");
 		}
 
 		logger.trace("バッチ実行終了：" + ret);

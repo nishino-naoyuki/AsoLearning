@@ -18,7 +18,37 @@ if [ ${FNAME##*.} = "java" ]; then
 
   # 実行する
   cd $1/classes
-  java $4 $5 $6 $7 $8 $9 > $3/result.txt
+  java $4 $5 $6 $7 $8 $9 > $3/result.txt &
+  
+  # PIDを取得
+  pid=$!
+  
+  # 100ms待つ
+  usleep 100000
+  time=0
+  
+  while true
+  do
+    #生存確認
+    isAlive=`ps -ef | grep "$pid" | grep -v grep | grep -v srvchk | wc -l`
+  
+    echo $isAlive
+    echo $time
+  
+    if [ $isAlive = 1 ]; then
+      if [ $time = ${10} ]; then
+        #タイムアウトに達したのでエラーにする
+        kill $pid
+        exit 1
+      fi
+    else
+      exit 0
+    fi
+    # 1秒待つ
+    usleep 1000000
+    time=$(( time + 1 ))
+  done
+  
 else
 
   #排他処理
