@@ -93,6 +93,11 @@ public class TaskBoImpl implements TaskBo {
 			//ログ出力
 			logger.warn("SQLエラー：",e);
 			throw new AsoLearningSystemErrException(e);
+		} catch (Exception e) {
+			//ログ出力
+			logger.warn("致命的エラー：",e);
+			json.errorMsg =
+					MessageProperty.getInstance().getErrorMsgFromErrCode(ErrorCode.ERR_TASK_EXEC_ERR);
 		} finally{
 
 			dao.close();

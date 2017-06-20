@@ -249,7 +249,7 @@ public abstract class BaseServlet extends HttpServlet {
 			intParam = Integer.parseInt(intString);
 		}catch(NumberFormatException e){
 			Logger logger = LoggerFactory.getLogger(this.getClass().getName());
-			logger.error("数値パラメータの取得に失敗:name["+pramName+"] value:"+intString);
+			logger.trace("数値パラメータの取得に失敗:name["+pramName+"] value:"+intString);
 			intParam = null;
 		}
 

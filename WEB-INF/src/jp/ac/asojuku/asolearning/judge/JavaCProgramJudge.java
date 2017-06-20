@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBException;
 
@@ -58,6 +59,7 @@ public class JavaCProgramJudge implements Judge {
 	private final int MAX_LOC_SCORE_MAX = 100;
 	private final int AVR_MVG_SCORE_MAX = 5;
 	private final int AVR_LOC_SCORE_MAX = 50;
+	private final int PROCESS_TIMEOUT = 15;
 
 	@Override
 	public JudgeResultJson judge(TaskTblEntity taskEntity,String dirName, String fileName,int userId,Connection con) throws IllegalJudgeFileException, AsoLearningSystemErrException {
@@ -128,18 +130,21 @@ public class JavaCProgramJudge implements Judge {
 
 			json.score = resultEntity.getTotalScore();
 
+
+		}catch (InterruptedException | IOException  | JAXBException e) {
+			logger.warn("判定結果エラー：", e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (SQLException e) {
+			logger.warn("SQLエラー：", e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (Exception e) {
+			logger.warn("不明エラー：", e);
+			throw new AsoLearningSystemErrException(e);
+		} finally {
 			///////////////////////////////////////
 			//すべて終わったら判定ファイルは削除
 			FileUtils.delete(dirName);
 
-		}catch (InterruptedException | IOException e) {
-			logger.warn("判定結果エラー：", e);
-		} catch (JAXBException e) {
-			logger.warn("判定結果エラー：", e);
-		} catch (SQLException e) {
-			logger.warn("SQLエラー：", e);
-		} catch (Exception e) {
-			logger.warn("不明エラー：", e);
 		}
 
 		return json;
@@ -156,11 +161,9 @@ public class JavaCProgramJudge implements Judge {
 		//ソースを取得
 		List<String> srcList = FileUtils.readLine(srcFile);
 
-		long count = 1;
 		StringBuilder sb = new StringBuilder();
 		for( String str : srcList ){
 			sb.append(str).append("\n");
-			count++;
 		}
 
 		//ソースを圧縮
@@ -244,7 +247,7 @@ public class JavaCProgramJudge implements Judge {
 	 */
 	private void execShell(TestcaseTableEntity testcase,String dirName, String fileName,String resultDir,String classDir) throws AsoLearningSystemErrException, IOException, InterruptedException{
 
-		int ret;
+		boolean ret;
 
 		String shellPath = AppSettingProperty.getInstance().getShellPath();
 
@@ -273,7 +276,15 @@ public class JavaCProgramJudge implements Judge {
 
 		logger.trace("バッチ実行開始：");
 
-		ret = process.waitFor();
+		//バッチ実行タイムアウトは１０秒
+		ret = process.waitFor(PROCESS_TIMEOUT,TimeUnit.SECONDS);
+
+		if( !ret ){
+			//タイムアウトが発生
+			process.destroy(); // プロセスを強制終了
+			logger.warn("プロセスの実行がタイムアウトしました。強制終了しました。[" + dirName+"/"+fileName+"]");
+			throw new AsoLearningSystemErrException("プロセスの実行がタイムアウトしました");
+		}
 
 		logger.trace("バッチ実行終了：" + ret);
 

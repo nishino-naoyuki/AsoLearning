@@ -76,11 +76,13 @@ public class TaskJudgeServlet extends BaseServlet {
 
 	        logger.trace("fileuploaded! user={} file={}",loginInfo.getName(),dir + "/" +name);
 
+	        logger.info("判定処理開始："+loginInfo.getName());
 			//////////////////////////////////////////////
 	        //判定処理を行う
 	        TaskBo taskBo = new TaskBoImpl();
 
 	        JudgeResultJson json = taskBo.judgeTask(taskId,loginInfo,dir, name);
+	        logger.info("判定処理終了"+loginInfo.getName());
 	        ObjectMapper mapper = new ObjectMapper();
 	        String jsonString = mapper.writeValueAsString(json);
 

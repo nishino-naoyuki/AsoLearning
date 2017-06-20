@@ -68,6 +68,7 @@ public class LoginServlet extends BaseServlet {
 
 			if( RoleId.STUDENT.equals(loginInfo.getRoleId()) ){
 				//画面転送（リダイレクト）
+				logger.info("ログインしました："+loginInfo.getName());
 				resp.sendRedirect("st_dashboad");
 			}else if( RoleId.TEACHER.equals(loginInfo.getRoleId()) ){
 				//画面転送（リダイレクト）
