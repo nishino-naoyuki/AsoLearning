@@ -257,6 +257,8 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 		    fd.append( "taskid", <%=taskdto.getTaskId()%> );
 		 }
 
+		  //一旦エラーメッセージをクリア
+		  $("#uploadErrorMsg").text("");
 		submit_action("judgetask",fd,null);
 	});
 	function submit_action(url, input_data, mode) {

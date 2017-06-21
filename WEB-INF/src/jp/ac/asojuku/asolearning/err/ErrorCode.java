@@ -53,6 +53,9 @@ public enum ErrorCode {
 	ERR_TASK_EXEC_ERR("0214"),
 	//CSV関連(03xx)
 	ERR_CSV_FORMAT_ERROR("0301"),
+	//お知らせ関連(04xx)
+	ERR_INFO_TITLE_LEN("0401"),
+	ERR_INFO_MSG_LEN("0402"),
 
 	//その他のエラー
 	ERR_SESSION_INVLIDATE("9901"),

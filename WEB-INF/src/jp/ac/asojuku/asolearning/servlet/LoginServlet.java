@@ -57,7 +57,7 @@ public class LoginServlet extends BaseServlet {
 
 			if( loginInfo == null ){
 				//ログイン画面へエラーメッセージ通達
-				fowardLoginErrDisp(request,resp);
+				fowardLoginErrDisp(request,resp,MessageProperty.LOGIN_ERR_LOGINERR);
 				return;
 			}
 
@@ -66,9 +66,9 @@ public class LoginServlet extends BaseServlet {
 			setLoginInfoToSession(request,loginInfo);
 			//ログイン成功の場合はトップ画面へ戻る
 
+			logger.info("ログインしました："+loginInfo.getName());
 			if( RoleId.STUDENT.equals(loginInfo.getRoleId()) ){
 				//画面転送（リダイレクト）
-				logger.info("ログインしました："+loginInfo.getName());
 				resp.sendRedirect("st_dashboad");
 			}else if( RoleId.TEACHER.equals(loginInfo.getRoleId()) ){
 				//画面転送（リダイレクト）
@@ -78,9 +78,12 @@ public class LoginServlet extends BaseServlet {
 				resp.sendRedirect("st_dashboad");
 			}
 
-		} catch (LoginFailureException | AccountLockedException e) {
+		} catch (LoginFailureException  e) {
 			//ログイン画面へエラーメッセージ通達
-			fowardLoginErrDisp(request,resp);
+			fowardLoginErrDisp(request,resp,MessageProperty.LOGIN_ERR_LOGINERR);
+		} catch (AccountLockedException e) {
+			//ログイン画面へエラーメッセージ通達
+			fowardLoginErrDisp(request,resp,MessageProperty.LOGIN_LOCK);
 		}
 
 
@@ -94,11 +97,11 @@ public class LoginServlet extends BaseServlet {
 	 * @throws IOException
 	 * @throws AsoLearningSystemErrException
 	 */
-	private void fowardLoginErrDisp(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException, AsoLearningSystemErrException{
+	private void fowardLoginErrDisp(HttpServletRequest request, HttpServletResponse resp,String errMsgId) throws ServletException, IOException, AsoLearningSystemErrException{
 		//エラーメッセージをセット
 		String errMsg;
 
-		errMsg = MessageProperty.getInstance().getProperty(MessageProperty.LOGIN_ERR_LOGINERR);
+		errMsg = MessageProperty.getInstance().getProperty(errMsgId);
 
 		request.setAttribute(RequestConst.LOGIN_ERR_MSG,errMsg );
 

@@ -30,6 +30,7 @@ public class MessageProperty extends ConfigBase{
 	public static final String INFO_RECENT_CREATE = "info.recent.create";
 	public static final String INFO_RECENT_UPDATE = "info.recent.update";
 	public static final String INFO_RECENT_END = "info.recent.end";
+	public static final String LOGIN_LOCK = "login.err.lock";
 
 	/**
 	 * インスタンスの取得

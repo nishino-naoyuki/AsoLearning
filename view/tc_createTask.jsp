@@ -82,7 +82,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            課題作成</small>
+                            <small>課題作成</small>
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">

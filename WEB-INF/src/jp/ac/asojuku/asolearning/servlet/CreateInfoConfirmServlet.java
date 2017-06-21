@@ -22,6 +22,8 @@ import jp.ac.asojuku.asolearning.dto.InfoPublicDto;
 import jp.ac.asojuku.asolearning.dto.InfomationDto;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
+import jp.ac.asojuku.asolearning.param.InfoPublicStateId;
+import jp.ac.asojuku.asolearning.validator.InfoValidator;
 
 /**
  * @author nishino
@@ -61,10 +63,10 @@ public class CreateInfoConfirmServlet extends BaseServlet{
 
 			//dtoにセット
 			dto.setInfoPublicList(infoPublicList);
-/*
+
 			//エラーチェック
 			checkError(dto);
-
+			/*
 			RequestDispatcher rd = null;
 			if( errors.isHasErr() ){
 				//エラーがある場合は、リクエストにセット
@@ -115,12 +117,26 @@ public class CreateInfoConfirmServlet extends BaseServlet{
 			int courseId = course.getId();
 			dto.setCourseId(courseId);
 			dto.setCourseName(course.getName());
-			dto.setPublicDatetime(getStringParamFromPart(req,courseId+"-startterm"));
-			dto.setEndDatetime(getStringParamFromPart(req,courseId+"-endterm"));
+			dto.setPublicDatetime(req.getParameter(courseId+"-startterm"));
+			dto.setEndDatetime(req.getParameter(courseId+"-endterm"));
+			dto.setStatus(InfoPublicStateId.valueOf(getIntParam(courseId+"-course",req)));
 
 			infopublicList.add(dto);
 		}
 
 		return infopublicList;
 	}
+
+	/**
+	 * エラーチェックメソッド
+	 * @param dto
+	 * @throws AsoLearningSystemErrException
+	 */
+	private void checkError(InfomationDto dto) throws AsoLearningSystemErrException{
+		//Validatorでエラーチェック
+		InfoValidator.title(dto.getInfomationTitle(), errors);
+		InfoValidator.contents(dto.getContents(), errors);
+		InfoValidator.publicStateList(dto.getInfoPublicList(),errors);
+	}
+
 }
