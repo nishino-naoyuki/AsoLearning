@@ -76,6 +76,29 @@
 
     </target>
 
+
+    <target depends="clean" name="build-event">
+        <mkdir dir="war/build"/>
+        <mkdir dir="war/build/classes"/>
+        <mkdir dir="war/build/view"/>
+        <mkdir dir="war/build/tmp"/>
+    	<echo message="${ant.project.name}: ${ant.file}"/>
+
+    	<javac encoding="utf-8" debug="true" debuglevel="${debuglevel}" destdir="war/build/classes" includeantruntime="false" source="${source}" target="${target}">
+            <src path="WEB-INF/src"/>
+            <classpath refid="build.lib"/>
+        </javac>
+    	<copy todir="war/build/classes">
+    		 <fileset dir="WEB-INF/src/" includes="message.properties"/>
+   		 	 <fileset dir="event_setting" includes="app.properties"/>
+   		 	 <fileset dir="WEB-INF/src/" includes="*.xml"/>
+    	</copy>
+    	<copy todir="war/build/view">
+    		 <fileset dir="view" includes="**/*.*"/>
+    	</copy>
+
+    </target>
+
     <target depends="build"  name="make-war">
     	<war destfile="war/${ant.project.name}.war" needxmlfile='false' >
     		<classes dir="war/build/classes" />
@@ -90,6 +113,18 @@
 
     <target depends="build-staging"  name="make-war-for-staging">
     	<war destfile="war/st${ant.project.name}.war" needxmlfile='false' >
+    		<classes dir="war/build/classes" />
+    		<lib dir="WEB-INF/lib" />
+    		<zipfileset dir="view"
+            prefix="view"/>
+    		<zipfileset dir="WEB-INF/tmp"
+            prefix="WEB-INF/tmp"/>
+    	</war>
+        <delete dir="war/build"/>
+    </target>
+
+    <target depends="build-event"  name="make-war-for-event">
+    	<war destfile="war/ev${ant.project.name}.war" needxmlfile='false' >
     		<classes dir="war/build/classes" />
     		<lib dir="WEB-INF/lib" />
     		<zipfileset dir="view"
