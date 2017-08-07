@@ -28,7 +28,7 @@ public class ChangePasswordStartServlet extends BaseServlet {
 	@Override
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_passChange.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_passChange.jsp");
 		rd.forward(req, resp);
 	}
 

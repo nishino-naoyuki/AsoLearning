@@ -60,7 +60,7 @@ public class ChangePasswordServlet extends BaseServlet {
 		if( errors.isHasErr() ){
 			//画面遷移
 			req.setAttribute(RequestConst.REQUEST_ERRORS, errors);
-			RequestDispatcher rd = req.getRequestDispatcher("view/st_passChange.jsp");
+			RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_passChange.jsp");
 			rd.forward(req, resp);
 			return;
 		}
@@ -75,7 +75,7 @@ public class ChangePasswordServlet extends BaseServlet {
 		userdo.updatePassword(logonInfo.getUserId(), pass1, logonInfo.getMailAddress());
 
 
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_passChangeFin.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_passChangeFin.jsp");
 		rd.forward(req, resp);
 	}
 

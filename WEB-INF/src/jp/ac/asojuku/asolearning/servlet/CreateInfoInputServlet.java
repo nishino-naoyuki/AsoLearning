@@ -46,7 +46,7 @@ public class CreateInfoInputServlet extends BaseServlet {
 		req.setAttribute(RequestConst.REQUEST_COURSE_LIST, list);
 
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_createInfo.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_createInfo.jsp");
 		rd.forward(req, resp);
 	}
 	/* (非 Javadoc)

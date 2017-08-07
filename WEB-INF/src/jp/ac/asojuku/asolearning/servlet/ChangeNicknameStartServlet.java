@@ -28,7 +28,7 @@ public class ChangeNicknameStartServlet extends BaseServlet {
 	@Override
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_nicknameChange.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_nicknameChange.jsp");
 		rd.forward(req, resp);
 	}
 

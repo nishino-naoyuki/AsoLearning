@@ -13,6 +13,8 @@ public class SearchTaskCondition {
 	private String taskName;
 	private String creator;
 	private Integer courseId;
+	private String groupName;
+
 	public String getTaskName() {
 		return taskName;
 	}
@@ -30,6 +32,18 @@ public class SearchTaskCondition {
 	}
 	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
+	}
+	/**
+	 * @return groupName
+	 */
+	public String getGroupName() {
+		return groupName;
+	}
+	/**
+	 * @param groupName セットする groupName
+	 */
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 

@@ -25,7 +25,7 @@ import jp.ac.asojuku.asolearning.json.TaskSearchResultJson;
 import jp.ac.asojuku.asolearning.param.RequestConst;
 
 /**
- * ユーザー検索処理
+ * 課題検索処理
  * @author nishino
  *
  */
@@ -90,6 +90,7 @@ public class SearchTaskServlet extends BaseServlet {
 		cond.setCourseId(getIntParam(RequestConst.REQUEST_COURSE_ID,req));
 		cond.setTaskName(req.getParameter("taskname"));
 		cond.setCreator(req.getParameter("creator"));
+		cond.setGroupName(req.getParameter("groupname"));
 
 		return cond;
 	}

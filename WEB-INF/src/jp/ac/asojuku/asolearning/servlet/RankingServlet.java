@@ -78,7 +78,7 @@ public class RankingServlet extends BaseServlet {
 
 		//////////////////////////////
 		//画面転送
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_ranking.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_ranking.jsp");
 		rd.forward(req, resp);
 	}
 	@Override

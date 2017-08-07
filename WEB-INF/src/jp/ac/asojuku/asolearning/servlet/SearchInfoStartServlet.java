@@ -43,7 +43,7 @@ public class SearchInfoStartServlet extends BaseServlet {
 
 		///////////////////////////////////////////
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_searchInfo.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_searchInfo.jsp");
 		rd.forward(req, resp);
 	}
 

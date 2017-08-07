@@ -28,7 +28,7 @@ public class LoginStartServlet extends BaseServlet {
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		// login.jspを表示
-		RequestDispatcher rd = req.getRequestDispatcher("view/login.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"login.jsp");
 		rd.forward(req, resp);
 	}
 

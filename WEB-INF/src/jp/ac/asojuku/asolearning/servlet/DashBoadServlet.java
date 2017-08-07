@@ -46,7 +46,7 @@ public class DashBoadServlet extends BaseServlet {
 		req.setAttribute(RequestConst.REQUEST_INFO_DTO, dto);
 
 		// tc_dashboad.jspを表示
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_dashboad.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_dashboad.jsp");
 		rd.forward(req, resp);
 	}
 }

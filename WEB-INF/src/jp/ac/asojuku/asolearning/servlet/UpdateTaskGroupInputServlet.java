@@ -69,7 +69,7 @@ public class UpdateTaskGroupInputServlet extends BaseServlet {
 		}
 
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/pop_updateTask.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"pop_updateTask.jsp");
 		rd.forward(req, resp);
 	}
 }

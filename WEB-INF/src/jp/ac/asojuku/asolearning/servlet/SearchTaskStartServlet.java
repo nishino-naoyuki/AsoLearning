@@ -45,7 +45,7 @@ public class SearchTaskStartServlet extends BaseServlet {
 
 		///////////////////////////////////////////
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_searchTask.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_searchTask.jsp");
 		rd.forward(req, resp);
 	}
 

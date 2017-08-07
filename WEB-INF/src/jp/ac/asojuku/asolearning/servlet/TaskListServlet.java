@@ -58,7 +58,7 @@ public class TaskListServlet extends BaseServlet {
 
 		//画面転送
 		req.setAttribute(RequestConst.REQUEST_TASK_LIST, taskList);
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_taskList.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_taskList.jsp");
 		rd.forward(req, resp);
 	}
 

@@ -72,7 +72,7 @@ public class UpdateTaskInputServlet extends BaseServlet {
 //		req.setAttribute(RequestConst.REQUEST_TESTCASE, testCaseList);
 
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_updateTask.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_updateTask.jsp");
 		rd.forward(req, resp);
 	}
 

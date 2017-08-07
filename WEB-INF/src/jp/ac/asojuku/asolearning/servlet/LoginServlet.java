@@ -106,7 +106,7 @@ public class LoginServlet extends BaseServlet {
 		request.setAttribute(RequestConst.LOGIN_ERR_MSG,errMsg );
 
 		//画面転送
-		RequestDispatcher rd = request.getRequestDispatcher("view/login.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher(getJspDir()+"login.jsp");
 		rd.forward(request, resp);
 
 	}
@@ -135,7 +135,7 @@ public class LoginServlet extends BaseServlet {
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		// login.jspを表示
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_taskList.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_taskList.jsp");
 		rd.forward(req, resp);
 	}
 

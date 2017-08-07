@@ -48,6 +48,9 @@ public class TaskTblEntity implements Serializable {
 	/** テストケーステーブル 一覧. */
 	private Set<TestcaseTableEntity> testcaseTableSet;
 
+	/** 課題グループテーブル. */
+	private TaskGroupTblEntity taskGroupTbl;
+
 	/** 難易度 */
 	private Integer difficalty;
 	/**
@@ -309,6 +312,25 @@ public class TaskTblEntity implements Serializable {
 	 */
 	public void setDifficalty(Integer difficalty) {
 		this.difficalty = difficalty;
+	}
+
+	/**
+	 * 課題グループテーブル を設定します.
+	 *
+	 * @param taskGroupTbl
+	 *            課題グループテーブル
+	 */
+	public void setTaskGroupTbl(TaskGroupTblEntity taskGroupTbl) {
+		this.taskGroupTbl = taskGroupTbl;
+	}
+
+	/**
+	 * 課題グループテーブル を取得します.
+	 *
+	 * @return 課題グループテーブル
+	 */
+	public TaskGroupTblEntity getTaskGroupTbl() {
+		return this.taskGroupTbl;
 	}
 
 	/**

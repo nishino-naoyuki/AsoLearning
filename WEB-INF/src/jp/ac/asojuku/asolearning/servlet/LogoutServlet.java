@@ -60,7 +60,7 @@ public class LogoutServlet extends BaseServlet {
 		request.setAttribute(RequestConst.LOGIN_ERR_MSG,errMsg );
 
 		//画面転送
-		RequestDispatcher rd = request.getRequestDispatcher("view/login.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher(getJspDir()+"login.jsp");
 		rd.forward(request, resp);
 
 	}

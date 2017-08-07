@@ -62,7 +62,7 @@ public class TaskServlet extends BaseServlet {
 		TaskDto dto =bo.getTaskDetailForUser(taskId, loginInfo);
 		if( dto == null ){
 			//IDが無い場合は、エラー画面へ
-			RequestDispatcher rd = req.getRequestDispatcher("view/error/st_task_error.jsp");
+			RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"error/st_task_error.jsp");
 			rd.forward(req, resp);
 			return;
 		}
@@ -71,7 +71,7 @@ public class TaskServlet extends BaseServlet {
 		//////////////////////////////
 		//画面転送
 		req.setAttribute(RequestConst.REQUEST_TASK, dto);
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_task.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_task.jsp");
 		rd.forward(req, resp);
 	}
 

@@ -62,7 +62,7 @@ public class TaskScoreServlet extends BaseServlet {
 		TaskResultDetailDto dto =bo.getResultDetail(taskId, userId);
 		if( dto == null ){
 			//IDが無い場合は、エラー画面へ
-			RequestDispatcher rd = req.getRequestDispatcher("view/error/st_task_error.jsp");
+			RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"error/st_task_error.jsp");
 			rd.forward(req, resp);
 			return;
 		}
@@ -72,7 +72,7 @@ public class TaskScoreServlet extends BaseServlet {
 		req.setAttribute(RequestConst.REQUEST_DISP_NO, dispNo);
 		req.setAttribute(RequestConst.REQUEST_TASK_RESULT, dto);
 		req.setAttribute(RequestConst.REQUEST_USER_ID, userId);
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_taskscore.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_taskscore.jsp");
 		rd.forward(req, resp);
 
 	}

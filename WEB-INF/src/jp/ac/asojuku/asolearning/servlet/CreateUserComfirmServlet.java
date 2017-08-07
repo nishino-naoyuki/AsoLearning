@@ -68,12 +68,12 @@ public class CreateUserComfirmServlet extends BaseServlet {
 			//エラーがある場合は、リクエストにセット
 			setToRequest(req,userDto,list);
 			//画面遷移
-			rd = req.getRequestDispatcher("view/tc_createUser.jsp");
+			rd = req.getRequestDispatcher(getJspDir()+"tc_createUser.jsp");
 		}else{
 			////////////////////////////////////////
 			//エラーが無い場合はセッションにセット
 			setToSession(req,userDto);
-			rd = req.getRequestDispatcher("view/tc_createUserConfirm.jsp");
+			rd = req.getRequestDispatcher(getJspDir()+"tc_createUserConfirm.jsp");
 		}
 		rd.forward(req, resp);
 

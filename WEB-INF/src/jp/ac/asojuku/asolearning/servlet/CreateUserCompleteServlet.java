@@ -58,7 +58,7 @@ public class CreateUserCompleteServlet extends BaseServlet {
 
 		/////////////////////////////////////
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_createUserFin.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_createUserFin.jsp");
 		rd.forward(req, resp);
 	}
 }

@@ -51,7 +51,7 @@ public class DetailUserServlet extends BaseServlet {
 		/////////////////////////////////
 		//画面遷移
 		RequestDispatcher rd = null;
-		rd = req.getRequestDispatcher("view/tc_detailUser.jsp");
+		rd = req.getRequestDispatcher(getJspDir()+"tc_detailUser.jsp");
 		rd.forward(req, resp);
 
 

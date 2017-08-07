@@ -35,7 +35,7 @@ public class CreateUserByCSVStartServlet extends BaseServlet {
 			throws ServletException, IOException, AsoLearningSystemErrException {
 
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_createUserCSV.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_createUserCSV.jsp");
 		rd.forward(req, resp);
 
 	}

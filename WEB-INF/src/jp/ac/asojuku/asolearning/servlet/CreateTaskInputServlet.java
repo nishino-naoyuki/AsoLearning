@@ -46,7 +46,7 @@ public class CreateTaskInputServlet extends BaseServlet {
 		req.setAttribute(RequestConst.REQUEST_COURSE_LIST, list);
 
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/tc_createTask.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_createTask.jsp");
 		rd.forward(req, resp);
 	}
 	/* (非 Javadoc)

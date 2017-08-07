@@ -34,6 +34,7 @@ public class AppSettingProperty extends ConfigBase {
 	private static final String RANKING_NORAML = "ranking.offset.normal";
 	private static final String RANKING_DIFFICAL = "ranking.offset.diffical";
 	private static final String DB_STRING = "db.connect.string";
+	private static final String JSP_DIR = "jsp.directory";
 
 	//設定値
 	private final String ASP_PWD_SALT = "pwd.hash.salt";	//パスワードソルト
@@ -198,5 +199,12 @@ public class AppSettingProperty extends ConfigBase {
 	 */
 	public String getDBString(){
 		return getProperty(DB_STRING);
+	}
+	/**
+	 * JSPのフォルダ取得
+	 * @return
+	 */
+	public String getJspDirString(){
+		return getProperty(JSP_DIR);
 	}
 }

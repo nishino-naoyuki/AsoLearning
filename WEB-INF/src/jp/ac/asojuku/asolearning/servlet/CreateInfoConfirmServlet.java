@@ -72,11 +72,11 @@ public class CreateInfoConfirmServlet extends BaseServlet{
 				//エラーがある場合は、リクエストにセット
 				setToRequest(req,dto,courselist);
 				//画面遷移
-				rd = req.getRequestDispatcher("view/tc_createTask.jsp");
+				rd = req.getRequestDispatcher(getJspDir()+"tc_createTask.jsp");
 			}else{
 				//エラーが無い場合はセッションにセット
 				setToSession(req,dto);
-				rd = req.getRequestDispatcher("view/tc_creatTaskConfirm.jsp");
+				rd = req.getRequestDispatcher(getJspDir()+"tc_creatTaskConfirm.jsp");
 			}
 			rd.forward(req, resp);
 */

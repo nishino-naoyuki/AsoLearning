@@ -17,6 +17,7 @@ import javax.servlet.http.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.SessionConst;
@@ -81,7 +82,7 @@ public abstract class BaseServlet extends HttpServlet {
 		Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 		logger.error("システムエラーが発生しました:",e);
-		RequestDispatcher rd = req.getRequestDispatcher("view/error/systemerror.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"error/systemerror.jsp");
 		rd.forward(req, resp);
 	}
 
@@ -96,21 +97,21 @@ public abstract class BaseServlet extends HttpServlet {
 	 */
 	private void fowardPermitError(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException{
 
-		RequestDispatcher rd = req.getRequestDispatcher("view/error/permision_err.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"error/permision_err.jsp");
 		rd.forward(req, resp);
 	}
 
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException,AsoLearningSystemErrException
 	{
 		//405エラーチック名画面へ遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/error/405error.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"error/405error.jsp");
 		rd.forward(req, resp);
 	}
 
 	protected void doPostMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException,AsoLearningSystemErrException
 	{
 		//405エラーチック名画面へ遷移
-		RequestDispatcher rd = req.getRequestDispatcher("view/error/405error.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"error/405error.jsp");
 		rd.forward(req, resp);
 
 	}
@@ -256,4 +257,22 @@ public abstract class BaseServlet extends HttpServlet {
 		return intParam;
 	}
 	protected abstract String getDisplayNo();
+
+	/**
+	 * JSPがあるフォルダを取得する
+	 * @return
+	 */
+	protected String getJspDir() {
+		String jspDir = "";
+
+		try{
+			jspDir = AppSettingProperty.getInstance().getJspDirString();
+		}catch(AsoLearningSystemErrException e){
+			Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+			logger.warn("JSPファイルのフォルダを読み込めません。設定ファイルを確認してください");
+			jspDir = "WEB-INF/jsp";//デフォルト
+		}
+
+		return jspDir;
+	}
 }

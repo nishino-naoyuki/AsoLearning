@@ -56,7 +56,7 @@ public class UpdateAvatarInputServlet extends BaseServlet {
 		//////////////////////////////
 		//画面転送
 		req.setAttribute(RequestConst.REQUEST_AVATAR_DTO, avatorDto);
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_updateAvatar.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_updateAvatar.jsp");
 		rd.forward(req, resp);
 	}
 }

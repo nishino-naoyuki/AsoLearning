@@ -33,12 +33,14 @@ public class TaskDao extends Dao {
 	//検索条件を指定して課題一覧を取得
 	private static final String TASK_LIST_COND_SQL =
 			"SELECT * FROM TASK_TBL t "
+			+ "LEFT JOIN TASK_GROUP_TBL tg ON(t.TASK_GROUP_ID = tg.TASK_GROUP_ID) "
 			+ "LEFT JOIN TASK_PUBLIC_TBL tp ON(t.TASK_ID = tp.TASK_ID) "
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "LEFT JOIN USER_TBL u ON(u.USER_ID=t.CREATE_USER_ID) "
 			+ "LEFT JOIN COURSE_MASTER cm ON(cm.COURSE_ID=tp.COURSE_ID) ";
 	private static final String TASK_LIST_WHERE_TASKNAME = "t.name LIKE ?";
 	private static final String TASK_LIST_WHERE_CREATOR = "u.MAILADRESS LIKE ?";
+	private static final String TASK_LIST_WHERE_GROUPNAME = "tg.TASK_GROUP_NAME LIKE ?";
 	private static final String TASK_LIST_WHERE_COURSE = "tp.COURSE_ID=? AND tp.STATUS_ID in (1,2)";
 	private static final String TASK_LIST_ORDERBY = " ORDER BY t.NAME,t.TASK_ID,tp.COURSE_ID";
 
@@ -278,6 +280,9 @@ public class TaskDao extends Dao {
 		if(condition.getCourseId() != null){
 			ps.setInt(index, condition.getCourseId());
 		}
+		if( StringUtils.isNotEmpty(condition.getGroupName()) ){
+			ps.setString(index++,getLikeString(condition.getGroupName()) );
+		}
 
 	}
 
@@ -297,6 +302,10 @@ public class TaskDao extends Dao {
 		}
 		if(condition.getCourseId() != null){
 			appendWhereWithAnd(sb,TASK_LIST_WHERE_COURSE);
+		}
+		if( StringUtils.isNotEmpty(condition.getGroupName()) ){
+			sb.append(TASK_LIST_WHERE_GROUPNAME);
+
 		}
 
 		if( sb.length() > 0 ){

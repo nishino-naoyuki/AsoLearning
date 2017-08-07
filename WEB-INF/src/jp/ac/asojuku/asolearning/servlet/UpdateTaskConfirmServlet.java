@@ -104,11 +104,11 @@ public class UpdateTaskConfirmServlet extends BaseServlet {
 				//エラーがある場合は、リクエストにセット
 				setToRequest(req,dto,courselist);
 				//画面遷移
-				rd = req.getRequestDispatcher("view/tc_updateTask.jsp");
+				rd = req.getRequestDispatcher(getJspDir()+"tc_updateTask.jsp");
 			}else{
 				//エラーが無い場合はセッションにセット
 				setToSession(req,dto);
-				rd = req.getRequestDispatcher("view/tc_updateTaskConfirm.jsp");
+				rd = req.getRequestDispatcher(getJspDir()+"tc_updateTaskConfirm.jsp");
 			}
 			rd.forward(req, resp);
 

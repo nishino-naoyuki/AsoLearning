@@ -54,7 +54,7 @@ public class ChangeNicknameServlet extends BaseServlet {
 		if( errors.isHasErr() ){
 			//画面遷移
 			req.setAttribute(RequestConst.REQUEST_ERRORS, errors);
-			RequestDispatcher rd = req.getRequestDispatcher("view/st_nicknameChange.jsp");
+			RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_nicknameChange.jsp");
 			rd.forward(req, resp);
 			return;
 		}
@@ -74,7 +74,7 @@ public class ChangeNicknameServlet extends BaseServlet {
 		HttpSession session = req.getSession(false);
 		session.setAttribute(SessionConst.SESSION_LOGININFO, logonInfo);
 
-		RequestDispatcher rd = req.getRequestDispatcher("view/st_nicknameChangeFin.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"st_nicknameChangeFin.jsp");
 		rd.forward(req, resp);
 	}
 
