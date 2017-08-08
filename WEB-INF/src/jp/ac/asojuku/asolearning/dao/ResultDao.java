@@ -106,6 +106,8 @@ public class ResultDao extends Dao {
 			" u.COURSE_ID=?";
 	private static final String RESULT_RANKING_SQL_WHERE_TASK =
 			" t.TASK_ID=?";
+	private static final String RESULT_RANKING_SQL_WHERE_TASKGRP =
+			" t.TASK_GROUP_ID=?";
 	private static final String RESULT_RANKING_SQL_GROUPBY =
 			" GROUP BY r.USER_ID ";
 	private static final String RESULT_RANKING_SQL_ORDERBY =
@@ -417,7 +419,7 @@ public class ResultDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<ResultTblEntity> getRanking(Integer courseId,Integer taskId,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
+	public List<ResultTblEntity> getRanking(Integer courseId,Integer taskId,Integer taskGrpId,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
 		List<ResultTblEntity> list = new ArrayList<ResultTblEntity>();
 
 
@@ -428,13 +430,13 @@ public class ResultDao extends Dao {
     		// ステートメント生成
         	StringBuffer sql = new StringBuffer(RESULT_RANKING_SQL_SELECT);
 
-        	sql.append(getRankingWhereString(courseId,taskId));
+        	sql.append(getRankingWhereString(courseId,taskId,taskGrpId));
         	sql.append(RESULT_RANKING_SQL_GROUPBY);
         	sql.append(RESULT_RANKING_SQL_ORDERBY);
 
 			ps = con.prepareStatement(sql.toString());
 
-			ps = setRankingPram(ps,courseId,taskId,easyOffset,normalOffset,difficalOffset);
+			ps = setRankingPram(ps,courseId,taskId,taskGrpId,easyOffset,normalOffset,difficalOffset);
 
 	        // SQLを実行
 	        rs = ps.executeQuery();
@@ -463,7 +465,7 @@ public class ResultDao extends Dao {
 	 * @param taskId
 	 * @return
 	 */
-	private String getRankingWhereString(Integer courseId,Integer taskId){
+	private String getRankingWhereString(Integer courseId,Integer taskId,Integer taskGrpId){
 		StringBuffer sb = new StringBuffer();
 
 		if( courseId != null ){
@@ -471,6 +473,9 @@ public class ResultDao extends Dao {
 		}
 		if( taskId != null ){
 			appendWhereWithAnd(sb,RESULT_RANKING_SQL_WHERE_TASK);
+		}
+		if( taskGrpId != null ){
+			appendWhereWithAnd(sb,RESULT_RANKING_SQL_WHERE_TASKGRP);
 		}
 
 		if( sb.length() > 0 ){
@@ -489,7 +494,7 @@ public class ResultDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	private PreparedStatement setRankingPram(PreparedStatement ps,Integer courseId,Integer taskId,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
+	private PreparedStatement setRankingPram(PreparedStatement ps,Integer courseId,Integer taskId,Integer taskGrpId,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
 		int index = 1;
 
 		ps.setFloat(index++, easyOffset);
@@ -502,6 +507,10 @@ public class ResultDao extends Dao {
 		}
 		if( taskId != null ){
 			ps.setInt(index, taskId);
+			index++;
+		}
+		if( taskGrpId != null ){
+			ps.setInt(index, taskGrpId);
 		}
 
 		return ps;

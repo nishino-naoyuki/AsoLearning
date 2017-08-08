@@ -17,6 +17,7 @@ import jp.ac.asojuku.asolearning.condition.SearchTaskCondition;
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.PublicStatusMasterEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
+import jp.ac.asojuku.asolearning.entity.TaskGroupTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.TestcaseTableEntity;
@@ -41,18 +42,22 @@ public class TaskDao extends Dao {
 	private static final String TASK_LIST_WHERE_TASKNAME = "t.name LIKE ?";
 	private static final String TASK_LIST_WHERE_CREATOR = "u.MAILADRESS LIKE ?";
 	private static final String TASK_LIST_WHERE_GROUPNAME = "tg.TASK_GROUP_NAME LIKE ?";
+	private static final String TASK_LIST_WHERE_GROUPID = "tg.TASK_GROUP_ID = ?";
 	private static final String TASK_LIST_WHERE_COURSE = "tp.COURSE_ID=? AND tp.STATUS_ID in (1,2)";
 	private static final String TASK_LIST_ORDERBY = " ORDER BY t.NAME,t.TASK_ID,tp.COURSE_ID";
 
 	//ユーザーを指定して、課題一覧を取得するSQL
 	private static final String TASK_COURSE_LIST_SQL =
 			"SELECT * FROM TASK_TBL t "
+			+ "LEFT JOIN TASK_GROUP_TBL tg ON(t.TASK_GROUP_ID = tg.TASK_GROUP_ID) "
 			+ "LEFT JOIN TASK_PUBLIC_TBL tp ON(t.TASK_ID = tp.TASK_ID) "
 			+ "LEFT JOIN COURSE_MASTER cm ON(cm.COURSE_ID=tp.COURSE_ID) "
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "WHERE tp.STATUS_ID IN(1,2) ";
 	private static final String TASK_COURSE_LIST_WHERE = " tp.COURSE_ID=? ";
+	private static final String TASK_GROUP_LIST_WHERE = " tg.TASK_GROUP_ID=? ";
 	private static final String TASK_COURSE_LIST_ORDERBY =  " ORDER BY t.TASK_ID";
+	private static final String TASK_GROUPNAME_LIST_ORDERBY =  " ORDER BY tg.TASK_GROUP_NAME";
 	private static final int TASK_COURSE_LIST_SQL_USER_IDX = 1;
 
 	//ユーザーを指定して、課題一覧を取得するSQL
@@ -278,10 +283,14 @@ public class TaskDao extends Dao {
 			ps.setString(index++,getLikeString(condition.getCreator()) );
 		}
 		if(condition.getCourseId() != null){
-			ps.setInt(index, condition.getCourseId());
+			ps.setInt(index++, condition.getCourseId());
 		}
 		if( StringUtils.isNotEmpty(condition.getGroupName()) ){
 			ps.setString(index++,getLikeString(condition.getGroupName()) );
+		}
+		if( condition.getGroupId() != null ){
+			ps.setInt(index++, condition.getGroupId());
+
 		}
 
 	}
@@ -304,7 +313,11 @@ public class TaskDao extends Dao {
 			appendWhereWithAnd(sb,TASK_LIST_WHERE_COURSE);
 		}
 		if( StringUtils.isNotEmpty(condition.getGroupName()) ){
-			sb.append(TASK_LIST_WHERE_GROUPNAME);
+			appendWhereWithAnd(sb,TASK_LIST_WHERE_GROUPNAME);
+
+		}
+		if( condition.getGroupId() != null ){
+			appendWhereWithAnd(sb,TASK_LIST_WHERE_GROUPID);
 
 		}
 
@@ -335,8 +348,31 @@ public class TaskDao extends Dao {
 			entity.setMailAddress(rs.getString("MAILADRESS"));
 			//※ニックネームの複合にメアドが必要
 		}
+		//課題グループの情報をセット(nullの場合あり)
+		entity.setTaskGroupTbl( createTaskGroupTblEntity(rs) );
 
 		return entity;
+	}
+
+	/**
+	 * 課題グループをセットする
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	private TaskGroupTblEntity createTaskGroupTblEntity(ResultSet rs) throws SQLException{
+		TaskGroupTblEntity tgEntity = new TaskGroupTblEntity();
+
+		Integer grpId = fixInt(rs.getInt("TASK_GROUP_ID"),rs.wasNull());
+
+		if( grpId == null ){
+			//グループIDがNULLの場合はデータを採ってきていない
+			return null;
+		}
+		tgEntity.setTaskGroupId(grpId);
+		tgEntity.setTaskGroupName(fixString(rs.getString("TASK_GROUP_NAME"),rs.wasNull()));
+
+		return tgEntity;
 	}
 
 	/**
@@ -364,6 +400,8 @@ public class TaskDao extends Dao {
 
 		return p;
 	}
+
+
 
 	/**
 	 * 学科を指定して、課題の一覧を取得する
@@ -440,6 +478,79 @@ public class TaskDao extends Dao {
 		return list;
 	}
 
+	/**
+	 * 課題グループを指定して課題の一覧を取得する
+	 *
+	 * @param taskGrpId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<TaskTblEntity> getTaskListBytaskGroupId(Integer taskGrpId) throws SQLException{
+
+		if( con == null ){
+			return null;
+		}
+		List<TaskTblEntity> list = new ArrayList<TaskTblEntity>();
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		TaskTblEntity entity = null;
+
+        try {
+    		// ステートメント生成
+        	StringBuffer sb = new StringBuffer(TASK_COURSE_LIST_SQL);
+
+        	if( taskGrpId != null ){
+        		sb.append(" AND ");
+        		sb.append(TASK_GROUP_LIST_WHERE);
+        	}
+        	sb.append(TASK_GROUPNAME_LIST_ORDERBY);
+
+			ps = con.prepareStatement(sb.toString());
+
+        	if( taskGrpId != null ){
+        		ps.setInt(TASK_COURSE_LIST_SQL_USER_IDX, taskGrpId);
+        	}
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+
+	        //値を取り出す
+	        int taskId = -1;
+	        int wkTaskId = 0;
+
+	        while(rs.next()){
+	        	wkTaskId = rs.getInt("TASK_ID");
+
+	        	//同じテストIDの間はテストケースのみため込む
+	        	if( taskId != wkTaskId ){
+	        		//テストケースが変わったら、テスト情報をセットする
+	        		if( entity != null ){
+	        			list.add(entity);
+	        		}
+	        		entity = createTaskTbl(rs,false);
+	        		entity.addTaskPublicTbl(createTaskPublicTblEntity(rs));
+	        		taskId = wkTaskId;
+	        	}
+	        }
+
+	        //最後の１件はループの外で登録する
+	        if( entity != null ){
+	        	list.add(entity);
+	        }
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+
+
+		return list;
+	}
 
 	/**
 	 * 課題を課題IDを指定して取得する

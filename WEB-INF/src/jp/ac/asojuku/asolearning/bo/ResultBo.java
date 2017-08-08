@@ -63,7 +63,7 @@ public interface ResultBo {
 	 * @return
 	 * @throws AsoLearningSystemErrException
 	 */
-	List<RankingDto> getRanking(Integer courseId,Integer taskId) throws AsoLearningSystemErrException;
+	List<RankingDto> getRanking(Integer courseId,Integer taskId,Integer taskGrpId) throws AsoLearningSystemErrException;
 
 	/**
 	 * ランキングの取得

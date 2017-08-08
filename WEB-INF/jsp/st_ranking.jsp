@@ -74,8 +74,10 @@
 List<CourseDto> courseList = (List<CourseDto>)request.getAttribute(RequestConst.REQUEST_COURSE_LIST);
 List<RankingDto> rankingList = (List<RankingDto>)request.getAttribute(RequestConst.REQUEST_RANKING_LIST);
 List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUEST_TASK_LIST);
+List<TaskGroupDto> taskGrpList = (List<TaskGroupDto>)request.getAttribute(RequestConst.REQUEST_TASKGRP_LIST);
 Integer courseId = (Integer)request.getAttribute(RequestConst.REQUEST_COURSE_ID);
 Integer taskId = (Integer)request.getAttribute(RequestConst.REQUEST_TASK_ID);
+Integer taskGrpId = (Integer)request.getAttribute(RequestConst.REQUEST_TASKGRP_ID);
 LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 
 if( courseId == null){
@@ -83,6 +85,9 @@ if( courseId == null){
 }
 if( taskId == null){
 	taskId = -1;
+}
+if( taskGrpId == null){
+	taskGrpId = -1;
 }
 %>
         <!-- Page Content -->
@@ -122,9 +127,18 @@ if( taskId == null){
 				                     </select>
 			                	</div>
 			                     <div class="col-lg-4">
+			                    	課題グループ
+				                     <select id="tgroup" class="form-control" name="<%=RequestConst.REQUEST_TASKGRP_LIST%>">
+				                         <option value="" >すべて</option>
+				                     <% for(TaskGroupDto taskGrp :taskGrpList){ %>
+				                         <option value="<%=taskGrp.getId() %>" <%= (taskGrpId == taskGrp.getId() ? "selected":"" ) %>><%=taskGrp.getName() %></option>
+				                     <%} %>
+				                     </select>
+			                	</div>
+			                     <div class="col-lg-4">
 			                    	課題
 				                     <select id="task" class="form-control" name="<%=RequestConst.REQUEST_TASK_ID%>">
-				                         <option value="" >全て</option>
+				                         <option value="" >すべて</option>
 					                     <% for(TaskDto taskDto : taskList ){ %>
 				                         	 <% if( taskDto != null){ %>
 					                         <option value="<%=taskDto.getTaskId() %>" <%= (taskId == taskDto.getTaskId() ? "selected":"" ) %> ><%=taskDto.getTaskName() %></option>
@@ -134,12 +148,10 @@ if( taskId == null){
 			                	</div>
 			                     <div class="col-lg-4">
 			                     	<button type="submit"  class="btn btn-default">表示</button>
-			                     </div>
 		                        <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
-			                     <div class="col-lg-4">
 			                     	<button id="create_csv" class="btn btn-default">CSV出力</button>
-			                     </div>
 			                     <% } %>
+			                     </div>
 		                     </div>
 		                </div>
 	            	</div>
@@ -233,10 +245,13 @@ if( taskId == null){
     <script src="view/datatables-plugins/dataTables.bootstrap.min.js"></script>
     <script src="view/datatables-responsive/dataTables.responsive.js"></script>
 
+
     <!-- Custom Theme JavaScript -->
     <script src="view/js/sb-admin-2.js"></script>
 	<script type="text/javascript" src="view/js/thumbnail.js"></script>
 <script>
+
+
 $(function(){
 	//学科の選択が変わった時
     $("#couse").change(function(){
@@ -256,8 +271,73 @@ $(function(){
 
 	    }).done(function(json) {
 	    	//var obj = $.parseJSON(json);
+            $("#tgroup").html("");
+            $("#tgroup").append("<option value=>すべて</option>");
+            for(var i=0;i<json.length;i++){
+                $("#tgroup").append("<option value="+json[i].itemValue+">"+json[i].itemLabel+"</option>");
+            }
+
+
+	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+
+	    	alert("err:"+textStatus);
+	        console.log( textStatus  + errorThrown);
+	    });
+
+	    $.ajax({
+	    	cache: false,
+	        type : 'GET',
+	        url : "rankingtgroupchange",
+	        data : params,
+	        dataType : 'json',
+	        processData : false,
+	        contentType : false,
+	        timeout : 360000, // milliseconds
+
+	    }).done(function(json) {
+	    	//var obj = $.parseJSON(json);
             $("#task").html("");
-            $("#task").append("<option value=>全て</option>");
+            $("#task").append("<option value=>すべて</option>");
+            for(var i=0;i<json.length;i++){
+                $("#task").append("<option value="+json[i].itemValue+">"+json[i].itemLabel+"</option>");
+            }
+
+
+	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+
+	    	alert("err:"+textStatus);
+	        console.log( textStatus  + errorThrown);
+	    });
+       // $.get("rankingcousechange/" + value ,function(data){
+       // 	alert(data);
+       //     var obj = $.parseJSON(data);
+       //     $("#task").html("");
+       //     for(var i=0;i<obj.length;i++){
+       //         $("#task").append("<option value="+obj[i].itemValue+">"+obj[i].itemLabel+"</option>");
+       //     }
+       // })
+    });
+
+	//課題グループの選択が変わった時
+    $("#tgroup").change(function(){
+        var value = $("#tgroup option:selected").val();
+		var params = "<%=RequestConst.REQUEST_TASKGRP_LIST%>="+value;
+
+        //alert("?");
+	    $.ajax({
+	    	cache: false,
+	        type : 'GET',
+	        url : "rankingtgroupchange",
+	        data : params,
+	        dataType : 'json',
+	        processData : false,
+	        contentType : false,
+	        timeout : 360000, // milliseconds
+
+	    }).done(function(json) {
+	    	//var obj = $.parseJSON(json);
+            $("#task").html("");
+            $("#task").append("<option value=>すべて</option>");
             for(var i=0;i<json.length;i++){
                 $("#task").append("<option value="+json[i].itemValue+">"+json[i].itemLabel+"</option>");
             }
@@ -278,7 +358,6 @@ $(function(){
        //     }
        // })
     });
-
 })
 
 <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
@@ -286,13 +365,14 @@ $(function(){
     $("#create_csv").on("click",function(){
         var couseId = $("#couse option:selected").val();
         var taskId = $("#task option:selected").val();
+        var taskGrpId = $("#tgroup option:selected").val();
 
     	//alert("couseId:"+couseId+" taskId:"+taskId);
 	    $.ajax({
 	    	cache: false,
 	        type : "GET",
 	        url : "creRankCsv",
-	        data : {"couseId":couseId, "taskId":taskId },
+	        data : {"couseId":couseId, "taskId":taskId,"taskGrpId":taskGrpId },
 	        dataType : 'text',
 	        timeout : 360000, // milliseconds
 	        beforeSend : function(xhr, settings) {
@@ -337,6 +417,9 @@ $(function(){
             ordering: false,
 
         });
+
+
+
     });
 </script>
 </body>

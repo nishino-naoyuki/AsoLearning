@@ -131,6 +131,9 @@ public class Dao {
 	protected Integer fixInt(int value, boolean isNull) {
 	    return isNull ? null : value;
 	}
+	protected String fixString(String value, boolean isNull) {
+	    return isNull ? null : value;
+	}
 
 	/**
 	 * PreparedStatementとResultSetをクローズする

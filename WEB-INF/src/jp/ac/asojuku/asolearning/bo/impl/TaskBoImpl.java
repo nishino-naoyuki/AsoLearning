@@ -17,12 +17,14 @@ import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
+import jp.ac.asojuku.asolearning.dto.TaskGroupDto;
 import jp.ac.asojuku.asolearning.dto.TaskPublicDto;
 import jp.ac.asojuku.asolearning.dto.TaskResultDto;
 import jp.ac.asojuku.asolearning.dto.TaskTestCaseDto;
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.PublicStatusMasterEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
+import jp.ac.asojuku.asolearning.entity.TaskGroupTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.TestcaseTableEntity;
@@ -210,6 +212,15 @@ public class TaskBoImpl implements TaskBo {
 			result.setHandedDate( DateUtil.formattedDate(rte.getHandedTimestamp(), "yyyy/MM/dd HH:mm:ss"));
 		}
 		dto.setResult(result);
+
+		//課題グループID
+		TaskGroupTblEntity taskGrpEntity = entity.getTaskGroupTbl();
+		if( taskGrpEntity != null ){
+			TaskGroupDto tgDto = new TaskGroupDto();
+
+			tgDto.setId(taskGrpEntity.getTaskGroupId());
+			tgDto.setName( taskGrpEntity.getTaskGroupName() );
+		}
 
 		return dto;
 	}
@@ -456,7 +467,6 @@ public class TaskBoImpl implements TaskBo {
 			TaskTblEntity entity =
 					dao.getTaskDetal(name);
 
-
 			//会員テーブル→ログイン情報
 			dto = getEntityToDto(entity);
 
@@ -493,6 +503,42 @@ public class TaskBoImpl implements TaskBo {
 			//課題リスト情報を取得
 			List<TaskTblEntity> entityList =
 					dao.getTaskListByCouseId(couseId);
+
+
+			//会員テーブル→ログイン情報
+			dtoList = getEntityListToDtoList(entityList);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return dtoList;
+	}
+
+	public List<TaskDto> getTaskListByTaskGrpId(Integer taskGrpId) throws AsoLearningSystemErrException{
+
+		List<TaskDto> dtoList = new ArrayList<TaskDto>();
+
+		TaskDao dao = new TaskDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//課題リスト情報を取得
+			List<TaskTblEntity> entityList =
+					dao.getTaskListBytaskGroupId(taskGrpId);
 
 
 			//会員テーブル→ログイン情報

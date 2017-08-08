@@ -18,12 +18,15 @@ import org.slf4j.LoggerFactory;
 import jp.ac.asojuku.asolearning.bo.CourseBo;
 import jp.ac.asojuku.asolearning.bo.ResultBo;
 import jp.ac.asojuku.asolearning.bo.TaskBo;
+import jp.ac.asojuku.asolearning.bo.TaskGroupBo;
 import jp.ac.asojuku.asolearning.bo.impl.CourseBoImpl;
 import jp.ac.asojuku.asolearning.bo.impl.ResultBoImpl;
 import jp.ac.asojuku.asolearning.bo.impl.TaskBoImpl;
+import jp.ac.asojuku.asolearning.bo.impl.TaskGroupBoImpl;
 import jp.ac.asojuku.asolearning.dto.CourseDto;
 import jp.ac.asojuku.asolearning.dto.RankingDto;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
+import jp.ac.asojuku.asolearning.dto.TaskGroupDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.RequestConst;
 
@@ -51,9 +54,11 @@ public class RankingServlet extends BaseServlet {
 		//パラメータを取得
 		Integer courseId = getIntParam(RequestConst.REQUEST_COURSE_ID,req);
 		Integer taskId = getIntParam(RequestConst.REQUEST_TASK_ID,req);
+		Integer taskGrpId = getIntParam(RequestConst.REQUEST_TASKGRP_LIST,req);
 
 		req.setAttribute(RequestConst.REQUEST_COURSE_ID, courseId);
 		req.setAttribute(RequestConst.REQUEST_TASK_ID, taskId);
+		req.setAttribute(RequestConst.REQUEST_TASKGRP_ID, taskGrpId);
 
 		//////////////////////////////
 		//学科一覧を取得
@@ -61,6 +66,13 @@ public class RankingServlet extends BaseServlet {
 
 		List<CourseDto> list = coursBo.getCourseAllList();
 		req.setAttribute(RequestConst.REQUEST_COURSE_LIST, list);
+
+		//////////////////////////////
+		//課題一グループ覧を取得
+		TaskGroupBo taskGrpBo = new TaskGroupBoImpl();
+
+		List<TaskGroupDto> taskGrpList = taskGrpBo.getTaskGroupList("");
+		req.setAttribute(RequestConst.REQUEST_TASKGRP_LIST, taskGrpList);
 
 		//////////////////////////////
 		//課題一覧を取得
@@ -73,7 +85,7 @@ public class RankingServlet extends BaseServlet {
 		//ランキング情報を取得
 		ResultBo retBo = new ResultBoImpl();
 
-		List<RankingDto> rankingList = retBo.getRanking(courseId, taskId);
+		List<RankingDto> rankingList = retBo.getRanking(courseId, taskId,taskGrpId);
 		req.setAttribute(RequestConst.REQUEST_RANKING_LIST, rankingList);
 
 		//////////////////////////////

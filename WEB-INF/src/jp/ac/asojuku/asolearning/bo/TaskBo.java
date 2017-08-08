@@ -96,12 +96,21 @@ public interface TaskBo {
 
 	/**
 	 * 学科を指定して課題一覧を取得する
-	 *
+	 * （その学科で表示する課題のみ表示する）
 	 * @param couseId
 	 * @return
 	 * @throws AsoLearningSystemErrException
 	 */
 	public List<TaskDto> getTaskListByCouseId(Integer couseId) throws AsoLearningSystemErrException;
+
+	/**
+	 * 課題グループのIDを指定して課題一覧を取得する
+	 * （その学科で表示する課題のみ表示する）
+	 * @param couseId
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	public List<TaskDto> getTaskListByTaskGrpId(Integer taskGrpId) throws AsoLearningSystemErrException;
 
 	/**
 	 * 課題をIDを指定して取得する

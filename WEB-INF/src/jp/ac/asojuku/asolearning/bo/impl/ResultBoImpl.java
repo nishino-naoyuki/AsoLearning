@@ -155,7 +155,7 @@ public class ResultBoImpl implements ResultBo {
 	 * @see jp.ac.asojuku.asolearning.bo.ResultBo#getRanking(java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
-	public List<RankingDto> getRanking(Integer courseId, Integer taskId) throws AsoLearningSystemErrException {
+	public List<RankingDto> getRanking(Integer courseId, Integer taskId,Integer taskGrpId) throws AsoLearningSystemErrException {
 
 		List<RankingDto> list = new ArrayList<RankingDto>();
 		ResultDao dao = new ResultDao();
@@ -169,7 +169,8 @@ public class ResultBoImpl implements ResultBo {
 
 			//ランキングを取得
 			List<ResultTblEntity> retEntityList =
-					dao.getRanking(courseId,taskId,config.getRankingEasy(),config.getRankingNormal(),config.getRankingDiffical());
+					dao.getRanking(courseId,taskId,taskGrpId,
+							config.getRankingEasy(),config.getRankingNormal(),config.getRankingDiffical());
 
 			int rank = 0;
 			float wkScore = Float.MAX_VALUE;

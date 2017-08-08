@@ -33,4 +33,5 @@ public class RequestConst {
 	public static final String REQUEST_INFO_DTO = "InformationDto";
 	public static final String REQUEST_AVATAR_DTO = "avatorDto";
 	public static final String REQUEST_TASKGRP_ID = "taskGrpId";
+	public static final String REQUEST_TASKGRP_LIST = "RequestTaskGrpList";
 }

@@ -14,7 +14,20 @@ public class SearchTaskCondition {
 	private String creator;
 	private Integer courseId;
 	private String groupName;
+	private Integer groupId;
 
+	/**
+	 * @return groupId
+	 */
+	public Integer getGroupId() {
+		return groupId;
+	}
+	/**
+	 * @param groupId セットする groupId
+	 */
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
+	}
 	public String getTaskName() {
 		return taskName;
 	}

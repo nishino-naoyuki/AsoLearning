@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jp.ac.asojuku.asolearning.bo.TaskBo;
-import jp.ac.asojuku.asolearning.bo.impl.TaskBoImpl;
-import jp.ac.asojuku.asolearning.dto.TaskDto;
+import jp.ac.asojuku.asolearning.bo.TaskGroupBo;
+import jp.ac.asojuku.asolearning.bo.impl.TaskGroupBoImpl;
+import jp.ac.asojuku.asolearning.dto.TaskGroupDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.json.SelectTaskJson;
 import jp.ac.asojuku.asolearning.param.RequestConst;
@@ -29,11 +29,11 @@ import jp.ac.asojuku.asolearning.param.RequestConst;
  * @author nishino
  *
  */
-@WebServlet(name="RankingChangeCourseIdServlet",urlPatterns={"/rankingcousechange"})
-public class RankingChangeCourseIdServlet extends BaseServlet {
+@WebServlet(name="RankingCourseIdChangeServlet",urlPatterns={"/rankingcousechange"})
+public class RankingCourseIdChangeServlet extends BaseServlet {
 
 
-	Logger logger = LoggerFactory.getLogger(RankingChangeCourseIdServlet.class);
+	Logger logger = LoggerFactory.getLogger(RankingCourseIdChangeServlet.class);
 
 	private final String DISPNO = "00201";
 	@Override
@@ -58,18 +58,18 @@ public class RankingChangeCourseIdServlet extends BaseServlet {
 
 			//////////////////////////////
 			//課題一覧を取得
-			TaskBo taskBo = new TaskBoImpl();
+			TaskGroupBo taskGrpBo = new TaskGroupBoImpl();
 
-			List<TaskDto> taskList = taskBo.getTaskListByCouseId(courseId);
+			List<TaskGroupDto> taskGrpList = taskGrpBo.getTaskGroupListByCourseId(courseId);
 
-			SelectTaskJson[] jsons = new SelectTaskJson[taskList.size()];
+			SelectTaskJson[] jsons = new SelectTaskJson[taskGrpList.size()];
 
 			int idx = 0;
-			for( TaskDto taskDto : taskList ){
+			for( TaskGroupDto taskGrpDto : taskGrpList ){
 				SelectTaskJson json = new SelectTaskJson();
 
-				json.itemValue = String.valueOf(taskDto.getTaskId());
-				json.itemLabel = taskDto.getTaskName();
+				json.itemValue = String.valueOf(taskGrpDto.getId());
+				json.itemLabel = taskGrpDto.getName();
 
 				jsons[idx] = json;
 				idx++;

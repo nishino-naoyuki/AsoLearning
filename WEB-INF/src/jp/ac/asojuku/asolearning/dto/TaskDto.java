@@ -23,6 +23,7 @@ public class TaskDto {
 	private Integer difficalty;
 	private List<TaskPublicDto> taskPublicList = new ArrayList<>();
 	private List<TaskTestCaseDto> taskTestCaseDtoList = new ArrayList<>();
+	private TaskGroupDto taskGrp;
 
 	/**
 	 * @return taskId
@@ -126,6 +127,17 @@ public class TaskDto {
 	public void setDifficalty(Integer difficalty) {
 		this.difficalty = difficalty;
 	}
-
+	/**
+	 * @return taskGrp
+	 */
+	public TaskGroupDto getTaskGrp() {
+		return taskGrp;
+	}
+	/**
+	 * @param taskGrp セットする taskGrp
+	 */
+	public void setTaskGrp(TaskGroupDto taskGrp) {
+		this.taskGrp = taskGrp;
+	}
 
 }

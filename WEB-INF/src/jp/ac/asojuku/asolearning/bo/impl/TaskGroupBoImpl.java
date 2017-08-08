@@ -17,6 +17,9 @@ import jp.ac.asojuku.asolearning.exception.DBConnectException;
 public class TaskGroupBoImpl implements TaskGroupBo {
 	Logger logger = LoggerFactory.getLogger(TaskGroupBoImpl.class);
 
+	/* (非 Javadoc)
+	 * @see jp.ac.asojuku.asolearning.bo.TaskGroupBo#getTaskGroupList(java.lang.String)
+	 */
 	public List<TaskGroupDto> getTaskGroupList(String groupName) throws AsoLearningSystemErrException{
 
 		List<TaskGroupDto> dtoList = new ArrayList<TaskGroupDto>();
@@ -62,6 +65,44 @@ public class TaskGroupBoImpl implements TaskGroupBo {
 			dto.setName(entity.getTaskGroupName());
 
 			dtoList.add(dto);
+		}
+
+		return dtoList;
+	}
+
+	/* (非 Javadoc)
+	 * @see jp.ac.asojuku.asolearning.bo.TaskGroupBo#getTaskGroupListByCourseId(java.lang.Integer)
+	 */
+	@Override
+	public List<TaskGroupDto> getTaskGroupListByCourseId(Integer courseId) throws AsoLearningSystemErrException {
+
+		List<TaskGroupDto> dtoList = new ArrayList<TaskGroupDto>();
+
+		TaskGroupDao dao = new TaskGroupDao();
+
+		try {
+			//DB接続
+			dao.connect();
+
+			//課題グループリスト情報を取得
+			List<TaskGroupTblEntity> entityList =
+					dao.getTaskGroupListByCourseId(courseId);
+
+			//Entity→DTO変換
+			dtoList = getEntityListToDtoList(entityList);
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
 		}
 
 		return dtoList;
