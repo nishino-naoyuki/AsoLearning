@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dao.HistoryDao;
 import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.dao.TaskDao;
+import jp.ac.asojuku.asolearning.dao.TaskGroupDao;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
 import jp.ac.asojuku.asolearning.dto.TaskGroupDto;
@@ -222,6 +224,13 @@ public class TaskBoImpl implements TaskBo {
 			tgDto.setName( taskGrpEntity.getTaskGroupName() );
 		}
 
+		//タスクグループ
+		TaskGroupTblEntity tasgGrpEntity = entity.getTaskGroupTbl();
+		TaskGroupDto taskGrpDto = new TaskGroupDto();
+		taskGrpDto.setId(tasgGrpEntity.getTaskGroupId());
+		taskGrpDto.setName(tasgGrpEntity.getTaskGroupName());
+		dto.setTaskGrp(taskGrpDto);
+
 		return dto;
 	}
 	/**
@@ -314,7 +323,16 @@ public class TaskBoImpl implements TaskBo {
 			//DB接続
 			dao.connect();
 
+			TaskGroupDao tgDao = new TaskGroupDao(dao.getConnection());
+
+			//タスクグループを取得
+			TaskGroupTblEntity taskGrpEntity = getTaskGroupTblEntity(tgDao,dto.getTaskGrp());
+
 			TaskTblEntity entity = getTaskTblEntity(dto,dto.getTaskTestCaseDtoList(),dto.getTaskPublicList());
+
+			//タスクグループをセット
+			entity.setTaskGroupTbl(taskGrpEntity);
+
 			//課題リスト情報を取得
 			dao.insert(user.getUserId(), entity);
 
@@ -341,6 +359,23 @@ public class TaskBoImpl implements TaskBo {
 
 	}
 
+	private TaskGroupTblEntity getTaskGroupTblEntity( TaskGroupDao tgDao,TaskGroupDto dto ) throws SQLException{
+		TaskGroupTblEntity tgEntity = new TaskGroupTblEntity();
+
+		if( dto == null ){
+			return null;
+		}
+
+		List<TaskGroupTblEntity> tGrpList = tgDao.getTaskGroupListBy(dto.getName());
+		if( CollectionUtils.isEmpty(tGrpList)){
+			//リストが1件も無い場合は、登録無しなので、登録をする
+			tgEntity.setTaskGroupName(dto.getName());
+			tgEntity = tgDao.insert(tgEntity);
+		}
+
+		return tgEntity;
+	}
+
 	/**
 	 * 課題エンティティを作成
 	 *
@@ -362,6 +397,11 @@ public class TaskBoImpl implements TaskBo {
 		entity.setTaskQuestion(dto.getQuestion());
 		entity.setTaskId(dto.getTaskId());
 		entity.setDifficalty(dto.getDifficalty());
+		//タスクグループ
+		if( dto.getTaskGrp() != null ){
+			TaskGroupTblEntity taskGrpEntity = new TaskGroupTblEntity();
+			taskGrpEntity.setTaskGroupName(dto.getTaskGrp().getName());
+		}
 
 		//テストケース情報
 		for( TaskTestCaseDto testcaseDto : testCaseList){
@@ -645,7 +685,15 @@ public class TaskBoImpl implements TaskBo {
 			//DB接続
 			dao.connect();
 
+			TaskGroupDao tgDao = new TaskGroupDao(dao.getConnection());
+
+			//タスクグループを取得
+			TaskGroupTblEntity taskGrpEntity = getTaskGroupTblEntity(tgDao,dto.getTaskGrp());
+
 			TaskTblEntity entity = getTaskTblEntity(dto,dto.getTaskTestCaseDtoList(),dto.getTaskPublicList());
+
+			entity.setTaskGroupTbl(taskGrpEntity);
+
 			//課題リスト情報を取得
 			dao.update(user.getUserId(), entity);
 

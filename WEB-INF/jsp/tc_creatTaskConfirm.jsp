@@ -105,6 +105,14 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                            <table class="table table-bordered table-hover" id="form">
 	                                <tbody>
 	                                	<tr>
+	                                		<th>課題グループ</th>
+	                                		<td>
+	                                		<div class="form-group">
+	                                			<%= dto.getTaskGrp().getName() %>
+	                                		</div>
+	                                		</td>
+	                                	</tr>
+	                                	<tr>
 	                                		<th>課題名</th>
 	                                		<td>
 	                                		<div class="form-group">

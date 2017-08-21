@@ -3,6 +3,7 @@
  */
 package jp.ac.asojuku.asolearning.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +21,14 @@ import jp.ac.asojuku.asolearning.entity.TaskGroupTblEntity;
  */
 public class TaskGroupDao extends Dao {
 
+	public TaskGroupDao(){
+		super();
+	}
+
+	public TaskGroupDao(Connection con) {
+		super(con);
+	}
+
 	//検索条件を指定して課題一覧を取得
 	private static final String TASK_GRP_LIST_COND_SQL =
 			"SELECT * FROM TASK_GROUP_TBL tg ";
@@ -34,6 +43,12 @@ public class TaskGroupDao extends Dao {
 	private static final String TASK_GRP_LIST_BYCID_WHERE = " tp.COURSE_ID = ?";
 	private static final String TASK_GRP_LIST_BYCID_GROUPBY = " GROUP BY t.TASK_GROUP_ID ";
 	private static final String TASK_GRP_LIST_BYCID_ORDERBY = " ORDER BY tg.TASK_GROUP_NAME ";
+
+	//グループを登録する
+	private static final String INSERT_TASK_GRP_LIST =
+			"INSERT INTO TASK_GROUP_TBL "
+			+ "(TASK_GROUP_ID,TASK_GROUP_NAME,ENTRY_DATE,UPDATE_DATE)VALUES"
+			+ "(null,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)";
 
 
 	/**
@@ -155,5 +170,49 @@ public class TaskGroupDao extends Dao {
 		entity.setUpdateDate(rs.getDate("UPDATE_DATE"));
 
 		return entity;
+	}
+
+	/**
+	 * 挿入セット
+	 *
+	 * @param entity
+	 * @return
+	 * @throws SQLException
+	 */
+	public  TaskGroupTblEntity insert(TaskGroupTblEntity entity) throws SQLException{
+
+		if( con == null ){
+			return null;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+        	this.beginTranzaction();
+
+        	////////////////////////////
+        	//TASK_TBL
+        	ps = con.prepareStatement(INSERT_TASK_GRP_LIST);
+
+        	ps.setString(1, entity.getTaskGroupName());
+
+        	ps.executeUpdate();
+
+			int taskGroupId = getLastInsertid("TASK_GROUP_TBL");
+
+	        //コミット
+	        this.commit();
+
+	        entity.setTaskGroupId(taskGroupId);
+
+	        return entity;
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			this.rollback();
+			throw e;
+		} finally {
+			safeClose(ps,null);
+		}
 	}
 }

@@ -29,6 +29,7 @@ import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.dto.CourseDto;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
+import jp.ac.asojuku.asolearning.dto.TaskGroupDto;
 import jp.ac.asojuku.asolearning.dto.TaskPublicDto;
 import jp.ac.asojuku.asolearning.dto.TaskTestCaseDto;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
@@ -228,6 +229,10 @@ public class UpdateTaskConfirmServlet extends BaseServlet {
 		dto.setQuestion(getStringParamFromPart(req,"question"));
 		//難易度を取得
 		dto.setDifficalty(getIntParamFromPart(req,"difficalty"));
+		//グループ名を取得
+		TaskGroupDto taskGrpDto = new TaskGroupDto();
+		taskGrpDto.setName(getStringParamFromPart(req,"groupname"));
+		dto.setTaskGrp(taskGrpDto);
 
 		return dto;
 	}

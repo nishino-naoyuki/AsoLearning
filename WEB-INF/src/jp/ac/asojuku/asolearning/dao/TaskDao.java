@@ -68,6 +68,7 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "LEFT JOIN TESTCASE_TABLE tc ON(t.TASK_ID = tc.TASK_ID) "
 			+ "LEFT JOIN RESULT_TBL r ON(t.TASK_ID = r.TASK_ID AND r.user_ID=?) "
+			+ "LEFT JOIN TASK_GROUP_TBL tg ON(t.TASK_GROUP_ID = tg.TASK_GROUP_ID) "
 			+ "WHERE tp.COURSE_ID=? ";
 	private static final String TASK_LIST_WHERE = " AND tp.STATUS_ID IN(1,2) ";
 	private static final String TASK_LIST_ORDERBY2 = " ORDER BY t.NAME,t.TASK_ID ";
@@ -90,8 +91,8 @@ public class TaskDao extends Dao {
 	//挿入SQL
 	private static final String TASK_INSERT_SQL =
 			"INSERT INTO TASK_TBL "
-			+ "(TASK_ID,NAME,TASK_QUESTION,CREATE_USER_ID,DIFFICALTY,ENTRY_DATE,UPDATE_TIM) "
-			+ "VALUES(null,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ";
+			+ "(TASK_ID,NAME,TASK_QUESTION,CREATE_USER_ID,DIFFICALTY,ENTRY_DATE,UPDATE_TIM,TASK_GROUP_ID) "
+			+ "VALUES(null,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,?) ";
 	private static final String TASKTESTCASE_INSERT_SQL =
 			"INSERT INTO TESTCASE_TABLE "
 			+ "(TASK_ID,TESTCASE_ID,ALLMOST_OF_MARKS,OUTPUT_FILE_NAME,INPUT_FILE_NAME) "
@@ -1022,6 +1023,7 @@ public class TaskDao extends Dao {
         	ps1.setString(2, entity.getTaskQuestion());
         	ps1.setInt(3, userId);
         	ps1.setInt(4, entity.getDifficalty());
+        	ps1.setInt(5, entity.getTaskGroupTbl().getTaskGroupId());
 
         	ps1.executeUpdate();
 
