@@ -83,6 +83,7 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "LEFT JOIN TESTCASE_TABLE tc ON(t.TASK_ID = tc.TASK_ID) "
 			+ "LEFT JOIN RESULT_TBL r ON(t.TASK_ID = r.TASK_ID AND r.user_ID=?) "
+			+ "LEFT JOIN TASK_GROUP_TBL tg ON(t.TASK_GROUP_ID = tg.TASK_GROUP_ID) "
 			+ "WHERE tp.COURSE_ID=? AND t.TASK_ID = ? ";
 	private static final String TASK_DETAIL_WHERE_SQL = " AND tp.STATUS_ID IN(1,2) ";
 	private static final int TASK_DETAIL_SQL_USER_IDX = 1;
@@ -105,7 +106,7 @@ public class TaskDao extends Dao {
 	//更新SQL
 	private static final String TASK_UPDATE_SQL =
 			"UPDATE TASK_TBL SET "
-			+ "NAME=?,TASK_QUESTION=?,DIFFICALTY=?,UPDATE_TIM=CURRENT_TIMESTAMP "
+			+ "NAME=?,TASK_QUESTION=?,DIFFICALTY=?,TASK_GROUP_ID=?,UPDATE_TIM=CURRENT_TIMESTAMP "
 			+ "WHERE TASK_ID=? ";
 	private static final String TASKTESTCASE_UPDATE_SQL =
 			"UPDATE TESTCASE_TABLE SET "
@@ -127,6 +128,7 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
 			+ "LEFT JOIN TESTCASE_TABLE tc ON(t.TASK_ID = tc.TASK_ID) "
 			+ "LEFT JOIN RESULT_TBL r ON(t.TASK_ID = r.TASK_ID) "
+			+ "LEFT JOIN TASK_GROUP_TBL tg ON(t.TASK_GROUP_ID = tg.TASK_GROUP_ID) "
 			+ "WHERE t.NAME=?  ";
 	private static final int TASK_NAME_SQL_NAMEIDX = 1;
 
@@ -135,6 +137,7 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN TASK_PUBLIC_TBL tp ON(t.TASK_ID = tp.TASK_ID) "
 			+ "LEFT JOIN COURSE_MASTER cm ON(cm.COURSE_ID=tp.COURSE_ID) "
 			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(tp.STATUS_ID = ps.STATUS_ID) "
+			+ "LEFT JOIN TASK_GROUP_TBL tg ON(t.TASK_GROUP_ID = tg.TASK_GROUP_ID) "
 			+ "WHERE t.TASK_ID=? ORDER BY t.TASK_ID ,tp.COURSE_ID  ";
 	private static final String TASK_ID_TESTCASE_SQL =
 			"SELECT * FROM TASK_TBL t "
@@ -867,7 +870,8 @@ public class TaskDao extends Dao {
         	ps1.setString(1, entity.getName());
         	ps1.setString(2, entity.getTaskQuestion());
         	ps1.setInt(3, entity.getDifficalty());
-        	ps1.setInt(4, entity.getTaskId());
+        	ps1.setInt(4, entity.getTaskGroupTbl().getTaskGroupId());
+        	ps1.setInt(5, entity.getTaskId());
 
         	ps1.executeUpdate();
 

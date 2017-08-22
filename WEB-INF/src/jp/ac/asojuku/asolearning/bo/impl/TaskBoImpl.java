@@ -359,6 +359,16 @@ public class TaskBoImpl implements TaskBo {
 
 	}
 
+	/**
+	 * 課題グループエンティティの取得
+	 * 課題名で検索をして、既にある場合はそのエンティティを、無い場合は新規登録して
+	 * 登録した情報を返す
+	 *
+	 * @param tgDao
+	 * @param dto
+	 * @return
+	 * @throws SQLException
+	 */
 	private TaskGroupTblEntity getTaskGroupTblEntity( TaskGroupDao tgDao,TaskGroupDto dto ) throws SQLException{
 		TaskGroupTblEntity tgEntity = new TaskGroupTblEntity();
 
@@ -371,6 +381,10 @@ public class TaskBoImpl implements TaskBo {
 			//リストが1件も無い場合は、登録無しなので、登録をする
 			tgEntity.setTaskGroupName(dto.getName());
 			tgEntity = tgDao.insert(tgEntity);
+		}else{
+			//存在する場合は1つ目のデータ（複数あることは想定していない）を
+			//取得する
+			tgEntity = tGrpList.get(0);
 		}
 
 		return tgEntity;

@@ -109,6 +109,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 
 		                                <thead>
 		                                    <tr class="info">
+		                                        <th>課題グループ</th>
 		                                        <th>課題名</th>
 		                                        <th>難易度</th>
 		                                        <th>状態</th>
@@ -121,8 +122,11 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 		                                <% for( TaskDto taskDto : taskList ){ %>
 		                                    <tr>
 
+												<td>
+		                                        	<%= ( taskDto.getTaskGrp() != null ? taskDto.getTaskGrp().getName():"") %>
+												</td>
 		                                        <td>
-		                                        <a href="task?taskid=<%=taskDto.getTaskId()%>">
+		                                        <a href="task?taskid=<%=taskDto.getTaskId()%>" target="_blank">
 		                                        <%= taskDto.getTaskName() %>
 		                                        </a>
 		                                        </td>
@@ -213,8 +217,8 @@ $(document).ready(function() {
         responsive: true,
         columnDefs: [
                      // 2列目(0から始まるため1になっています)の幅を100pxにする
-                     { targets: 1, width: 120 },
-                     { targets: 2, width: 100 }
+                     { targets: 2, width: 120 },
+                     { targets: 3, width: 100 }
                  ]
 
     });

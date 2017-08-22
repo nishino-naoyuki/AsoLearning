@@ -8,33 +8,31 @@
 
 FNAME=$2
 
-
-# 複雑度を判定
-cccc $1/$2 --outdir=$3/cccc
-
 if [ ${FNAME##*.} = "java" ]; then
+  # 複雑度を判定
+  cccc $1/*.java --outdir=$3/cccc
   # コンパイルを行う
-  javac -d $1/classes $1/$2 2>$3/error.txt
+  javac -d $1/classes $1/*.java 2>$3/error.txt
 
   # 実行する
   cd $1/classes
   java $4 $5 $6 $7 $8 $9 > $3/result.txt &
-  
+
   # PIDを取得
   pid=$!
-  
+
   # 100ms待つ
   usleep 100000
   time=0
-  
+
   while true
   do
     #生存確認
     isAlive=`ps -ef | grep "$pid" | grep -v grep | grep -v srvchk | wc -l`
-  
+
     echo $isAlive
     echo $time
-  
+
     if [ $isAlive = 1 ]; then
       if [ $time = ${10} ]; then
         #タイムアウトに達したのでエラーにする
@@ -48,9 +46,11 @@ if [ ${FNAME##*.} = "java" ]; then
     usleep 1000000
     time=$(( time + 1 ))
   done
-  
+
 else
 
+  # 複雑度を判定
+  cccc $1/*.* --outdir=$3/cccc
   #排他処理
   _LOCK_FILE=$0.lock
   exec {F_LOCK}>>$_LOCK_FILE

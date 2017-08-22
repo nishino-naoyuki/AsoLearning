@@ -6,7 +6,7 @@ set OUTPUT_DIR = %3
 cd %1
 
 rem CCCC�ŕi������
-"C:\Program Files\CCCC\cccc" %1/%2 --outdir=%3\cccc
+"C:\Program Files\CCCC\cccc" %1/*.java --outdir=%3\cccc
 
 rem �R���p�C��
 javac -d %1\classes %1\%2 2>%3\error.txt

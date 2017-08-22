@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +42,7 @@ import jp.ac.asojuku.asolearning.util.TimestampUtil;
 @WebServlet(name="TaskJudgeServlet",urlPatterns={"/judgetask"})
 @MultipartConfig(location="/tmp", maxFileSize=1048576)
 public class TaskJudgeServlet extends BaseServlet {
+	private final int JUDGEFILE_MAX = 10;
 
 	Logger logger = LoggerFactory.getLogger(TaskJudgeServlet.class);
 
@@ -57,10 +61,6 @@ public class TaskJudgeServlet extends BaseServlet {
 			//////////////////////////////////////////////
 			//課題IDを取得
 	        Integer taskId = getTaskId(req);
-			//////////////////////////////////////////////
-			//アップロードされたファイルを取得
-			Part part = req.getPart("file");
-	        String name = this.getFileName(part);
 
 			//////////////////////////////////////////////
 	        //ファイル名を決定する
@@ -72,16 +72,20 @@ public class TaskJudgeServlet extends BaseServlet {
 			//フォルダを作成する
 			FileUtils.makeDir(dir);
 
-	        part.write(dir + "/" + name);
+			//////////////////////////////////////////////
+			//アップロードされたファイルを取得
+			//Part part = req.getPart("file");
+	        //String name = this.getFileName(part);
+	        List<String> fileList = getInputFileList(req,dir);
 
-	        logger.trace("fileuploaded! user={} file={}",loginInfo.getName(),dir + "/" +name);
+	        String mainFile = fileList.get(0);
 
 	        logger.info("判定処理開始："+loginInfo.getName());
 			//////////////////////////////////////////////
 	        //判定処理を行う
 	        TaskBo taskBo = new TaskBoImpl();
 
-	        JudgeResultJson json = taskBo.judgeTask(taskId,loginInfo,dir, name);
+	        JudgeResultJson json = taskBo.judgeTask(taskId,loginInfo,dir, mainFile);
 	        logger.info("判定処理終了"+loginInfo.getName());
 	        ObjectMapper mapper = new ObjectMapper();
 	        String jsonString = mapper.writeValueAsString(json);
@@ -167,5 +171,28 @@ public class TaskJudgeServlet extends BaseServlet {
 
 		return taskId;
 	}
+
+	private List<String> getInputFileList(HttpServletRequest req,String dir)
+							throws IllegalStateException, IOException, ServletException{
+		List<String> fileList = new ArrayList<String>();
+
+		for(int i = 0; i < JUDGEFILE_MAX; i++){
+			//入力ファイル
+			Part ipart = req.getPart("inputfile["+i+"]");
+			if(ipart != null ){
+		        String name = getFileName(ipart);
+		        if( StringUtils.isNotEmpty(name)){
+		        	fileList.add(name);
+		        	ipart.write(dir + "/" + name);
+
+			        logger.trace("fileuploaded!  file={}",dir + "/" +name);
+		        }
+			}
+
+		}
+
+		return fileList;
+	}
+
 
 }

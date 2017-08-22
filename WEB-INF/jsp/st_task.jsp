@@ -184,6 +184,51 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 
 								        </div>
 
+
+
+
+<input type="button" value="行追加" id="addForm">
+
+		                		<label>
+		                		<p>No.1には必ず「mainメソッド」があるファイルを指定してください</p>
+		                		</label>
+
+		                        <div class="table-responsive">
+
+		                            <table class="table table-bordered table-hover" id="form">
+		                                <thead>
+		                                    <tr>
+		                                        <th>&nbsp;</th>
+		                                        <th>No.</th>
+		                                        <th>入力ファイル</th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody>
+		                                	<tr id="testcase_table_tr[0]" class="testcase_table_tr">
+
+		                                		<td>
+		                                			<input class="close" type="button" value="削除" id="close[0]" style="display: none;">
+		                                		</td>
+		                                		<td>
+		                                			<div id="index[0]">1</div>
+		                                		</td>
+		                                		<td>
+			                                        <input type="file" id="infile_select[0]" name="inputfile[0]" class="form-control" style="display:none;">
+			                                        <div class="input-group">
+
+											          <span class="input-group-btn">
+											            <button type="button" id="infile_select_icon[0]" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
+											          </span>
+											          <input type="text" id="inputfile_name[0]" name="inputfile_name[0]" class="form-control" placeholder="Select file ..." readonly>
+
+											        </div>
+		                                		</td>
+		                                	</tr>
+		                                </tbody>
+		                            </table>
+		                        </div>
+
+
                                         </td>
                                         <td>
                                         	<p id="score">
@@ -252,8 +297,11 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 
 	$('#judge').on('click', function() {
 		var fd = new FormData();
-		  if ($("input[name='javafile']").val()!== '') {
-		    fd.append( "file", $("input[name='javafile']").prop("files")[0] );
+		  if ($('[id^=inputfile]').val()!== '') {
+			  for(var i = 0; i < testcase_cnt; i++){
+				  fd.append( "inputfile["+i+"]", $("input[name='inputfile["+i+"]']").prop("files")[0] );
+			  }
+		    //fd.append( "file", $("input[name='javafile']").prop("files")[0] );
 		    fd.append( "taskid", <%=taskdto.getTaskId()%> );
 		 }
 
@@ -325,6 +373,119 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 	 $("#loading").remove();
 	}
 
+
+	//アイコンをクリックした場合は、ファイル選択をクリックした挙動とする.
+	$('[id^=infile_select_icon]').on('click', function() {
+		var idx = 0;
+		if( $(this).data("n") != null ){
+			idx = $(this).data("n");
+		}
+	  $('[id=infile_select\\['+idx+'\\]]').click();
+	});
+
+	// ファイル選択時に表示用テキストボックスへ値を連動させる.
+	// ファイル選択値のクリア機能の実装により、#file_select がDOMから消されることがあるので親要素からセレクタ指定でイベントを割り当てる.
+	$('[id^=infile_select]').parent().on('change', '[id^=infile_select]', function() {
+	  // $('#file_name').val($(this).val());
+		var idx = 0;
+		if( $(this).data("n") != null ){
+			idx = $(this).data("n");
+		}
+	  $('[id=inputfile_name\\['+idx+'\\]]').val($('[id=infile_select\\['+idx+'\\]]').prop('files')[0].name);
+	});
+
+
+
+
+
+
+	var testcase_cnt = 0;	//テストケースの数。初期値は0
+	$(function(){
+		//追加
+		  $('#addForm').click(function(){
+			  var original = $('#testcase_table_tr\\[' + testcase_cnt + '\\]');
+			  var originCnt = testcase_cnt;
+
+			  if( testcase_cnt < 9 ){
+				  testcase_cnt++;
+				  original
+				  	.clone(original)
+					.insertAfter(original)
+					.attr('id', 'testcase_table_tr[' + testcase_cnt + ']')
+					.end()
+					.find('input, button, div, button').each(function(idx, obj) {
+							//id属性変更
+							if($(obj).attr('id') != null ){
+					              $(obj).attr({
+					                  id: $(obj).attr('id').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
+					              });
+					              $(obj).data("n",testcase_cnt);
+				             }
+							//名前属性変更
+							if($(obj).attr('name') != null ){
+	                            $(obj).attr({
+	                                name: $(obj).attr('name').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
+	                            });
+							}
+							if ($(obj).attr('type') == 'text') {
+				                $(obj).val('');
+				            }
+			          });
+
+					  var clone = $('#testcase_table_tr\\[' + testcase_cnt + '\\]');
+					  $('#index\\['+testcase_cnt+'\\]').text( testcase_cnt+1 );
+				      clone.children('td').children('input.close').show();
+				      clone.slideDown('slow');
+		  		}
+
+		  });
+
+		  //削除
+		  $("[id^=close]").on("click",function(){
+		        console.log($(this).data("n"));
+				//削除対象を取得
+		        var removeObj = $('#testcase_table_tr\\[' + $(this).data("n") + '\\]');
+		        //var removeObj = $(this).parent();
+		        removeObj.fadeOut('fast', function() {
+		            removeObj.remove();
+		            // 番号振り直し
+		            testcase_cnt = 0;
+		            $('[id^=testcase_table_tr]').each(function(index, formObj) {
+		            	//alert($(formObj).attr('id'));
+		                if ($(formObj).attr('id') != 'testcase_table_tr[0]') {
+		                	testcase_cnt++;
+		                    $(formObj)
+		                        .attr('id', 'testcase_table_tr[' + testcase_cnt + ']') // id属性を変更。
+		                        .find('input, button,div, button').each(function(idx, obj) {
+		    						if($(obj).attr('id') != null ){
+			                            $(obj).attr({
+			                                id: $(obj).attr('id').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
+			                            });
+							              $(obj).data("n",testcase_cnt);
+										  var clone = $('#testcase_table_tr\\[' + testcase_cnt + '\\]');
+										  $('#index\\['+testcase_cnt+'\\]').text( testcase_cnt+1 );
+		    						}
+		    						if($(obj).attr('name') != null ){
+			                            $(obj).attr({
+			                                name: $(obj).attr('name').replace(/\[[0-9]\]+$/, '[' + testcase_cnt + ']'),
+			                            });
+		    						}
+		                        });
+		                }
+		            });
+		        });
+
+		    });
+
+		  $('#scrollable-dropdown-menu .typeahead').typeahead(
+			    	null,
+			    	{
+			    	  name: 'states',
+			    	  limit: 30,
+			    	  display: 'value',
+			    	  source: states
+			    	});
+		});
 	</script>
 
 </body>

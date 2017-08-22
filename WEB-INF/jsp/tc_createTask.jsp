@@ -49,6 +49,10 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	TaskDto taskDto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK_DTO);
 	List<TaskPublicDto> taskPublicList = (taskDto == null ? null :taskDto.getTaskPublicList());
 	List<TaskTestCaseDto> testCaseList = (taskDto == null ? null :taskDto.getTaskTestCaseDtoList());
+	TaskGroupDto tasGrpDto = null;
+	if( taskDto != null ){
+		tasGrpDto = taskDto.getTaskGrp();
+	}
 %>
 </head>
 
@@ -113,7 +117,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 		                                		<td>
 		                                		<div class="form-group">
 							                    	<div id="scrollable-dropdown-menu">
-								                    	<input type="text" name="groupname" class="typeahead" placeholder="課題グループを選択するか新しく入力してください">
+								                    	<input type="text" name="groupname" class="typeahead" placeholder="課題グループを選択するか新しく入力してください" value="<%= (tasGrpDto!=null ? tasGrpDto.getName():"") %>">
 								                    </div>
 		                                		</div>
 		                                		</td>
