@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +27,7 @@ import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.entity.ResultMetricsTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTestcaseTblEntity;
+import jp.ac.asojuku.asolearning.entity.SrcTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.TestcaseTableEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
@@ -120,12 +122,13 @@ public class JavaCProgramJudge implements Judge {
 
 			///////////////////////////////////////
 			//ソースファイルの内容を圧縮してセット
-			resultEntity.setAnswer(getCompressedSourceCode(srcFile));
+			//resultEntity.setAnswer(getCompressedSourceCode(srcFile));
+			List<SrcTblEntity> srcFileList = getSrcTblEntityList(dirName,srcFile);
 
 			///////////////////////////////////////
 			//DBに書き込み
 			resultEntity.setTaskTbl(taskEntity);
-			setResultToDB(con,userId,resultEntity);
+			setResultToDB(con,userId,resultEntity,srcFileList);
 
 			json.score = resultEntity.getTotalScore();
 
@@ -147,6 +150,33 @@ public class JavaCProgramJudge implements Judge {
 		}
 
 		return json;
+	}
+
+	/**
+	 * ソースコードのエンティティリストを作成する
+	 * 結果IDについては、ResultTblEntityをセットする時にDao側で追加
+	 *
+	 * @param dirName
+	 * @param fileName
+	 * @return
+	 * @throws IOException
+	 */
+	private List<SrcTblEntity> getSrcTblEntityList(String dirName,String fileName) throws IOException{
+		List<SrcTblEntity> srcFileList = new ArrayList<SrcTblEntity>();
+
+		//同じ下位層にあるソースファイルの一覧を取得する
+		File[] files = FileUtils.getFiles(dirName, FileUtils.getExt(fileName));
+
+		for( File file : files ){
+			SrcTblEntity srcEntity = new SrcTblEntity();
+
+			srcEntity.setFileName(file.getName());
+			srcEntity.setSrc(getCompressedSourceCode(file.getAbsolutePath()));
+
+			srcFileList.add(srcEntity);
+		}
+
+		return srcFileList;
 	}
 
 	/**
@@ -225,11 +255,11 @@ public class JavaCProgramJudge implements Judge {
 	 * @param resultEntity
 	 * @throws SQLException
 	 */
-	private void setResultToDB(Connection con,int userId,ResultTblEntity resultEntity) throws SQLException{
+	private void setResultToDB(Connection con,int userId,ResultTblEntity resultEntity,List<SrcTblEntity> srcFileList) throws SQLException{
 
 		ResultDao dao = new ResultDao(con);
 
-		dao.insertOrupdateTaskResult(userId, resultEntity);
+		dao.insertOrupdateTaskResult(userId, resultEntity,srcFileList);
 	}
 
 
@@ -432,6 +462,11 @@ public class JavaCProgramJudge implements Judge {
 	}
 	/**
 	 * 品質計測の結果を設定する
+	 *
+	 * 品質ファイルの中にある「procedural_detail」タグにメソッド毎の品質データがある
+	 * そのほかのcccc.xmlにサマリーっぽいのがあるが、残念ながら、モジュール（ファイル）単位の
+	 * サマリーであり、メソッド毎のサマリーではないため、使えない
+	 *
 	 * @param resultDir
 	 * @param fileName
 	 * @return
@@ -442,14 +477,12 @@ public class JavaCProgramJudge implements Judge {
 		ResultMetricsTblEntity metricsEntity = new ResultMetricsTblEntity();
 
 		//実行クラス名（＝ファイル名の拡張子を除いたもの）を取得
-		String className = FileUtils.getPreffix(fileName);
+		//String className = FileUtils.getPreffix(fileName);
+		//
+		//String metricsPath = resultDir + CCCC+"/"+className+".xml";
 
-		String metricsPath = resultDir + CCCC+"/"+className+".xml";
-		//XML解析
-		XmlReader<CCCC_ProjectElement> xml =
-				new XmlReader<CCCC_ProjectElement>(metricsPath,CCCC_ProjectElement.class);
-
-		CCCC_ProjectElement element = (CCCC_ProjectElement)xml.readListXml();
+		//CCCCフォルダ内のXMLファイルを取得する
+		File[] xmlFiles = FileUtils.getFiles(resultDir+CCCC, "xml");
 
 		int maxMvg = 0;
 		int maxLoc = 0;
@@ -457,23 +490,37 @@ public class JavaCProgramJudge implements Judge {
 		int totalLoc = 0;
 		int count = 0;
 
-		for( MemberFunction memberFunction : element.procedural_detail.member_function ){
+		for( File xmlFile : xmlFiles){
 
-			//最大行数を更新
-			if( memberFunction.lines_of_code.value > maxLoc ){
-				maxLoc = memberFunction.lines_of_code.value;
+			String metricsPath = xmlFile.getAbsolutePath();
+			//XML解析
+			XmlReader<CCCC_ProjectElement> xml =
+					new XmlReader<CCCC_ProjectElement>(metricsPath,CCCC_ProjectElement.class);
+
+			CCCC_ProjectElement element = (CCCC_ProjectElement)xml.readListXml();
+
+			if( element.procedural_detail == null || element.procedural_detail.member_function == null ){
+				continue;//element.procedural_detail、member_functionが無いものは無視
 			}
 
-			//最大複雑度を更新
-			if( memberFunction.McCabes_cyclomatic_complexity.value > maxMvg ){
-				maxMvg = memberFunction.McCabes_cyclomatic_complexity.value;
+			for( MemberFunction memberFunction : element.procedural_detail.member_function ){
+
+				//最大行数を更新
+				if( memberFunction.lines_of_code.value > maxLoc ){
+					maxLoc = memberFunction.lines_of_code.value;
+				}
+
+				//最大複雑度を更新
+				if( memberFunction.McCabes_cyclomatic_complexity.value > maxMvg ){
+					maxMvg = memberFunction.McCabes_cyclomatic_complexity.value;
+				}
+
+				//合計値を入れていく
+				totalLoc += memberFunction.lines_of_code.value;
+				totalMvg += memberFunction.McCabes_cyclomatic_complexity.value;
+
+				count++;
 			}
-
-			//合計値を入れていく
-			totalLoc += memberFunction.lines_of_code.value;
-			totalMvg += memberFunction.McCabes_cyclomatic_complexity.value;
-
-			count++;
 		}
 
 		float avrMvg = divIntForFloat(totalMvg,count);

@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -231,4 +232,37 @@ public class FileUtils {
 
 		return f.getName();
 	}
+
+	/**
+	 * 指定されたディレクトリから、指定された拡張子のファイルの一覧を取得する
+	 *
+	 * @param dir
+	 * @param extend
+	 * @return
+	 */
+	public static File[] getFiles(String dir,String extend){
+
+		FilenameFilter filter = null;
+
+		//拡張子の指定があるか？
+		if( StringUtils.isNotEmpty(extend)){
+			//フィルタを作成する
+			filter = new FilenameFilter() {
+				public boolean accept(File file, String str){
+
+					// 拡張子を指定する
+					if (str.endsWith(extend)){
+						return true;
+					}else{
+						return false;
+					}
+				}
+			};
+		}
+
+		//ファイルの一覧を取得する
+		return  new File(dir).listFiles(filter);
+	}
+
+
 }

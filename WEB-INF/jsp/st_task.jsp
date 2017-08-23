@@ -17,9 +17,10 @@
 
     <title>課題画面</title>
 
-    <link href="view/css/main.css" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
     <link href="view/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="view/css/main.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
     <link href="view/metisMenu/metisMenu.min.css" rel="stylesheet">
@@ -174,18 +175,6 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 								            <button type="submit" id="judge" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 判定</button>
                                         </td>
                                         <td>
-                                        <input type="file" id="file_select" name="javafile" class="form-control" style="display:none;">
-                                        <div class="input-group">
-
-								          <span class="input-group-btn">
-								            <button type="button" id="file_select_icon" class="btn btn-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
-								          </span>
-								          <input type="text" id="file_name" class="form-control" placeholder="Select file ..." readonly>
-
-								        </div>
-
-
-
 
 <input type="button" value="行追加" id="addForm">
 
@@ -210,7 +199,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 		                                			<input class="close" type="button" value="削除" id="close[0]" style="display: none;">
 		                                		</td>
 		                                		<td>
-		                                			<div id="index[0]">1</div>
+		                                			<div id="index[0]">1（main）</div>
 		                                		</td>
 		                                		<td>
 			                                        <input type="file" id="infile_select[0]" name="inputfile[0]" class="form-control" style="display:none;">
@@ -276,7 +265,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
     <script src="view/js/sb-admin-2.js"></script>
 
 	<script>
-	  if ($("input[name='javafile']").val()!== '') {
+	  if ($("input[name='inputfile[0]']").val()!== '') {
 		  $("#judge").attr('disabled', false);
 	  }else{
 		  $("#judge").attr('disabled', true);
@@ -298,7 +287,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 	$('#judge').on('click', function() {
 		var fd = new FormData();
 		  if ($('[id^=inputfile]').val()!== '') {
-			  for(var i = 0; i < testcase_cnt; i++){
+			  for(var i = 0; i <= testcase_cnt; i++){
 				  fd.append( "inputfile["+i+"]", $("input[name='inputfile["+i+"]']").prop("files")[0] );
 			  }
 		    //fd.append( "file", $("input[name='javafile']").prop("files")[0] );
@@ -392,6 +381,7 @@ TaskDto taskdto = (TaskDto)request.getAttribute(RequestConst.REQUEST_TASK);
 			idx = $(this).data("n");
 		}
 	  $('[id=inputfile_name\\['+idx+'\\]]').val($('[id=infile_select\\['+idx+'\\]]').prop('files')[0].name);
+	  $("#judge").attr('disabled', false);
 	});
 
 

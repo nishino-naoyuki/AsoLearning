@@ -16,6 +16,7 @@ import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.ResultMetricsTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTestcaseTblEntity;
+import jp.ac.asojuku.asolearning.entity.SrcTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 
@@ -128,6 +129,11 @@ public class ResultDao extends Dao {
 			+ "(RESULT_ID,MAX_MVG,AVR_MVG,MAX_LOC,AVR_LOC,MAX_MVG_SCORE,MAX_LOC_SCORE,AVR_MVG_SCORE,AVR_LOC_SCORE) "
 			+ "VALUES(?,?,?,?,?,?,?,?,?) ";
 
+	private static final String SRCTBL_INSERT_SQL =
+			"INSERT INTO SRC_TBL "
+			+ "(SRC_ID,RESULT_ID,FILE_NAME,SRC) "
+			+ "VALUES(null,?,?,?) ";
+
 	//更新SQL
 	private static final String RESULT_UPDATE_SQL =
 			"UPDATE RESULT_TBL SET "
@@ -156,6 +162,9 @@ public class ResultDao extends Dao {
 			+ "AVR_MVG_SCORE = ?,"
 			+ "AVR_LOC_SCORE = ? "
 			+ "WHERE RESULT_ID = ?";
+
+	private static final String SRCTBL_DELETE_SQL =
+			"DELETE FROM SRC_TBL WHERE RESULT_ID=? ";
 
 	//UserIDランキングを求めるSQL
 	private static final String RESULT_RANKING_USERID_SQL_SELECT =
@@ -689,14 +698,14 @@ public class ResultDao extends Dao {
 	 * @param resultEntity
 	 * @throws SQLException
 	 */
-	public void insertOrupdateTaskResult(int userId,ResultTblEntity resultEntity) throws SQLException{
+	public void insertOrupdateTaskResult(int userId,ResultTblEntity resultEntity,List<SrcTblEntity> srcFileList) throws SQLException{
 
 		if( resultEntity.getResultId() == null ){
 			//新規登録
-			insertTaskResult(userId,resultEntity);
+			insertTaskResult(userId,resultEntity,srcFileList);
 		}else{
 			//更新処理
-			updateTaskResult(userId,resultEntity);
+			updateTaskResult(userId,resultEntity,srcFileList);
 		}
 	}
 
@@ -706,7 +715,7 @@ public class ResultDao extends Dao {
 	 * @param resultEntity
 	 * @throws SQLException
 	 */
-	public void insertTaskResult(int userId,ResultTblEntity resultEntity) throws SQLException{
+	public void insertTaskResult(int userId,ResultTblEntity resultEntity,List<SrcTblEntity> srcFileList) throws SQLException{
 
 		if( con == null ){
 			return;
@@ -715,6 +724,7 @@ public class ResultDao extends Dao {
 		PreparedStatement ps1 = null;
 		PreparedStatement ps2 = null;
 		PreparedStatement ps3 = null;
+		PreparedStatement ps4 = null;
 
         try {
         	this.beginTranzaction();
@@ -779,6 +789,20 @@ public class ResultDao extends Dao {
 			}
 			ps3.executeBatch();
 
+        	////////////////////////////
+        	//SRC_TBL
+			ps4 = con.prepareStatement(SRCTBL_INSERT_SQL);
+
+			for(SrcTblEntity src : srcFileList){
+
+				ps4.setInt(1, result_id);
+				ps4.setString(2, src.getFileName());
+				ps4.setString(3, src.getSrc());
+
+				ps4.addBatch();
+			}
+			ps4.executeBatch();
+
 	        //コミット
 	        this.commit();
 
@@ -790,6 +814,7 @@ public class ResultDao extends Dao {
 			safeClose(ps1,null);
 			safeClose(ps2,null);
 			safeClose(ps3,null);
+			safeClose(ps4,null);
 		}
 	}
 
@@ -799,7 +824,7 @@ public class ResultDao extends Dao {
 	 * @param resultEntity
 	 * @throws SQLException
 	 */
-	public void updateTaskResult(int userId,ResultTblEntity resultEntity) throws SQLException{
+	public void updateTaskResult(int userId,ResultTblEntity resultEntity,List<SrcTblEntity> srcFileList) throws SQLException{
 
 		if( con == null ){
 			return;
@@ -808,6 +833,8 @@ public class ResultDao extends Dao {
 		PreparedStatement ps1 = null;
 		PreparedStatement ps2 = null;
 		PreparedStatement ps3 = null;
+		PreparedStatement ps4 = null;
+		PreparedStatement ps5 = null;
 
         try {
         	this.beginTranzaction();
@@ -871,6 +898,26 @@ public class ResultDao extends Dao {
 			}
 			ps3.executeBatch();
 
+        	////////////////////////////
+        	//SRC_TBL
+			//一旦削除し、新規追加
+			ps4 = con.prepareStatement(SRCTBL_DELETE_SQL);
+			ps4.setInt(1, resultEntity.getResultId());
+			ps4.executeUpdate();
+
+			//新規追加
+			ps5 = con.prepareStatement(SRCTBL_INSERT_SQL);
+
+			for(SrcTblEntity src : srcFileList){
+
+				ps5.setInt(1, resultEntity.getResultId());
+				ps5.setString(2, src.getFileName());
+				ps5.setString(3, src.getSrc());
+
+				ps5.addBatch();
+			}
+			ps5.executeBatch();
+
 	        //コミット
 	        this.commit();
 
@@ -882,6 +929,8 @@ public class ResultDao extends Dao {
 			safeClose(ps1,null);
 			safeClose(ps2,null);
 			safeClose(ps3,null);
+			safeClose(ps4,null);
+			safeClose(ps5,null);
 		}
 	}
 
