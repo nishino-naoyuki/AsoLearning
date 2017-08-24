@@ -284,10 +284,12 @@ public class TaskBoImpl implements TaskBo {
 				throw new AsoLearningSystemErrException("課題IDが不正です。");
 			}
 
+			//ランクを取得
 			Integer rank = retDao.getRankingForUser(user.getUserId(), taskId);
-
-			//会員テーブル→ログイン情報
+			//エンティティ→DTO
 			dto = getEntityToDto(entity);
+
+
 			//ランクをセット
 			dto.setRank(rank);
 

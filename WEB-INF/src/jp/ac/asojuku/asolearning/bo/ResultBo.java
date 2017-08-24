@@ -6,6 +6,7 @@ package jp.ac.asojuku.asolearning.bo;
 import java.util.List;
 
 import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
+import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.RankingDto;
 import jp.ac.asojuku.asolearning.dto.TaskResultDetailDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
@@ -17,6 +18,17 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
  *
  */
 public interface ResultBo {
+
+	/**
+	 * 指定された結果情報のソースコードを表示する
+	 * 閲覧者が管理者の場合は、誰のソースコードでも閲覧OKだが、ユーザーの場合は自分の市か見れない
+	 * @param logonInfo
+	 * @param resultId
+	 * @param fileName
+	 * @return
+	 * @throws AsoLearningSystemErrException
+	 */
+	String getSrcCode(LogonInfoDTO logonInfo,Integer resultId,String fileName) throws AsoLearningSystemErrException;
 
 	String createTaskUserList(SearchUserCondition userCond) throws AsoLearningSystemErrException;
 	/**

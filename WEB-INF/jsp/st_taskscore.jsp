@@ -284,6 +284,11 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 	                	<div class="panel panel-default">
 	                		<div class="panel-heading">
 	                			提出した解答
+	                			<select id="srcFileList">
+	                			<% for(String fname : resultDto.getSrcFileList()){ %>
+	                				<option><%=fname %></option>
+	                			<% }%>
+	                			</select>
 	                		</div>
 		                	<div class="panel-body">
 		                        <button id="answer_btn" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 提出した解答の確認</button>
@@ -324,6 +329,35 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 	        $("#answer").toggle();
 	    });
 
+		$("#srcFileList").change(function(){
+			var fname = $("#srcFileList option:selected").val();
+			var params = "<%=RequestConst.REQUEST_RESULT_FILE_NAME%>="+fname+"&<%=RequestConst.REQUEST_RESULT_ID%>=<%=resultDto.getResultId()%>";
+
+			alert( params );
+
+
+		    $.ajax({
+		    	cache: false,
+		        type : 'GET',
+		        url : "dispSrc",
+		        data : params,
+		        dataType : 'json',
+		        processData : false,
+		        contentType : false,
+		        timeout : 360000, // milliseconds
+
+		    }).done(function(json) {
+		    	//var obj = $.parseJSON(json);
+	            $("#answer").html("");
+	            $("#answer").html(json.srcCode);
+
+
+		    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+
+		    	alert("err:"+textStatus);
+		        console.log( textStatus  + errorThrown);
+		    });
+		});
 	});
 	</script>
 

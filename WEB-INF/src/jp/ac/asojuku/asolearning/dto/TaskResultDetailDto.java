@@ -13,12 +13,14 @@ import java.util.List;
  */
 public class TaskResultDetailDto {
 
+	private int resultId;
 	private int taskId;
 	private String taskName;
 	private float totalScore;
 	private boolean handed;
 	private String handedDate;
 	private String answerString;
+	private List<String> srcFileList;
 
 	private List<TaskResultTestCaseDto> testcase = new ArrayList<TaskResultTestCaseDto>();
 	private TaskResultMetricsDto metrics;
@@ -110,5 +112,29 @@ public class TaskResultDetailDto {
 		this.answerString = answerString;
 	}
 
+	/**
+	 * @return srcFileList
+	 */
+	public List<String> getSrcFileList() {
+		return srcFileList;
+	}
+	/**
+	 * @param srcFileList セットする srcFileList
+	 */
+	public void setSrcFileList(List<String> srcFileList) {
+		this.srcFileList = srcFileList;
+	}
+	/**
+	 * @return resultId
+	 */
+	public int getResultId() {
+		return resultId;
+	}
+	/**
+	 * @param resultId セットする resultId
+	 */
+	public void setResultId(int resultId) {
+		this.resultId = resultId;
+	}
 
 }

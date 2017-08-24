@@ -20,6 +20,8 @@ import jp.ac.asojuku.asolearning.bo.ResultBo;
 import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
 import jp.ac.asojuku.asolearning.dao.ResultDao;
+import jp.ac.asojuku.asolearning.dao.SrcDao;
+import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.RankingDto;
 import jp.ac.asojuku.asolearning.dto.TaskResultDetailDto;
 import jp.ac.asojuku.asolearning.dto.TaskResultMetricsDto;
@@ -27,10 +29,12 @@ import jp.ac.asojuku.asolearning.dto.TaskResultTestCaseDto;
 import jp.ac.asojuku.asolearning.entity.ResultMetricsTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTestcaseTblEntity;
+import jp.ac.asojuku.asolearning.entity.SrcTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
+import jp.ac.asojuku.asolearning.param.RoleId;
 import jp.ac.asojuku.asolearning.util.CompressUtils;
 import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
@@ -62,11 +66,25 @@ public class ResultBoImpl implements ResultBo {
 
 			//DB接続
 			dao.connect();
+			//ソースコードDAO
+			SrcDao srcDao = new SrcDao(dao.getConnection());
 
 			//課題リスト情報を取得
 			ResultTblEntity entity = dao.getResult(taskId, userId);
 
+			//ソースコードに関する情報を取得
+			List<SrcTblEntity> srcList = srcDao.getList(entity.getResultId());
+
+			List<String> fileNameList = new ArrayList<String>();
+
+			for( SrcTblEntity src : srcList ){
+				fileNameList.add(src.getFileName());
+			}
+
 			resultDetail = getTaskResultDetail(entity);
+
+			//ソースコードのファイル名リストをセットする
+			resultDetail.setSrcFileList(fileNameList);
 
 		} catch (DBConnectException e) {
 			//ログ出力
@@ -112,6 +130,7 @@ public class ResultBoImpl implements ResultBo {
 
 		//基本情報取得
 		dto.setTaskId( taskEntity.getTaskId() );
+		dto.setResultId(entity.getResultId());
 		dto.setTaskName( taskEntity.getName() );
 		dto.setTotalScore(entity.getTotalScore());
 		dto.setHanded((entity.getHanded() == 1 ? true:false));
@@ -410,6 +429,44 @@ public class ResultBoImpl implements ResultBo {
 
 			dao.close();
 		}
+	}
+
+	@Override
+	public String getSrcCode(LogonInfoDTO logonInfo, Integer resultId, String fileName) throws AsoLearningSystemErrException {
+
+		Integer userId = (RoleId.STUDENT.equals(logonInfo.getRoleId()) ? logonInfo.getUserId():null);
+		String src = "";
+		SrcDao dao = new SrcDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			//ソースコードを取得
+			SrcTblEntity srcEntity = dao.get(resultId, fileName, userId);
+
+			//解凍する
+			src = CompressUtils.decode(srcEntity.getSrc());
+
+		} catch (DataFormatException e) {
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (IOException e) {
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (DBConnectException e) {
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} catch (SQLException e) {
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+
+		return src;
 	}
 
 	@Override

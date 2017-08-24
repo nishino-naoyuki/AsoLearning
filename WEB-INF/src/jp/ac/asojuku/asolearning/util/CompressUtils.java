@@ -10,6 +10,7 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 圧縮・解凍クラス
@@ -57,6 +58,10 @@ public class CompressUtils {
 	 * @throws IOException
 	 */
 	public static String decode(String base64String) throws DataFormatException, IOException{
+
+		if( StringUtils.isEmpty(base64String) ){
+			return "";
+		}
 
         Base64 base = new Base64();
         byte[] decoded = base.decode(base64String);
