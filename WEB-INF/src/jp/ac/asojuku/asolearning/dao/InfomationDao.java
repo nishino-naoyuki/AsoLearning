@@ -96,7 +96,7 @@ public class InfomationDao extends Dao {
 	private static final String COMMENT_INFO_RECNET =
 			"SELECT * FROM "
 			+ "(select *,datediff(CURRENT_DATE(),r.COMMENT_UPDATE_TIME) diff  from RESULT_TBL r) dd "
-			+ "WHERE (dd.diff BETWEEN -7 AND 7) WHERE r.USER_ID = ? ";
+			+ "WHERE (dd.diff BETWEEN -7 AND 7) AND dd.USER_ID = ? ";
 
 
 	/**
