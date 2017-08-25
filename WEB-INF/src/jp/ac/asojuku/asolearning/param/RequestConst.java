@@ -36,4 +36,5 @@ public class RequestConst {
 	public static final String REQUEST_TASKGRP_LIST = "RequestTaskGrpList";
 	public static final String REQUEST_RESULT_ID = "ResultId";
 	public static final String REQUEST_RESULT_FILE_NAME = "ResultFileName";
+	public static final String REQUEST_RESULT_COMMENT = "comment";
 }

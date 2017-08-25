@@ -184,6 +184,45 @@ public class ResultDao extends Dao {
 			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID = t.TASK_ID) "
 			+ "WHERE r.USER_ID = ?";
 
+	//コメントを更新する
+	private static final String UPDATE_COMMENT =
+			"UPDATE RESULT_TBL SET "
+			+ "COMMENT = ?, "
+			+ "COMMENT_UPDATE_TIME = CURRENT_TIMESTAMP "
+			+ "WHERE RESULT_ID = ?";
+
+	/**
+	 * コメントを更新（登録）する
+	 *
+	 * @param resultId
+	 * @param comment
+	 * @throws SQLException
+	 */
+	public void updateComment(Integer resultId,String comment) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+    		// ステートメント生成
+			ps = con.prepareStatement(UPDATE_COMMENT);
+
+			//値をセット
+			ps.setString(1, comment);
+			ps.setInt(2, resultId);
+
+			ps.executeUpdate();
+
+        } catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+		}finally {
+			safeClose(ps,null);
+		}
+	}
 	/**
 	 * 結果リスト
 	 * @param userId
@@ -525,6 +564,14 @@ public class ResultDao extends Dao {
 		return ps;
 	}
 
+	/**
+	 * ランキングデータを取得
+	 *
+	 *
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
 	private ResultTblEntity getResultTblEntityForRanking(ResultSet rs) throws SQLException{
 		ResultTblEntity entity = new ResultTblEntity();
 
@@ -628,6 +675,7 @@ public class ResultDao extends Dao {
     	resultEntity.setHanded(rs.getInt("HANDED"));
     	resultEntity.setHandedTimestamp(rs.getTimestamp("HANDED_TIMESTAMP"));
     	resultEntity.setAnswer(rs.getString("ANSWER"));
+    	resultEntity.setComment(rs.getString("COMMENT"));
 
     	//taskEntity
     	taskEntity.setTaskId(rs.getInt("TASK_ID"));

@@ -284,16 +284,15 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 	                	<div class="panel panel-default">
 	                		<div class="panel-heading">
 	                			提出した解答
+	                		</div>
+		                	<div class="panel-body">
+		                        <button id="answer_btn" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 提出した解答の確認</button>
 	                			<select id="srcFileList">
 	                			<% for(String fname : resultDto.getSrcFileList()){ %>
 	                				<option><%=fname %></option>
 	                			<% }%>
 	                			</select>
-	                		</div>
-		                	<div class="panel-body">
-		                        <button id="answer_btn" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> 提出した解答の確認</button>
 		                        <div id="answer" style="display: none;" >
-		                        <%= HtmlUtil.nl2be(resultDto.getAnswerString()) %>
 		                        </div>
 							</div>
 	                	</div>
@@ -301,6 +300,36 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
                 </div>
 <%} %>
                 <!-- /.row -->
+
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-12">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			先生からのコメント
+	                		</div>
+		                	<div class="panel-body" id="disp_comment">
+		                		<%= HtmlUtil.nl2be( resultDto.getComment() ) %>
+		                	</div>
+	                	</div>
+	                </div>
+	            </div>
+<%if(RoleId.STUDENT.equals(loginInfo.getRoleId()) != true ){ %>
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-12">
+	                	<div class="panel panel-default">
+	                		<div class="panel-heading">
+	                			コメント入力
+	                		</div>
+		                	<div class="panel-body">
+		                		<button id="update_comment_btn" class="btn"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span> コメント登録・更新</button>
+		                		<textarea id="comment" placeholder="コメントを記載してください" class="form-control"></textarea>
+		                	</div>
+	                	</div>
+	                </div>
+	            </div>
+<%} %>
             </div>
             <!-- /.container-fluid -->
 <% } %>
@@ -323,6 +352,37 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
     <script src="view/js/sb-admin-2.js"></script>
 
 	<script>
+	//選択されたソースコードを読み込む
+	function getSrcCode(params){
+		$.ajax({
+	    	cache: false,
+	        type : 'GET',
+	        url : "dispSrc",
+	        data : params,
+	        dataType : 'json',
+	        processData : false,
+	        contentType : false,
+	        timeout : 360000, // milliseconds
+
+	    }).done(function(json) {
+	    	//var obj = $.parseJSON(json);
+            $("#answer").html("");
+            $("#answer").html(json.srcCode);
+
+	    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+
+	    	alert("err:"+textStatus);
+	        console.log( textStatus  + errorThrown);
+	    });
+	}
+
+	//最初にソースコードを読み込んでおく
+    $(document).ready(function() {
+		var fname = $("#srcFileList option:selected").val();
+		var params = "<%=RequestConst.REQUEST_RESULT_FILE_NAME%>="+fname+"&<%=RequestConst.REQUEST_RESULT_ID%>=<%=resultDto.getResultId()%>";
+    	getSrcCode(params);
+    });
+
 	$(function(){
 		$("#answer_btn").click(function(){
 	        // 「id="answer"」の表示、非表示を切り替える
@@ -333,13 +393,17 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 			var fname = $("#srcFileList option:selected").val();
 			var params = "<%=RequestConst.REQUEST_RESULT_FILE_NAME%>="+fname+"&<%=RequestConst.REQUEST_RESULT_ID%>=<%=resultDto.getResultId()%>";
 
-			alert( params );
+			getSrcCode(params);
+		});
 
+		$("#update_comment_btn").click(function(){
+			var comment = encodeURI( $("#comment").val() );
+			var params = "<%=RequestConst.REQUEST_RESULT_COMMENT%>="+comment+"&<%=RequestConst.REQUEST_RESULT_ID%>=<%=resultDto.getResultId()%>";
 
-		    $.ajax({
+			$.ajax({
 		    	cache: false,
 		        type : 'GET',
-		        url : "dispSrc",
+		        url : "updatecomment",
 		        data : params,
 		        dataType : 'json',
 		        processData : false,
@@ -347,18 +411,20 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 		        timeout : 360000, // milliseconds
 
 		    }).done(function(json) {
+		    	alert("正しく登録されました。");
 		    	//var obj = $.parseJSON(json);
-	            $("#answer").html("");
-	            $("#answer").html(json.srcCode);
-
+	            $("#disp_comment").html("");
+	            $("#disp_comment").html(json.comment);
 
 		    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
 
 		    	alert("err:"+textStatus);
 		        console.log( textStatus  + errorThrown);
 		    });
-		});
+	    });
+
 	});
+
 	</script>
 
 </body>

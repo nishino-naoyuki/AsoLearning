@@ -20,6 +20,16 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 public interface ResultBo {
 
 	/**
+	 * コメントを登録（更新）する
+	 * ※コメントを登録できるのは先生又は管理者だけ
+	 *
+	 * @param logonInfo
+	 * @param resultId
+	 * @param comment
+	 * @throws AsoLearningSystemErrException
+	 */
+	void setComment(LogonInfoDTO logonInfo,Integer resultId,String comment) throws AsoLearningSystemErrException;
+	/**
 	 * 指定された結果情報のソースコードを表示する
 	 * 閲覧者が管理者の場合は、誰のソースコードでも閲覧OKだが、ユーザーの場合は自分の市か見れない
 	 * @param logonInfo

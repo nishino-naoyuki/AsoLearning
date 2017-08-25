@@ -2,7 +2,7 @@ package jp.ac.asojuku.asolearning.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -34,20 +34,31 @@ public class ResultTblEntity implements Serializable {
 	/** 最終提出日. */
 	private Date handedTimestamp;
 
+	/** 解答の文字列. */
+	private String answer;
+
+	/** COMMENT. */
+	private String comment;
+
+	/** COMMENT_UPDATE_TIME. */
+	private Date commentUpdateTime;
+
 	/** 結果ソース品質テーブル 一覧. */
 	private Set<ResultMetricsTblEntity> resultMetricsTblSet;
 
 	/** 結果詳細テーブル（テストケース） 一覧. */
 	private Set<ResultTestcaseTblEntity> resultTestcaseTblSet;
 
-	/** 解答の文字列. */
-	private String answer;
+	/** ソースコードテーブル 一覧. */
+	private Set<SrcTblEntity> srcTblSet;
+
 	/**
 	 * コンストラクタ.
 	 */
 	public ResultTblEntity() {
-		this.resultMetricsTblSet = new LinkedHashSet<ResultMetricsTblEntity>();
-		this.resultTestcaseTblSet = new LinkedHashSet<ResultTestcaseTblEntity>();
+		this.resultMetricsTblSet = new HashSet<ResultMetricsTblEntity>();
+		this.resultTestcaseTblSet = new HashSet<ResultTestcaseTblEntity>();
+		this.srcTblSet = new HashSet<SrcTblEntity>();
 	}
 
 	/**
@@ -165,6 +176,44 @@ public class ResultTblEntity implements Serializable {
 	}
 
 	/**
+	 * 解答の文字列 を設定します.
+	 *
+	 * @param answer
+	 *            解答の文字列
+	 */
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+	/**
+	 * 解答の文字列 を取得します.
+	 *
+	 * @return 解答の文字列
+	 */
+	public String getAnswer() {
+		return this.answer;
+	}
+
+	/**
+	 * COMMENT を設定します.
+	 *
+	 * @param comment
+	 *            COMMENT
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	/**
+	 * COMMENT を取得します.
+	 *
+	 * @return COMMENT
+	 */
+	public String getComment() {
+		return this.comment;
+	}
+
+	/**
 	 * 結果ソース品質テーブル 一覧を設定します.
 	 *
 	 * @param resultMetricsTblSet
@@ -214,24 +263,6 @@ public class ResultTblEntity implements Serializable {
 	}
 
 	/**
-	 * 解答の文字列 を設定します.
-	 *
-	 * @param answer
-	 *            解答の文字列
-	 */
-	public void setAnswer(String answer) {
-		this.answer = answer;
-	}
-
-	/**
-	 * 解答の文字列 を取得します.
-	 *
-	 * @return 解答の文字列
-	 */
-	public String getAnswer() {
-		return this.answer;
-	}
-	/**
 	 * 結果詳細テーブル（テストケース） 一覧を取得します.
 	 *
 	 * @return 結果詳細テーブル（テストケース） 一覧
@@ -239,6 +270,55 @@ public class ResultTblEntity implements Serializable {
 	public Set<ResultTestcaseTblEntity> getResultTestcaseTblSet() {
 		return this.resultTestcaseTblSet;
 	}
+
+	/**
+	 * ソースコードテーブル 一覧を設定します.
+	 *
+	 * @param srcTblSet
+	 *            ソースコードテーブル 一覧
+	 */
+	public void setSrcTblSet(Set<SrcTblEntity> srcTblSet) {
+		this.srcTblSet = srcTblSet;
+	}
+
+	/**
+	 * ソースコードテーブル を追加します.
+	 *
+	 * @param srcTbl
+	 *            ソースコードテーブル
+	 */
+	public void addSrcTbl(SrcTblEntity srcTbl) {
+		this.srcTblSet.add(srcTbl);
+	}
+
+	/**
+	 * ソースコードテーブル 一覧を取得します.
+	 *
+	 * @return ソースコードテーブル 一覧
+	 */
+	public Set<SrcTblEntity> getSrcTblSet() {
+		return this.srcTblSet;
+	}
+
+	/**
+	 * COMMENT_UPDATE_TIME を設定します.
+	 *
+	 * @param commentUpdateTime
+	 *            COMMENT_UPDATE_TIME
+	 */
+	public void setCommentUpdateTime(Date commentUpdateTime) {
+		this.commentUpdateTime = commentUpdateTime;
+	}
+
+	/**
+	 * COMMENT_UPDATE_TIME を取得します.
+	 *
+	 * @return COMMENT_UPDATE_TIME
+	 */
+	public Date getCommentUpdateTime() {
+		return this.commentUpdateTime;
+	}
+
 
 	/**
 	 * {@inheritDoc}

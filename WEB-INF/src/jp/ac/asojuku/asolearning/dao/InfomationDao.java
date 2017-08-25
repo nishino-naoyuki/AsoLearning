@@ -16,6 +16,7 @@ import jp.ac.asojuku.asolearning.condition.SearchInfomationCondition;
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.InfoPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.InfomationTblEntity;
+import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 
@@ -91,6 +92,77 @@ public class InfomationDao extends Dao {
 	private static final String INFO_SEARCH_ORDER_BY =
 			" ORDER BY i.UPDATE_DATE DESC ";
 
+	//7日以内に更新されたコメントを取得
+	private static final String COMMENT_INFO_RECNET =
+			"SELECT * FROM "
+			+ "(select *,datediff(CURRENT_DATE(),r.COMMENT_UPDATE_TIME) diff  from RESULT_TBL r) dd "
+			+ "WHERE (dd.diff BETWEEN -7 AND 7) WHERE r.USER_ID = ? ";
+
+
+	/**
+	 * 最近更新されたコメントを取得する
+	 *
+	 * @param userId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<ResultTblEntity> getUpdateComment(Integer userId) throws SQLException{
+
+		if( con == null ){
+			return null;
+		}
+		List<ResultTblEntity> list = new ArrayList<ResultTblEntity>();
+
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+        try {
+    		// ステートメント生成
+			ps = con.prepareStatement(COMMENT_INFO_RECNET);
+
+			//値をセット
+			ps.setInt(1, userId);
+
+	        // SQLを実行
+	        rs = ps.executeQuery();
+
+	        //値を取り出す
+	        while(rs.next()){
+	        	ResultTblEntity resultEntity = new ResultTblEntity();
+	    		TaskTblEntity taskEntity = new TaskTblEntity();
+
+	    		//ResultTblEntity
+	        	resultEntity.setResultId(rs.getInt("RESULT_ID"));
+	        	resultEntity.setTotalScore(rs.getFloat("TOTAL_SCORE"));
+	        	resultEntity.setHanded(rs.getInt("HANDED"));
+	        	resultEntity.setHandedTimestamp(rs.getTimestamp("HANDED_TIMESTAMP"));
+	        	resultEntity.setAnswer(rs.getString("ANSWER"));
+
+	        	//taskEntity
+	        	taskEntity.setTaskId(rs.getInt("TASK_ID"));
+	        	taskEntity.setName(rs.getString("NAME"));
+	        	taskEntity.setTaskQuestion(rs.getString("TASK_QUESTION"));
+	        	taskEntity.setCreateUserId(rs.getInt("CREATE_USER_ID"));
+	        	taskEntity.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
+	        	taskEntity.setUpdateTim(rs.getTimestamp("UPDATE_TIM"));
+	        	taskEntity.setTerminationDate(rs.getDate("termination_date"));
+	        	taskEntity.setDifficalty(rs.getInt("DIFFICALTY"));
+
+	        	resultEntity.setTaskTbl(taskEntity);
+
+	        	list.add(resultEntity);
+	        }
+
+
+		} catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			throw e;
+
+		} finally {
+			safeClose(ps,rs);
+		}
+		return list;
+	}
 
 	public List<InfomationTblEntity> searchInfo(SearchInfomationCondition cond) throws SQLException{
 

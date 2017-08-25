@@ -20,6 +20,7 @@ import jp.ac.asojuku.asolearning.dto.InfomationSearchResultDto;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.entity.InfoPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.InfomationTblEntity;
+import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
@@ -137,6 +138,15 @@ public class InfomationBoImpl implements InfomationBo {
 						String.format(MessageProperty.getInstance().getProperty(MessageProperty.INFO_RECENT_END),task.getName())
 						);
 				}
+			}
+			/////////////////////////////
+			//最近追加されたコメント
+			List<ResultTblEntity> resultList = dao.getUpdateComment(logon.getUserId());
+			for( ResultTblEntity result : resultList){
+				TaskTblEntity task = result.getTaskTbl();
+				dto.addInfoList(
+					String.format(MessageProperty.getInstance().getProperty(MessageProperty.INFO_RECENT_COMMENT),task.getTaskId(),task.getName())
+					);
 			}
 
 

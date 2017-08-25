@@ -21,6 +21,7 @@ public class TaskResultDetailDto {
 	private String handedDate;
 	private String answerString;
 	private List<String> srcFileList;
+	private String comment;
 
 	private List<TaskResultTestCaseDto> testcase = new ArrayList<TaskResultTestCaseDto>();
 	private TaskResultMetricsDto metrics;
@@ -135,6 +136,18 @@ public class TaskResultDetailDto {
 	 */
 	public void setResultId(int resultId) {
 		this.resultId = resultId;
+	}
+	/**
+	 * @return comment
+	 */
+	public String getComment() {
+		return comment;
+	}
+	/**
+	 * @param comment セットする comment
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

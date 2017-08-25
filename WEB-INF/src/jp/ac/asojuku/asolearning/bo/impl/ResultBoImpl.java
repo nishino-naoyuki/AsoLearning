@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import jp.ac.asojuku.asolearning.bo.ResultBo;
 import jp.ac.asojuku.asolearning.condition.SearchUserCondition;
 import jp.ac.asojuku.asolearning.config.AppSettingProperty;
+import jp.ac.asojuku.asolearning.dao.InfomationDao;
 import jp.ac.asojuku.asolearning.dao.ResultDao;
 import jp.ac.asojuku.asolearning.dao.SrcDao;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
@@ -136,6 +137,7 @@ public class ResultBoImpl implements ResultBo {
 		dto.setHanded((entity.getHanded() == 1 ? true:false));
 		dto.setHandedDate(DateUtil.formattedDate(entity.getHandedTimestamp(), "yyyy/MM/dd HH:mm:ss"));
 		dto.setAnswerString(CompressUtils.decode(entity.getAnswer()));
+		dto.setComment(CompressUtils.decode(entity.getComment()));
 
 		//メトリクスデータ取得
 		Set<ResultMetricsTblEntity> retMetricsEntitySet = entity.getResultMetricsTblSet();
@@ -474,4 +476,45 @@ public class ResultBoImpl implements ResultBo {
 		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
+
+	@Override
+	public void setComment(LogonInfoDTO logonInfo, Integer resultId, String comment)
+			throws AsoLearningSystemErrException {
+
+		ResultDao dao = new ResultDao();
+
+		//権限が無い場合はエラーとする
+		if( RoleId.STUDENT.equals(logonInfo.getRoleId())){
+			logger.warn("権限が無いユーザーがコメントを更新しようとしてます user="+logonInfo.getMailAddress());
+			throw new AsoLearningSystemErrException("権限が無いユーザーがコメントを更新しようとしてます user="+logonInfo.getMailAddress());
+		}
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			InfomationDao infoDao = new InfomationDao(dao.getConnection());
+
+			//トランザクション
+			dao.beginTranzaction();
+
+			//更新
+			dao.updateComment(resultId, CompressUtils.encode(comment));
+
+			dao.commit();
+
+		} catch (Exception e) {
+			dao.rollback();
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} finally{
+
+			dao.close();
+		}
+	}
+
+
 }
