@@ -95,7 +95,8 @@ public class InfomationDao extends Dao {
 	//7日以内に更新されたコメントを取得
 	private static final String COMMENT_INFO_RECNET =
 			"SELECT * FROM "
-			+ "(select *,datediff(CURRENT_DATE(),r.COMMENT_UPDATE_TIME) diff  from RESULT_TBL r) dd "
+			+ "(select *,datediff(CURRENT_DATE(),r.COMMENT_UPDATE_TIME) diff from RESULT_TBL r"
+			+ "LEFT JOIN TASK_TBL t ON(r.TASK_ID=t.TASK_ID)) dd "
 			+ "WHERE (dd.diff BETWEEN -7 AND 7) AND dd.USER_ID = ? ";
 
 
