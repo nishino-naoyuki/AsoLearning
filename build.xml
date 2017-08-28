@@ -107,6 +107,8 @@
             prefix="view"/>
     		<zipfileset dir="WEB-INF/tmp"
             prefix="WEB-INF/tmp"/>
+    		<zipfileset dir="WEB-INF/jsp"
+            prefix="WEB-INF/jsp"/>
     	</war>
         <delete dir="war/build"/>
     </target>
@@ -119,6 +121,8 @@
             prefix="view"/>
     		<zipfileset dir="WEB-INF/tmp"
             prefix="WEB-INF/tmp"/>
+    		<zipfileset dir="WEB-INF/jsp"
+            prefix="WEB-INF/jsp"/>
     	</war>
         <delete dir="war/build"/>
     </target>
@@ -131,6 +135,8 @@
             prefix="view"/>
     		<zipfileset dir="WEB-INF/tmp"
             prefix="WEB-INF/tmp"/>
+    		<zipfileset dir="WEB-INF/jsp"
+            prefix="WEB-INF/jsp"/>
     	</war>
         <delete dir="war/build"/>
     </target>

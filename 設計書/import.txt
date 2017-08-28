@@ -1,1 +1,4 @@
 mysql -uroot stasolearning < asolearning
+
+¦ŽQl
+http://qiita.com/rato303/items/2e614f23e5feee150ffc
