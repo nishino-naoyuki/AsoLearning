@@ -42,6 +42,10 @@ AvatarSettingDto avDto = loginInfo.getAvatar();
             </li>
             <li><a href="updateavatarinput"><i class="fa fa-heart fa-fw"></i> アバター設定</a>
             </li>
+            <% if( RoleId.MANAGER.equals( loginInfo.getRoleId() )){ %>
+            <li><a href="resetpassinput"><i class="fa fa-user fa-fw"></i> パスワードリセット</a>
+            </li>
+            <% } %>
             <li class="divider"></li>
             <li><a href="logout"><i class="fa fa-sign-out fa-fw"></i> ログアウト</a>
             </li>

@@ -15,6 +15,7 @@ import jp.ac.asojuku.asolearning.dto.UserDto;
 import jp.ac.asojuku.asolearning.dto.UserSearchResultDto;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
+import jp.ac.asojuku.asolearning.exception.MailNotFoundException;
 
 /**
  * ユーザー情報を扱う
@@ -32,6 +33,16 @@ public interface UserBo {
 	 */
 	String createUserCSV(List<UserSearchResultDto> userList) throws AsoLearningSystemErrException;
 
+	public void updatePassword(String password,String maileaddress) throws AsoLearningSystemErrException, MailNotFoundException;
+	/**
+	 * 指定したユーザーIDのパスワードを更新する
+	 * メールアドレスはパスワードのハッシュ化で必要
+	 *
+	 * @param userId
+	 * @param password
+	 * @param maileaddress
+	 * @throws AsoLearningSystemErrException
+	 */
 	public void updatePassword(Integer userId,String password,String maileaddress) throws AsoLearningSystemErrException;
 	public void updateNickName(Integer userId,String nickName,String maileaddress) throws AsoLearningSystemErrException;
 	/**

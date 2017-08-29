@@ -47,6 +47,7 @@ import jp.ac.asojuku.asolearning.err.ActionErrors;
 import jp.ac.asojuku.asolearning.err.ErrorCode;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
+import jp.ac.asojuku.asolearning.exception.MailNotFoundException;
 import jp.ac.asojuku.asolearning.param.ActionId;
 import jp.ac.asojuku.asolearning.param.AvatarKind;
 import jp.ac.asojuku.asolearning.param.RoleId;
@@ -530,7 +531,7 @@ public class UserBoImpl implements UserBo {
 	}
 
 	@Override
-	public void updatePassword(Integer userId, String password,String maileaddress) throws AsoLearningSystemErrException {
+	public void updatePassword(String password,String maileaddress) throws AsoLearningSystemErrException, MailNotFoundException{
 
 		UserDao dao = new UserDao();
 
@@ -539,7 +540,18 @@ public class UserBoImpl implements UserBo {
 			//DB接続
 			dao.connect();
 
-			//パスワードのハッシュ値計算
+			SearchUserCondition cond = new SearchUserCondition();
+
+			cond.setMailaddress(maileaddress);
+
+			List<UserTblEntity> userList = dao.search(cond);
+
+			if( CollectionUtils.isEmpty(userList) ){
+				throw new MailNotFoundException();
+			}
+
+			updatePassword(dao,userList.get(0).getUserId(),password,maileaddress);
+			/*//パスワードのハッシュ値計算
 			String hashPwd = Digest.createPassword(maileaddress,password);
 
 			//パスワード変更
@@ -557,7 +569,76 @@ public class UserBoImpl implements UserBo {
 
 			//動作ログをセット
 			HistoryDao history = new HistoryDao(dao.getConnection());
-			history.insert(userId, ActionId.PWD_CHANGE.getId(), "");
+			history.insert(userId, ActionId.PWD_CHANGE.getId(), "");*/
+
+		} catch (DBConnectException e) {
+			//ログ出力
+			logger.warn("DB接続エラー：",e);
+			throw new AsoLearningSystemErrException(e);
+
+		} catch (SQLException e) {
+			//ログ出力
+			logger.warn("SQLエラー：",e);
+			throw new AsoLearningSystemErrException(e);
+		} finally{
+
+			dao.close();
+		}
+	}
+
+	private void updatePassword(UserDao dao,Integer userId, String password,String maileaddress) throws AsoLearningSystemErrException, SQLException{
+
+		//パスワードのハッシュ値計算
+		String hashPwd = Digest.createPassword(maileaddress,password);
+
+		//パスワード変更
+		dao.updatePassword(userId, hashPwd);
+
+		//有効期限を設定ファイルから取得
+		Integer pwdExp = getPwdExpiry();
+		if( pwdExp != null ){
+			//ユーザー情報を取得しなおす
+			UserTblEntity userEntity = dao.detail(userId);
+			Date expDate = userEntity.getAccountExpryDate();
+			//設定ファイルの値を足したものを渡す
+			dao.updatePassLimit(userId, DateUtil.plusDay(expDate, pwdExp));
+		}
+
+		//動作ログをセット
+		HistoryDao history = new HistoryDao(dao.getConnection());
+		history.insert(userId, ActionId.PWD_CHANGE.getId(), "");
+
+	}
+	@Override
+	public void updatePassword(Integer userId, String password,String maileaddress) throws AsoLearningSystemErrException {
+
+		UserDao dao = new UserDao();
+
+		try {
+
+			//DB接続
+			dao.connect();
+
+			updatePassword(dao,userId,password,maileaddress);
+			/*//パスワードのハッシュ値計算
+			String hashPwd = Digest.createPassword(maileaddress,password);
+
+			//パスワード変更
+			dao.updatePassword(userId, hashPwd);
+
+			//有効期限を設定ファイルから取得
+			Integer pwdExp = getPwdExpiry();
+			if( pwdExp != null ){
+				//ユーザー情報を取得しなおす
+				UserTblEntity userEntity = dao.detail(userId);
+				Date expDate = userEntity.getAccountExpryDate();
+				//設定ファイルの値を足したものを渡す
+				dao.updatePassLimit(userId, DateUtil.plusDay(expDate, pwdExp));
+			}
+
+			//動作ログをセット
+			HistoryDao history = new HistoryDao(dao.getConnection());
+			history.insert(userId, ActionId.PWD_CHANGE.getId(), "");*/
 
 		} catch (DBConnectException e) {
 			//ログ出力
