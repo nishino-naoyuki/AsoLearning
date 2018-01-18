@@ -12,6 +12,7 @@
     <property environment="env"/>
     <property name="TOMCAT_HOME" value="C:\apache-tomcat-7.0.61"/>
     <property name="debuglevel" value="source,lines,vars"/>
+    <property name="WebContent" value="WebContent"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
     <path id="AsoLearning.classpath">
@@ -24,7 +25,7 @@
         <pathelement location="work"/>
     </path>
   	<path id="build.lib">
-  	   <fileset dir="WEB-INF/lib" includes="*.jar" />
+  	   <fileset dir="${WebContent}/WEB-INF/lib" includes="*.jar" />
    	   <fileset dir="${TOMCAT_HOME}/lib" includes="*.jar" />
   	</path>
 
@@ -40,16 +41,16 @@
     	<echo message="${ant.project.name}: ${ant.file}"/>
 
     	<javac encoding="utf-8" debug="true" debuglevel="${debuglevel}" destdir="war/build/classes" includeantruntime="false" source="${source}" target="${target}">
-            <src path="WEB-INF/src"/>
+            <src path="src"/>
             <classpath refid="build.lib"/>
         </javac>
     	<copy todir="war/build/classes">
-    		 <fileset dir="WEB-INF/src/" includes="message.properties"/>
+    		 <fileset dir="src" includes="message.properties"/>
    		 	 <fileset dir="linux_setting/" includes="app.properties"/>
   		 	 <fileset dir="linux_setting/" includes="logback.xml"/>
     	</copy>
     	<copy todir="war/build/view">
-    		 <fileset dir="view" includes="**/*.*"/>
+    		 <fileset dir="${WebContent}/view" includes="**/*.*"/>
     	</copy>
 
     </target>
@@ -62,16 +63,16 @@
     	<echo message="${ant.project.name}: ${ant.file}"/>
 
     	<javac encoding="utf-8" debug="true" debuglevel="${debuglevel}" destdir="war/build/classes" includeantruntime="false" source="${source}" target="${target}">
-            <src path="WEB-INF/src"/>
+            <src path="src"/>
             <classpath refid="build.lib"/>
         </javac>
     	<copy todir="war/build/classes">
-    		 <fileset dir="WEB-INF/src/" includes="message.properties"/>
+    		 <fileset dir="src" includes="message.properties"/>
    		 	 <fileset dir="staging_setting" includes="app.properties"/>
-   		 	 <fileset dir="WEB-INF/src/" includes="*.xml"/>
+   		 	 <fileset dir="src" includes="*.xml"/>
     	</copy>
     	<copy todir="war/build/view">
-    		 <fileset dir="view" includes="**/*.*"/>
+    		 <fileset dir="${WebContent}/view" includes="**/*.*"/>
     	</copy>
 
     </target>
@@ -85,16 +86,16 @@
     	<echo message="${ant.project.name}: ${ant.file}"/>
 
     	<javac encoding="utf-8" debug="true" debuglevel="${debuglevel}" destdir="war/build/classes" includeantruntime="false" source="${source}" target="${target}">
-            <src path="WEB-INF/src"/>
+            <src path="src"/>
             <classpath refid="build.lib"/>
         </javac>
     	<copy todir="war/build/classes">
-    		 <fileset dir="WEB-INF/src/" includes="message.properties"/>
+    		 <fileset dir="src" includes="message.properties"/>
    		 	 <fileset dir="event_setting" includes="app.properties"/>
-   		 	 <fileset dir="WEB-INF/src/" includes="*.xml"/>
+   		 	 <fileset dir="src" includes="*.xml"/>
     	</copy>
     	<copy todir="war/build/view">
-    		 <fileset dir="view" includes="**/*.*"/>
+    		 <fileset dir="${WebContent}/view" includes="**/*.*"/>
     	</copy>
 
     </target>
@@ -102,12 +103,12 @@
     <target depends="build"  name="make-war">
     	<war destfile="war/${ant.project.name}.war" needxmlfile='false' >
     		<classes dir="war/build/classes" />
-    		<lib dir="WEB-INF/lib" />
-    		<zipfileset dir="view"
+    		<lib dir="${WebContent}/WEB-INF/lib" />
+    		<zipfileset dir="${WebContent}/view"
             prefix="view"/>
-    		<zipfileset dir="WEB-INF/tmp"
+    		<zipfileset dir="${WebContent}/WEB-INF/tmp"
             prefix="WEB-INF/tmp"/>
-    		<zipfileset dir="WEB-INF/jsp"
+    		<zipfileset dir="${WebContent}/WEB-INF/jsp"
             prefix="WEB-INF/jsp"/>
     	</war>
         <delete dir="war/build"/>
@@ -116,12 +117,12 @@
     <target depends="build-staging"  name="make-war-for-staging">
     	<war destfile="war/st${ant.project.name}.war" needxmlfile='false' >
     		<classes dir="war/build/classes" />
-    		<lib dir="WEB-INF/lib" />
-    		<zipfileset dir="view"
+    		<lib dir="${WebContent}/WEB-INF/lib" />
+    		<zipfileset dir="${WebContent}/view"
             prefix="view"/>
-    		<zipfileset dir="WEB-INF/tmp"
+    		<zipfileset dir="${WebContent}/WEB-INF/tmp"
             prefix="WEB-INF/tmp"/>
-    		<zipfileset dir="WEB-INF/jsp"
+    		<zipfileset dir="${WebContent}/WEB-INF/jsp"
             prefix="WEB-INF/jsp"/>
     	</war>
         <delete dir="war/build"/>
@@ -130,12 +131,12 @@
     <target depends="build-event"  name="make-war-for-event">
     	<war destfile="war/ev${ant.project.name}.war" needxmlfile='false' >
     		<classes dir="war/build/classes" />
-    		<lib dir="WEB-INF/lib" />
-    		<zipfileset dir="view"
+    		<lib dir="${WebContent}/WEB-INF/lib" />
+    		<zipfileset dir="${WebContent}/view"
             prefix="view"/>
-    		<zipfileset dir="WEB-INF/tmp"
-            prefix="WEB-INF/tmp"/>
-    		<zipfileset dir="WEB-INF/jsp"
+    		<zipfileset dir="${WebContent}/WEB-INF/tmp"
+            prefix="/WEB-INF/tmp"/>
+    		<zipfileset dir="${WebContent}/WEB-INF/jsp"
             prefix="WEB-INF/jsp"/>
     	</war>
         <delete dir="war/build"/>

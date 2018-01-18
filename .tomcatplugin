@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tomcatProjectProperties>
     <rootDir>/</rootDir>
+    <workDir>/work</workDir>
     <exportSource>false</exportSource>
     <reloadable>true</reloadable>
     <redirectLogger>false</redirectLogger>
     <updateXml>true</updateXml>
-    <warLocation>C:\Users\nishino\Desktop\AsoLearning.war</warLocation>
+    <warLocation></warLocation>
     <extraInfo></extraInfo>
-    <webPath>/AsoLearning</webPath>
+    <mavenClasspath>false</mavenClasspath>
+    <webPath>AsoLearning</webPath>
 </tomcatProjectProperties>
