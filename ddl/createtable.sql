@@ -416,6 +416,8 @@ ROLEが「先生」の場合も必要
 	UPDATE_DATE datetime NOT NULL,
 	-- NULLの場合は未設定
 	AVATAR_ID_CSV varchar(100) COMMENT 'NULLの場合は未設定',
+	-- 2018/1/19で追加
+	GRADE int DEFAULT 1 NOT NULL COMMENT '2018/1/19で追加',
 	PRIMARY KEY (USER_ID),
 	UNIQUE (MAILADRESS)
 ) COMMENT = '利用者テーブル

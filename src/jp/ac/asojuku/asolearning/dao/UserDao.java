@@ -46,6 +46,8 @@ public class UserDao extends Dao {
 			+ "LEFT JOIN RESULT_TBL ret ON(ret.USER_ID = u.USER_ID) "
 			+ "LEFT JOIN TASK_TBL t ON(t.TASK_ID = ret.TASK_ID) "
 			+ "LEFT JOIN TASK_PUBLIC_TBL p ON(t.TASK_ID=p.TASK_ID) "
+			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(p.STATUS_ID = ps.STATUS_ID) "
+			+ "LEFT JOIN COURSE_MASTER c2 ON(c2.COURSE_ID = p.COURSE_ID) "
 			+ "WHERE u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null ";
 	private static final String MEMBER_SEARCH_COND1 = " u.NAME LIKE ? ";
 	private static final String MEMBER_SEARCH_COND2 = " u.MAILADRESS LIKE ? ";
@@ -64,6 +66,8 @@ public class UserDao extends Dao {
 			+ "LEFT JOIN COURSE_MASTER c ON(c.COURSE_ID = u.COURSE_ID) "
 			+ "LEFT JOIN ROLE_MASTER r ON(r.ROLE_ID = u.ROLE_ID) "
 			+ "LEFT JOIN TASK_PUBLIC_TBL p ON(t.TASK_ID=p.TASK_ID) "
+			+ "LEFT JOIN PUBLIC_STATUS_MASTER ps ON(p.STATUS_ID = ps.STATUS_ID) "
+			+ "LEFT JOIN COURSE_MASTER c2 ON(c2.COURSE_ID = p.COURSE_ID) "
 			+ "WHERE u.GRADUATE_YEAR is null AND u.GIVE_UP_YEAR is null ";
 
 	// ユーザーIDとパスワードを指定してユーザー情報を取得する
@@ -540,7 +544,7 @@ public class UserDao extends Dao {
         		wkTaskId = taskId;
         	}
         	//学科ごとの公開設定を設定する
-        	resultEntity.getTaskTbl().addTaskPublicTbl(createTaskPublicTblEntity(rs));
+        	resultEntity.getTaskTbl().addTaskPublicTbl(createTaskPublicTblEntity(rs,"c2."));
         }
 
 		if( entity != null ){
@@ -567,6 +571,7 @@ public class UserDao extends Dao {
 			ps.setString(index++, getLikeString(cond.getMailaddress()));
 		}
 		if(cond.getCourseId() != null){
+			ps.setInt(index++, cond.getCourseId());
 			ps.setInt(index++, cond.getCourseId());
 		}
 		if(cond.getRoleId() != null){
@@ -600,6 +605,7 @@ public class UserDao extends Dao {
 		}
 		if(cond.getCourseId() != null){
 			appendWhereWithAnd(sb,MEMBER_SEARCH_COND3);
+			appendWhereWithAnd(sb,MEMBER_SEARCH_COND7);
 		}
 		if(cond.getRoleId() != null){
 			appendWhereWithAnd(sb,MEMBER_SEARCH_COND4);

@@ -9,7 +9,9 @@ import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -41,6 +43,7 @@ import jp.ac.asojuku.asolearning.entity.AvatarMasterEntity;
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
 import jp.ac.asojuku.asolearning.entity.RoleMasterEntity;
+import jp.ac.asojuku.asolearning.entity.TaskPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.err.ActionErrors;
@@ -893,15 +896,64 @@ public class UserBoImpl implements UserBo {
 		return fname;
 	}
 
+	/**
+	 * 課題名を出力
+	 * @param header
+	 * @param retList
+	 */
 	private void setTaskHeader(StringBuilder header,List<ResultTblEntity> retList){
 
 		for( ResultTblEntity ret : retList){
 			if( header.length() > 0 ){
 				header.append(",");
 			}
-			header.append(ret.getTaskTbl().getName());
+			TaskTblEntity task = ret.getTaskTbl();
+			//課題名
+			header.append(task.getName());
 		}
 		header.append("\n");
+
+		setPublicState(header,retList);
+	}
+
+	/**
+	 * 公開情報を登録する
+	 * @param header
+	 * @param retList
+	 */
+	private void setPublicState(StringBuilder header,List<ResultTblEntity> retList){
+		//学科名を出力する
+		//学科名,,,公開状態１,公開状態２,・・・と言う感じで表示する
+		HashMap<Integer,StringBuilder> publicStateHash =  new HashMap<Integer,StringBuilder>();
+
+		for( ResultTblEntity ret : retList){
+			TaskTblEntity task = ret.getTaskTbl();
+			Set<TaskPublicTblEntity> publicStates = task.getTaskPublicTblSet();
+
+			for( TaskPublicTblEntity publicState : publicStates ){
+				int courseId = publicState.getCourseMaster().getCourseId();
+
+				StringBuilder sb = publicStateHash.get(courseId);
+				if( sb == null ){
+					//まだその学科が登録されていない場合は、学科名を追加する
+					String courseName = publicState.getCourseMaster().getCourseName();
+					sb = new StringBuilder(courseName+",,,,");
+				}
+				if( sb.length() > 0 ){
+					sb.append(",");
+				}
+				sb.append(publicState.getPublicStatusMaster().getStatusName());
+				//公開情報を登録
+				publicStateHash.put(courseId,sb);
+
+			}
+		}
+
+		//作成した学科ごとの設定を出力する
+		for(int key : publicStateHash.keySet()){
+			StringBuilder sb = publicStateHash.get(key);
+			header.append(sb.toString()).append("\n");
+		}
 
 	}
 

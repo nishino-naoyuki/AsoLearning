@@ -127,12 +127,13 @@ if( taskId == null){
 	                        	<div class="form-group">
 		                    		学科
 		                    		<select id="couse" class="form-control" name="<%=RequestConst.REQUEST_COURSE_ID%>">
-				                         <option value="" >指定なし</option>
+				                         <!-- option value="" >指定なし</option-->
 				                     <% for(CourseDto course :courseList){ %>
 				                         <option value="<%=course.getId() %>" ><%=course.getName() %></option>
 				                     <%} %>
 				                     </select>
 				                </div>
+				                <!--
 	                        	<div class="form-group">
 	                        		<p>※課題名を指定する場合は提出状況も設定してください</p>
 		                    		課題名
@@ -151,6 +152,7 @@ if( taskId == null){
 				                         <option value="1" >提出済み</option>
 				                     </select>
 				                </div>
+				                -->
 			                     <div class="col-lg-12">
 			                     	<button id="search"  class="btn btn-default">検索</button>
 		                        <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>

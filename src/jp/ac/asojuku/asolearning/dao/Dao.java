@@ -233,13 +233,22 @@ public class Dao {
 		return sb.toString();
 	}
 
-
 	/**
 	 * @param rs
 	 * @return
 	 * @throws SQLException
 	 */
 	protected TaskPublicTblEntity createTaskPublicTblEntity(ResultSet rs) throws SQLException{
+
+		return createTaskPublicTblEntity(rs,"");
+	}
+
+	/**
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	protected TaskPublicTblEntity createTaskPublicTblEntity(ResultSet rs,String preFix) throws SQLException{
 
 		TaskPublicTblEntity p = new TaskPublicTblEntity();
 		PublicStatusMasterEntity psm = new PublicStatusMasterEntity();
@@ -249,8 +258,8 @@ public class Dao {
 		p.setPublicDatetime(rs.getDate("PUBLIC_DATETIME"));
 		p.setEndDatetime(rs.getDate("END_DATETIME"));
 		//学科情報
-		cm.setCourseId(rs.getInt("COURSE_ID"));
-		cm.setCourseName(rs.getString("COURSE_NAME"));
+		cm.setCourseId(rs.getInt(preFix+"COURSE_ID"));
+		cm.setCourseName(rs.getString(preFix+"COURSE_NAME"));
 		p.setCourseMaster(cm);
 		//公開情報
 		psm.setStatusId(rs.getInt("STATUS_ID"));
