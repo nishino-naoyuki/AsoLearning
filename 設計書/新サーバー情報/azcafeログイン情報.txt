@@ -1,0 +1,13 @@
+◆学外
+URL：azcafe.aso-abcc.com
+SSHポート番号：2297
+SSHログインID/PW：root/vx5cl.aba
+
+◆学内
+IP：172.22.9.97
+SSHポート番号：22
+SSHログインID/PW：root/vx5cl.aba
+
+
+
+certbot:SSL

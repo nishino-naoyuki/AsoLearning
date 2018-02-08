@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#CSVふぁいる削除
+sh /data/batch/csvFileDelete.sh
+
+#DBバックアップ
+sh /data/batch/dbbackup.sh
+
+exit 0

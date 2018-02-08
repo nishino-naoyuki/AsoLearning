@@ -1,0 +1,37 @@
+【mySQL】
+・インストール場所
+　
+・起動
+　systemctl start mysqld.service
+　
+・終了
+　
+　
+・rootのパスワード
+　Abcc.2291
+　
+【Tomcat】
+・インストール場所
+　/var/tomcat
+
+・起動
+sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/startup.sh
+
+・停止
+sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/shutdown.sh
+
+
+【apache】
+・インストール場所
+　/etc/httpd
+　
+・起動
+　sudo service httpd start
+　
+・停止
+　sudo service httpd stop
+
+【URL】
+http://azcafe.aso-abcc.com/AsoLearning/login
+
+
