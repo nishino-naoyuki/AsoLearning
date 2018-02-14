@@ -80,8 +80,8 @@ public class ResultDao extends Dao {
 			+ "u.ADMISSION_YEAR,"
 			+ "u.REPEAT_YEAR_COUNT,"
 			+ "u.REMARK,"
-			+ "t.NAME taskname,"
-			+ "t.DIFFICALTY,"
+			//+ "t.NAME taskname,"
+			//+ "t.DIFFICALTY,"
 			+ "cm.COURSE_ID, "
 			+ "(year(now())-u.ADMISSION_YEAR-u.REPEAT_YEAR_COUNT+1) grade,"
 			+ "COURSE_NAME "
@@ -110,7 +110,8 @@ public class ResultDao extends Dao {
 	private static final String RESULT_RANKING_SQL_WHERE_TASKGRP =
 			" t.TASK_GROUP_ID=?";
 	private static final String RESULT_RANKING_SQL_GROUPBY =
-			" GROUP BY r.USER_ID ";
+			" GROUP BY u.USER_ID,u.NAME,u.NICK_NAME,u.MAILADRESS,u.MAILADRESS,u.ADMISSION_YEAR,"
+			+ "u.REPEAT_YEAR_COUNT,u.REMARK,cm.COURSE_ID,grade,COURSE_NAME ";
 	private static final String RESULT_RANKING_SQL_ORDERBY =
 			" ORDER BY rank_total DESC";
 	//挿入SQL
@@ -601,8 +602,8 @@ public class ResultDao extends Dao {
 		//////////////////////////////////
 		// TASK_TBL
 		TaskTblEntity taskEntity = new TaskTblEntity();
-		taskEntity.setName(rs.getString("taskname"));
-		taskEntity.setDifficalty(rs.getInt("DIFFICALTY"));
+//		taskEntity.setName(rs.getString("taskname"));
+//		taskEntity.setDifficalty(rs.getInt("DIFFICALTY"));
 
 		entity.setUserTbl(userEntity);
 		entity.setTaskTbl(taskEntity);

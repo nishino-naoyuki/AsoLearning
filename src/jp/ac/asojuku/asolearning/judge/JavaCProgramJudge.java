@@ -145,7 +145,7 @@ public class JavaCProgramJudge implements Judge {
 		} finally {
 			///////////////////////////////////////
 			//すべて終わったら判定ファイルは削除
-			FileUtils.delete(dirName);
+			//FileUtils.delete(dirName);
 
 		}
 
@@ -303,7 +303,8 @@ public class JavaCProgramJudge implements Judge {
 						args[0],args[1],args[2],args[3],args[4],String.valueOf(PROCESS_TIMEOUT));
 		Process process = pb.start();
 
-		logger.trace("バッチ実行開始：");
+		logger.trace("バッチ実行開始：("
+				+ ","+shellPath+","+dirName+","+fileName+","+resultDir+","+className+")");
 
 		//バッチ実行タイムアウトは１０秒
 		ret = process.waitFor();

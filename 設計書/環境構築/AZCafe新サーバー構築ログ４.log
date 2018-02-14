@@ -1,0 +1,1180 @@
+Last login: Fri Feb  9 18:57:00 2018 from 172.17.10.52
+[root@azcafe ~]# cc d /data/upload/123456789/20180109194702444/result
+-bash: cd: /data/upload/123456789/20180109194702444/result: そのようなファイルやディレクトリはありません
+[root@azcafe ~]# cd /data/upload/123456789/20180109194702444/result20919194702444/
+[root@azcafe 20180209194702444]# ls -la
+合計 4
+drwxr-x---. 4 tomcat tomcat  57  2月  9 19:47 .
+drwxr-x---. 8 tomcat tomcat 156  2月  9 19:47 ..
+-rw-r-----. 1 tomcat tomcat 123  2月  9 19:47 JSSJK1201.java
+drwxr-x---. 2 tomcat tomcat  29  2月  9 19:47 classes
+drwxr-x---. 2 tomcat tomcat  41  2月  9 19:47 result
+[root@azcafe 20180209194702444]# cccc *.java --outdir=/data/upload/123456789/201 80209194702444/result
+JSSJK1201.java
+CCCC - a code counter for C and C++
+===================================
+
+A program to analyse C and C++ source code and report on
+some simple software metrics
+Version 3.1.4
+Copyright Tim Littlefair, 1995, 1996, 1997, 1998, 1999, 2000
+with contributions from Bill McLean, Herman Hueni, Lynn Wilson 
+Peter Bell, Thomas Hieber and Kenneth H. Cox.
+
+The development of this program was heavily dependent on
+the Purdue Compiler Construction Tool Set (PCCTS) 
+by Terence Parr, Will Cohen, Hank Dietz, Russel Quoung,
+Tom Moog and others.
+
+CCCC comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.  See the file COPYING in the source
+code distribution for details.
+Parsing
+Processing JSSJK1201.java as Java
+
+Generating HTML reports
+
+Generating XML reports
+
+Primary HTML output is in /data/upload/123456789/20180209194702444/result/cccc.html
+Detailed HTML reports on modules and source are in /data/upload/123456789/20180209194702444/result
+Primary XML output is in /data/upload/123456789/20180209194702444/result/cccc.xml
+Detailed XML reports on modules are in /data/upload/123456789/20180209194702444/result
+Database dump is in /data/upload/123456789/20180209194702444/result/cccc.db
+
+[root@azcafe 20180209194702444]# cccc *.java --outdir=/data/upload/123456789/201880209194702444/result/cccc
+JSSJK1201.java
+CCCC - a code counter for C and C++
+===================================
+
+A program to analyse C and C++ source code and report on
+some simple software metrics
+Version 3.1.4
+Copyright Tim Littlefair, 1995, 1996, 1997, 1998, 1999, 2000
+with contributions from Bill McLean, Herman Hueni, Lynn Wilson 
+Peter Bell, Thomas Hieber and Kenneth H. Cox.
+
+The development of this program was heavily dependent on
+the Purdue Compiler Construction Tool Set (PCCTS) 
+by Terence Parr, Will Cohen, Hank Dietz, Russel Quoung,
+Tom Moog and others.
+
+CCCC comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.  See the file COPYING in the source
+code distribution for details.
+Parsing
+Processing JSSJK1201.java as Java
+
+Generating HTML reports
+
+Generating XML reports
+
+Primary HTML output is in /data/upload/123456789/20180209194702444/result/cccc/cccc.html
+Detailed HTML reports on modules and source are in /data/upload/123456789/20180209194702444/result/cccc
+Primary XML output is in /data/upload/123456789/20180209194702444/result/cccc/cccc.xml
+Detailed XML reports on modules are in /data/upload/123456789/20180209194702444/result/cccc
+Database dump is in /data/upload/123456789/20180209194702444/result/cccc/cccc.db
+
+[root@azcafe 20180209194702444]# cccc *.java --outdir=/data/upload/123456789/201880209194702444/result/ccccscccc *.java --outdir=/data/upload/123456789/20180209194702444/result/ccccucccc *.java --outdir=/data/upload/123456789/20180209194702444/result/ccccdcccc *.java --outdir=/data/upload/123456789/20180209194702444/result/ccccocccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc-cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/ccccucccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccctcccc *.java --outdir=/data/upload/123456789/20180209194702444/result/ccccocccc *.java --outdir=/data/upload/123456789/20180209194702444/result/ccccmcccc *.java --outdir=/data/upload/123456789/20180209194702444/result/ccccc *.java --outdir=/data/upload/123456789/20180209194702444/result/ccccacccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccctcccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc
+
+sudo: cccc: コマンドが見つかりません
+[root@azcafe 20180209194702444]# sudo -u tomcat cccc *.java --outdir=/data/uploadd/123456789/20180209194702444/result/cccctomcat cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc
+
+sudo: cccc: コマンドが見つかりません
+[root@azcafe 20180209194702444]# sudo -utomcat cccc *.java --outdir=/data/upload//123456789/20180209194702444/result/cccc
+cd /data/batch/
+[root@azcafe batch]# ls -la
+合計 12
+drwxrwxrwx. 3 root root   76  2月  8 19:39 .
+drwxrwxrwx. 9 root root   98  2月  8 18:49 ..
+-rw-r--r--. 1 root root  189  3月 14  2017 csvFileDelete.sh
+-rwxr-xr-x. 1 root root  261  2月  8 18:49 dbbackup.sh
+-rwxr-xr-x. 1 root root 1402  8月 22 17:41 judge.sh
+drwxr-xr-x. 2 root root   36  2月  8 19:39 lib
+[root@azcafe batch]# vi judge.sh 
+"judge.sh" [noeol] 80L, 1402C#!/bin/bash
+
+#######################################
+##
+## 判定しょり実行シェル
+##
+#######################################
+
+FNAME=$2
+
+if [ ${FNAME##*.} = "java" ]; then
+  # 複雑度を判定
+  cccc $1/*.java --outdir=$3/cccc
+  # コンパイルを行う
+  javac -d $1/classes $1/*.java 2>$3/error.txt
+
+  # 実行する
+  cd $1/classes
+  java $4 $5 $6 $7 $8 $9 > $3/result.txt &
+
+  # PIDを取得
+  pid=$!
+
+
+
+
+
+
+
+
+
+
+
+  -- INSERT -- $1/*.java --outdir=$3/cuccc $1/*.java --outdir=$3/cccc  udccc $1/*.java --outdir=$3/cccc  udoccc $1/*.java --outdir=$3/cccc  udo ccc $1/*.java --outdir=$3/ccccccc $1/*.java --outdir=$3/cccc $1/*.java --outdir=$3/cccc $1/*.java --outdir=$3/cccc $1/*.java --outdir=$3/csccc $1/*.java --outdir=$3/cccc  succc $1/*.java --outdir=$3/cccc  sudccc $1/*.java --outdir=$3/cccc  sudoccc $1/*.java --outdir=$3/cccc ccc $1/*.java --outdir=$3/cccc:wq"judge.sh" 80L, 1407C written
+[root@azcafe batch]# vi judge.sh ls -lacd /data/batch/sudo -utomcat cccc *.java --outdir=/data/upload/123456789/200180209194702444/result/cccc
+sudo: cccc: コマンドが見つかりません
+[root@azcafe batch]# sudo -utomcat cccc *.java --outdir=/data/upload/123456789/200180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/ccccr cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccco cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccco cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccct cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc
+
+sudo: cccc: コマンドが見つかりません
+[root@azcafe batch]# sudo -u root cccc *.java --outdir=/data/upload/123456789/201180209194702444/result/ccccroot cccc *.java --outdir=/data/upload/123456789/20180209194702444/result/cccc
+
+sudo: cccc: コマンドが見つかりません
+[root@azcafe batch]# :q
+-bash: :q: コマンドが見つかりません
+[root@azcafe batch]# cccc
+CCCC - a code counter for C and C++
+===================================
+
+A program to analyse C and C++ source code and report on
+some simple software metrics
+Version 3.1.4
+Copyright Tim Littlefair, 1995, 1996, 1997, 1998, 1999, 2000
+with contributions from Bill McLean, Herman Hueni, Lynn Wilson 
+Peter Bell, Thomas Hieber and Kenneth H. Cox.
+
+The development of this program was heavily dependent on
+the Purdue Compiler Construction Tool Set (PCCTS) 
+by Terence Parr, Will Cohen, Hank Dietz, Russel Quoung,
+Tom Moog and others.
+
+CCCC comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.  See the file COPYING in the source
+code distribution for details.
+Parsing
+
+No files parsed on this run
+
+[root@azcafe batch]# sudo cccc
+sudo: cccc: コマンドが見つかりません
+[root@azcafe batch]# su tomcat
+This account is currently not available.
+[root@azcafe batch]# jusdgh.sh
+-bash: judgh.sh: コマンドが見つかりません
+[root@azcafe batch]# ls -la
+合計 12
+drwxrwxrwx. 3 root root   76  2月  9 19:57 .
+drwxrwxrwx. 9 root root   98  2月  8 18:49 ..
+-rw-r--r--. 1 root root  189  3月 14  2017 csvFileDelete.sh
+-rwxr-xr-x. 1 root root  261  2月  8 18:49 dbbackup.sh
+-rwxr-xr-x. 1 root root 1407  2月  9 19:57 judge.sh
+drwxr-xr-x. 2 root root   36  2月  8 19:39 lib
+[root@azcafe batch]# sh judge.sh 
+judge.sh: 11 行: [: =: 単項演算子が予期されます
+/*.*
+CCCC - a code counter for C and C++
+===================================
+
+A program to analyse C and C++ source code and report on
+some simple software metrics
+Version 3.1.4
+Copyright Tim Littlefair, 1995, 1996, 1997, 1998, 1999, 2000
+with contributions from Bill McLean, Herman Hueni, Lynn Wilson 
+Peter Bell, Thomas Hieber and Kenneth H. Cox.
+
+The development of this program was heavily dependent on
+the Purdue Compiler Construction Tool Set (PCCTS) 
+by Terence Parr, Will Cohen, Hank Dietz, Russel Quoung,
+Tom Moog and others.
+
+CCCC comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.  See the file COPYING in the source
+code distribution for details.
+Parsing
+No language found for extension .*
+Couldn't open /*.*
+
+No files parsed on this run
+
+cp: `a.out' の後に宛先のファイルオペランドがありません
+Try 'cp --help' for more information.
+judge.sh: 行 68: ./a.out: そのようなファイルやディレクトリはありません
+.xml
+judge.sh: 72 行: cd: /cccc: そのようなファイルやディレクトリはありません
+mv: `./anonymous.xml' を stat できません: そのようなファイルやディレクトリはありません
+[root@azcafe batch]# sh judge.sh data/batch/judge.sh,/data/upload/123456789/2018 0209194702444 eJSSJK1201.java /data/upload/123456789/20180209194702444/result
+sudo: ccc: コマンドが見つかりません
+judge.sh: 18 行: cd: data/batch/judge.sh,/data/upload/123456789/20180209194702444/classes: そのようなファイルやディレクトリはありません
+使用方法: java [-options] class [args...]
+           (クラスを実行する場合)
+   または  java [-options] -jar jarfile [args...]
+           (jarファイルを実行する場合)
+optionsには次のものがあります。
+    -d32	  使用可能な場合は32ビットのデータ・モデルを使用する
+    -d64	  使用可能な場合は64ビットのデータ・モデルを使用する
+    -server	  "server" VMを選択する場合
+                  デフォルトVMはserverです,
+                  これはサーバークラスのマシンで実行しているためです。
+
+
+    -cp <ディレクトリおよびzip/jarファイルのクラス検索パス>
+    -classpath <ディレクトリおよびzip/jarファイルのクラス検索パス>
+                  クラス・ファイルを検索するディレクトリ、
+                  JARアーカイブおよびZIPアーカイブの:で区切られたリストです。
+    -D<name>=<value>
+                  システム・プロパティを設定する
+    -verbose:[class|gc|jni]
+                  詳細な出力を行う
+    -version      製品バージョンを出力して終了する
+    -version:<value>
+                  警告: この機能は非推奨であり、詳細のリリースで
+                  廃止されます。
+                  指定したバージョンを実行に必須にする
+    -showversion  製品バージョンを出力して続行する
+    -jre-restrict-search | -no-jre-restrict-search
+                  警告: この機能は非推奨であり、詳細のリリースで
+                  廃止されます。
+                  ユーザーのプライベートJREをバージョン検索に含める/除外する
+    -? -help      このヘルプ・メッセージを出力する
+    -X            非標準オプションに関するヘルプを出力する
+    -ea[:<packagename>...|:<classname>]
+    -enableassertions[:<packagename>...|:<classname>]
+                  指定した粒度でアサーションを有効にする
+    -da[:<packagename>...|:<classname>]
+    -disableassertions[:<packagename>...|:<classname>]
+                  指定した粒度でアサーションを無効にする
+    -esa | -enablesystemassertions
+                  システム・アサーションを有効にする
+    -dsa | -disablesystemassertions
+                  システム・アサーションを無効にする
+    -agentlib:<libname>[=<options>]
+                  ネイティブ・エージェント・ライブラリ<libname>をロードする。例: -agentlib:hprof
+                  -agentlib:jdwp=helpと-agentlib:hprof=helpも参照
+    -agentpath:<pathname>[=<options>]
+                  フルパス名でネイティブ・エージェント・ライブラリをロードする
+    -javaagent:<jarpath>[=<options>]
+                  Javaプログラミング言語エージェントをロードする。java.lang.instrumentを参照
+    -splash:<imagepath>
+                  指定したイメージでスプラッシュ画面を表示する
+詳細はhttp://www.oracle.com/technetwork/java/javase/documentation/index.htmlを参照してください。
+0
+0
+[root@azcafe batch]# cd /root/cccc-3.1.4/cccc
+[root@azcafe cccc]# ls -la
+合計 4764
+drwxr-xr-x. 2 root root   4096  2月  8 20:14 .
+drwxr-xr-x. 9 root root   4096  2月  8 20:06 ..
+-rw-r--r--. 1 root root  23768  2月  8 20:14 AParser.o
+-rw-r--r--. 1 root root  10072  2月  8 20:14 ATokenBuffer.o
+-rw-r--r--. 1 root root  31651  1月  5  2006 CCCC User Guide.html
+-rw-r--r--. 1 root root 184472  2月  8 20:08 CLexer.cpp
+-rw-r--r--. 1 root root  17939  2月  8 20:08 CLexer.h
+-rw-r--r--. 1 root root 148120  2月  8 20:09 CLexer.o
+-rw-r--r--. 1 root root  17989  1月  6  2006 COPYING
+-rw-r--r--. 1 root root  60360  2月  8 20:08 CParser.cpp
+-rw-r--r--. 1 root root  10172  2月  8 20:08 CParser.h
+-rw-r--r--. 1 root root  41656  2月  8 20:09 CParser.o
+-rw-r--r--. 1 root root   4990  4月 27  2001 Cccc.dsp
+-rw-r--r--. 1 root root   4620  2月  8 20:08 Ctokens.h
+-rw-r--r--. 1 root root  11736  2月  8 20:14 DLexerBase.o
+-rw-r--r--. 1 root root 140645  2月  8 20:09 JLexer.cpp
+-rw-r--r--. 1 root root  14362  2月  8 20:09 JLexer.h
+-rw-r--r--. 1 root root 106968  2月  8 20:09 JLexer.o
+-rw-r--r--. 1 root root  33948  2月  8 20:09 JParser.cpp
+-rw-r--r--. 1 root root   8524  2月  8 20:09 JParser.h
+-rw-r--r--. 1 root root  29208  2月  8 20:09 JParser.o
+-rw-r--r--. 1 root root   3972  2月  8 20:09 Jtokens.h
+-rw-r--r--. 1 root root  31356  1月  6  2006 ada.g
+-rwxr-xr-x. 1 root root 986128  2月  8 20:14 cccc
+-rw-r--r--. 1 root root  89245  1月 31  2017 cccc.cpp
+-rw-r--r--. 1 root root  34166  1月  6  2006 cccc.g
+-rw-r--r--. 1 root root   2332  2月 28  2004 cccc.h
+-rw-r--r--. 1 root root 197864  2月  8 20:09 cccc.o
+-rw-r--r--. 1 root root   4024  1月  6  2006 cccc_db.cc
+-rw-r--r--. 1 root root   2955  1月  6  2006 cccc_db.h
+-rw-r--r--. 1 root root  15624  2月  8 20:09 cccc_db.o
+-rw-r--r--. 1 root root   3794  1月  6  2006 cccc_ext.cc
+-rw-r--r--. 1 root root   1731  1月  6  2006 cccc_ext.h
+-rw-r--r--. 1 root root  11480  2月  8 20:09 cccc_ext.o
+-rw-r--r--. 1 root root  44534  1月  6  2006 cccc_htm.cc
+-rw-r--r--. 1 root root   4607  1月  6  2006 cccc_htm.h
+-rw-r--r--. 1 root root 283352  2月  8 20:14 cccc_htm.o
+-rw-r--r--. 1 root root   2126  1月  6  2006 cccc_itm.cc
+-rw-r--r--. 1 root root   1020  1月  6  2006 cccc_itm.h
+-rw-r--r--. 1 root root   9392  2月  8 20:14 cccc_itm.o
+-rw-r--r--. 1 root root   5855  1月  6  2006 cccc_mem.cc
+-rw-r--r--. 1 root root   1650  1月  6  2006 cccc_mem.h
+-rw-r--r--. 1 root root 113736  2月  8 20:14 cccc_mem.o
+-rw-r--r--. 1 root root   6034  1月  6  2006 cccc_met.cc
+-rw-r--r--. 1 root root   2927  1月  6  2006 cccc_met.h
+-rw-r--r--. 1 root root  17040  2月  8 20:14 cccc_met.o
+-rw-r--r--. 1 root root   6994  1月  6  2006 cccc_mod.cc
+-rw-r--r--. 1 root root   1869  1月  6  2006 cccc_mod.h
+-rw-r--r--. 1 root root 152952  2月  8 20:14 cccc_mod.o
+-rw-r--r--. 1 root root   2006  1月  6  2006 cccc_new.cc
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_new.o
+-rw-r--r--. 1 root root  12477  1月  6  2006 cccc_opt.cc
+-rw-r--r--. 1 root root   2396  1月  6  2006 cccc_opt.h
+-rw-r--r--. 1 root root 148968  2月  8 20:09 cccc_opt.o
+-rw-r--r--. 1 root root  10937  1月  6  2006 cccc_prj.cc
+-rw-r--r--. 1 root root   3193  1月  6  2006 cccc_prj.h
+-rw-r--r--. 1 root root 267216  2月  8 20:14 cccc_prj.o
+-rw-r--r--. 1 root root   2220  1月  6  2006 cccc_rec.cc
+-rw-r--r--. 1 root root   2226  1月  6  2006 cccc_rec.h
+-rw-r--r--. 1 root root  56672  2月  8 20:09 cccc_rec.o
+-rw-r--r--. 1 root root   3203  1月 31  2017 cccc_tbl.cc
+-rw-r--r--. 1 root root   1716  1月  6  2006 cccc_tbl.h
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_tbl.o
+-rw-r--r--. 1 root root   5518  1月  6  2006 cccc_tok.cc
+-rw-r--r--. 1 root root   2886  1月  6  2006 cccc_tok.h
+-rw-r--r--. 1 root root  31704  2月  8 20:14 cccc_tok.o
+-rw-r--r--. 1 root root   1398  1月  6  2006 cccc_tpl.cc
+-rw-r--r--. 1 root root 343008  2月  8 20:14 cccc_tpl.o
+-rw-r--r--. 1 root root   6381  1月  6  2006 cccc_use.cc
+-rw-r--r--. 1 root root   1867  1月  6  2006 cccc_use.h
+-rw-r--r--. 1 root root 113984  2月  8 20:14 cccc_use.o
+-rw-r--r--. 1 root root  16660  1月  6  2006 cccc_utl.cc
+-rw-r--r--. 1 root root  11570  1月  6  2006 cccc_utl.h
+-rw-r--r--. 1 root root 134752  2月  8 20:09 cccc_utl.o
+-rw-r--r--. 1 root root     36  1月  6  2006 cccc_ver.h
+-rw-r--r--. 1 root root  29287  1月  6  2006 cccc_xml.cc
+-rw-r--r--. 1 root root   4298  1月  6  2006 cccc_xml.h
+-rw-r--r--. 1 root root 142224  2月  8 20:14 cccc_xml.o
+-rw-r--r--. 1 root root  18703  1月  6  2006 ccccmain.cc
+-rw-r--r--. 1 root root  85416  2月  8 20:09 ccccmain.o
+-rw-r--r--. 1 root root  65274  2月  8 20:09 java.cpp
+-rw-r--r--. 1 root root  35897  1月 14  2005 java.g
+-rw-r--r--. 1 root root 151464  2月  8 20:09 java.o
+-rw-r--r--. 1 root root   7669  2月  8 20:09 parser.dlg
+-rw-r--r--. 1 root root    988  8月 12  2003 posixgcc.mak
+-rw-r--r--. 1 root root   7572  8月 11  2003 rules.mak
+-rw-r--r--. 1 root root    726  8月 30  2001 w32bcb.mak
+-rw-r--r--. 1 root root    964  9月  6  2001 w32bcc.mak
+-rw-r--r--. 1 root root    785  9月  6  2001 w32bcc55.mak
+-rw-r--r--. 1 root root    557  4月 17  2001 w32cygnus.mak
+-rw-r--r--. 1 root root    739  8月 30  2001 w32cygnus_gmake.mak
+-rw-r--r--. 1 root root    571  8月 30  2001 w32cygnus_nmake.mak
+-rw-r--r--. 1 root root    552  4月 27  2001 w32vc.mak
+[root@azcafe cccc]# chmod 755 cccc
+[root@azcafe cccc]# ls -la
+合計 4764
+drwxr-xr-x. 2 root root   4096  2月  8 20:14 .
+drwxr-xr-x. 9 root root   4096  2月  8 20:06 ..
+-rw-r--r--. 1 root root  23768  2月  8 20:14 AParser.o
+-rw-r--r--. 1 root root  10072  2月  8 20:14 ATokenBuffer.o
+-rw-r--r--. 1 root root  31651  1月  5  2006 CCCC User Guide.html
+-rw-r--r--. 1 root root 184472  2月  8 20:08 CLexer.cpp
+-rw-r--r--. 1 root root  17939  2月  8 20:08 CLexer.h
+-rw-r--r--. 1 root root 148120  2月  8 20:09 CLexer.o
+-rw-r--r--. 1 root root  17989  1月  6  2006 COPYING
+-rw-r--r--. 1 root root  60360  2月  8 20:08 CParser.cpp
+-rw-r--r--. 1 root root  10172  2月  8 20:08 CParser.h
+-rw-r--r--. 1 root root  41656  2月  8 20:09 CParser.o
+-rw-r--r--. 1 root root   4990  4月 27  2001 Cccc.dsp
+-rw-r--r--. 1 root root   4620  2月  8 20:08 Ctokens.h
+-rw-r--r--. 1 root root  11736  2月  8 20:14 DLexerBase.o
+-rw-r--r--. 1 root root 140645  2月  8 20:09 JLexer.cpp
+-rw-r--r--. 1 root root  14362  2月  8 20:09 JLexer.h
+-rw-r--r--. 1 root root 106968  2月  8 20:09 JLexer.o
+-rw-r--r--. 1 root root  33948  2月  8 20:09 JParser.cpp
+-rw-r--r--. 1 root root   8524  2月  8 20:09 JParser.h
+-rw-r--r--. 1 root root  29208  2月  8 20:09 JParser.o
+-rw-r--r--. 1 root root   3972  2月  8 20:09 Jtokens.h
+-rw-r--r--. 1 root root  31356  1月  6  2006 ada.g
+-rwxr-xr-x. 1 root root 986128  2月  8 20:14 cccc
+-rw-r--r--. 1 root root  89245  1月 31  2017 cccc.cpp
+-rw-r--r--. 1 root root  34166  1月  6  2006 cccc.g
+-rw-r--r--. 1 root root   2332  2月 28  2004 cccc.h
+-rw-r--r--. 1 root root 197864  2月  8 20:09 cccc.o
+-rw-r--r--. 1 root root   4024  1月  6  2006 cccc_db.cc
+-rw-r--r--. 1 root root   2955  1月  6  2006 cccc_db.h
+-rw-r--r--. 1 root root  15624  2月  8 20:09 cccc_db.o
+-rw-r--r--. 1 root root   3794  1月  6  2006 cccc_ext.cc
+-rw-r--r--. 1 root root   1731  1月  6  2006 cccc_ext.h
+-rw-r--r--. 1 root root  11480  2月  8 20:09 cccc_ext.o
+-rw-r--r--. 1 root root  44534  1月  6  2006 cccc_htm.cc
+-rw-r--r--. 1 root root   4607  1月  6  2006 cccc_htm.h
+-rw-r--r--. 1 root root 283352  2月  8 20:14 cccc_htm.o
+-rw-r--r--. 1 root root   2126  1月  6  2006 cccc_itm.cc
+-rw-r--r--. 1 root root   1020  1月  6  2006 cccc_itm.h
+-rw-r--r--. 1 root root   9392  2月  8 20:14 cccc_itm.o
+-rw-r--r--. 1 root root   5855  1月  6  2006 cccc_mem.cc
+-rw-r--r--. 1 root root   1650  1月  6  2006 cccc_mem.h
+-rw-r--r--. 1 root root 113736  2月  8 20:14 cccc_mem.o
+-rw-r--r--. 1 root root   6034  1月  6  2006 cccc_met.cc
+-rw-r--r--. 1 root root   2927  1月  6  2006 cccc_met.h
+-rw-r--r--. 1 root root  17040  2月  8 20:14 cccc_met.o
+-rw-r--r--. 1 root root   6994  1月  6  2006 cccc_mod.cc
+-rw-r--r--. 1 root root   1869  1月  6  2006 cccc_mod.h
+-rw-r--r--. 1 root root 152952  2月  8 20:14 cccc_mod.o
+-rw-r--r--. 1 root root   2006  1月  6  2006 cccc_new.cc
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_new.o
+-rw-r--r--. 1 root root  12477  1月  6  2006 cccc_opt.cc
+-rw-r--r--. 1 root root   2396  1月  6  2006 cccc_opt.h
+-rw-r--r--. 1 root root 148968  2月  8 20:09 cccc_opt.o
+-rw-r--r--. 1 root root  10937  1月  6  2006 cccc_prj.cc
+-rw-r--r--. 1 root root   3193  1月  6  2006 cccc_prj.h
+-rw-r--r--. 1 root root 267216  2月  8 20:14 cccc_prj.o
+-rw-r--r--. 1 root root   2220  1月  6  2006 cccc_rec.cc
+-rw-r--r--. 1 root root   2226  1月  6  2006 cccc_rec.h
+-rw-r--r--. 1 root root  56672  2月  8 20:09 cccc_rec.o
+-rw-r--r--. 1 root root   3203  1月 31  2017 cccc_tbl.cc
+-rw-r--r--. 1 root root   1716  1月  6  2006 cccc_tbl.h
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_tbl.o
+-rw-r--r--. 1 root root   5518  1月  6  2006 cccc_tok.cc
+-rw-r--r--. 1 root root   2886  1月  6  2006 cccc_tok.h
+-rw-r--r--. 1 root root  31704  2月  8 20:14 cccc_tok.o
+-rw-r--r--. 1 root root   1398  1月  6  2006 cccc_tpl.cc
+-rw-r--r--. 1 root root 343008  2月  8 20:14 cccc_tpl.o
+-rw-r--r--. 1 root root   6381  1月  6  2006 cccc_use.cc
+-rw-r--r--. 1 root root   1867  1月  6  2006 cccc_use.h
+-rw-r--r--. 1 root root 113984  2月  8 20:14 cccc_use.o
+-rw-r--r--. 1 root root  16660  1月  6  2006 cccc_utl.cc
+-rw-r--r--. 1 root root  11570  1月  6  2006 cccc_utl.h
+-rw-r--r--. 1 root root 134752  2月  8 20:09 cccc_utl.o
+-rw-r--r--. 1 root root     36  1月  6  2006 cccc_ver.h
+-rw-r--r--. 1 root root  29287  1月  6  2006 cccc_xml.cc
+-rw-r--r--. 1 root root   4298  1月  6  2006 cccc_xml.h
+-rw-r--r--. 1 root root 142224  2月  8 20:14 cccc_xml.o
+-rw-r--r--. 1 root root  18703  1月  6  2006 ccccmain.cc
+-rw-r--r--. 1 root root  85416  2月  8 20:09 ccccmain.o
+-rw-r--r--. 1 root root  65274  2月  8 20:09 java.cpp
+-rw-r--r--. 1 root root  35897  1月 14  2005 java.g
+-rw-r--r--. 1 root root 151464  2月  8 20:09 java.o
+-rw-r--r--. 1 root root   7669  2月  8 20:09 parser.dlg
+-rw-r--r--. 1 root root    988  8月 12  2003 posixgcc.mak
+-rw-r--r--. 1 root root   7572  8月 11  2003 rules.mak
+-rw-r--r--. 1 root root    726  8月 30  2001 w32bcb.mak
+-rw-r--r--. 1 root root    964  9月  6  2001 w32bcc.mak
+-rw-r--r--. 1 root root    785  9月  6  2001 w32bcc55.mak
+-rw-r--r--. 1 root root    557  4月 17  2001 w32cygnus.mak
+-rw-r--r--. 1 root root    739  8月 30  2001 w32cygnus_gmake.mak
+-rw-r--r--. 1 root root    571  8月 30  2001 w32cygnus_nmake.mak
+-rw-r--r--. 1 root root    552  4月 27  2001 w32vc.mak
+[root@azcafe cccc]# 
+新しいメールが /var/spool/mail/root にあります
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# sudo -u tomcat cccc
+sudo: cccc: コマンドが見つかりません
+[root@azcafe cccc]# cccc
+CCCC - a code counter for C and C++
+===================================
+
+A program to analyse C and C++ source code and report on
+some simple software metrics
+Version 3.1.4
+Copyright Tim Littlefair, 1995, 1996, 1997, 1998, 1999, 2000
+with contributions from Bill McLean, Herman Hueni, Lynn Wilson 
+Peter Bell, Thomas Hieber and Kenneth H. Cox.
+
+The development of this program was heavily dependent on
+the Purdue Compiler Construction Tool Set (PCCTS) 
+by Terence Parr, Will Cohen, Hank Dietz, Russel Quoung,
+Tom Moog and others.
+
+CCCC comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.  See the file COPYING in the source
+code distribution for details.
+Parsing
+
+No files parsed on this run
+
+[root@azcafe cccc]# sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/s hutdown.sh
+Using CATALINA_BASE:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_HOME:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_TMPDIR: /opt/apache-tomcat/apache-tomcat-8.5.27/temp
+Using JRE_HOME:        /
+Using CLASSPATH:       /opt/apache-tomcat/apache-tomcat-8.5.27/bin/bootstrap.jar:/opt/apache-tomcat/apache-tomcat-8.5.27/bin/tomcat-juli.jar
+[root@azcafe cccc]# sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/s tartup.sh
+Using CATALINA_BASE:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_HOME:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_TMPDIR: /opt/apache-tomcat/apache-tomcat-8.5.27/temp
+Using JRE_HOME:        /
+Using CLASSPATH:       /opt/apache-tomcat/apache-tomcat-8.5.27/bin/bootstrap.jar:/opt/apache-tomcat/apache-tomcat-8.5.27/bin/tomcat-juli.jar
+Tomcat started.
+[root@azcafe cccc]# [sudo] tomcat のパスワード:
+
+新しいメールが /var/spool/mail/root にあります
+[root@azcafe cccc]# cd /opt/apache-tomcat/apache-tomcat-8.5.27
+[root@azcafe apache-tomcat-8.5.27]# cd /data/batch/
+[root@azcafe batch]# ls -la
+合計 12
+drwxrwxrwx. 3 root root   97  2月  9 20:05 .
+drwxrwxrwx. 9 root root   98  2月  8 18:49 ..
+-rw-r--r--. 1 root root  189  3月 14  2017 csvFileDelete.sh
+-rwxr-xr-x. 1 root root  261  2月  8 18:49 dbbackup.sh
+-rwxr-xr-x. 1 root root 1407  2月  9 19:57 judge.sh
+-rw-r--r--. 1 root root    0  2月  9 20:05 judge.sh.lock
+drwxr-xr-x. 2 root root   36  2月  8 19:39 lib
+[root@azcafe batch]# vi judge.sh
+"judge.sh" 80L, 1407C#!/bin/bash
+
+#######################################
+##
+## 判定しょり実行シェル
+##
+#######################################
+
+FNAME=$2
+
+if [ ${FNAME##*.} = "java" ]; then
+  # 複雑度を判定
+  sudo ccc $1/*.java --outdir=$3/cccc
+  # コンパイルを行う
+  javac -d $1/classes $1/*.java 2>$3/error.txt
+
+  # 実行する
+  cd $1/classes
+  java $4 $5 $6 $7 $8 $9 > $3/result.txt &
+
+  # PIDを取得
+  pid=$!
+
+
+
+
+
+
+
+
+
+
+
+-- INSERT --  sudo ccc $1/*.java --outdir=$3/c ccc $1/*.java --outdir=$3/c ccc $1/*.java --outdir=$3/c ccc $1/*.java --outdir=$3/c ccc $1/*.java --outdir=$3/ccccc $1/*.java --outdir=$3/cccc  c:wq"judge.sh" 80L, 1403C written
+[root@azcafe batch]# cccc
+CCCC - a code counter for C and C++
+===================================
+
+A program to analyse C and C++ source code and report on
+some simple software metrics
+Version 3.1.4
+Copyright Tim Littlefair, 1995, 1996, 1997, 1998, 1999, 2000
+with contributions from Bill McLean, Herman Hueni, Lynn Wilson 
+Peter Bell, Thomas Hieber and Kenneth H. Cox.
+
+The development of this program was heavily dependent on
+the Purdue Compiler Construction Tool Set (PCCTS) 
+by Terence Parr, Will Cohen, Hank Dietz, Russel Quoung,
+Tom Moog and others.
+
+CCCC comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.  See the file COPYING in the source
+code distribution for details.
+Parsing
+
+No files parsed on this run
+
+[root@azcafe batch]# ^C
+[root@azcafe batch]# ccccvi judge.sh
+"judge.sh" 80L, 1403C#!/bin/bash
+
+#######################################
+##
+## 判定しょり実行シェル
+##
+#######################################
+
+FNAME=$2
+
+if [ ${FNAME##*.} = "java" ]; then
+  # 複雑度を判定
+  cccc $1/*.java --outdir=$3/cccc
+  # コンパイルを行う
+  javac -d $1/classes $1/*.java 2>$3/error.txt
+
+  # 実行する
+  cd $1/classes
+  java $4 $5 $6 $7 $8 $9 > $3/result.txt &
+
+  # PIDを取得
+  pid=$!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 100ms待つ
+usleep 100000
+time=0
+
+while true
+do
+#生存確認
+isAlive=`ps -ef | grep "$pid" | grep -v grep | grep -v srvchk | wc -l`
+
+echo $isAlive
+echo $time
+
+if [ $isAlive = 1 ]; then
+if [ $time = ${10} ]; then
+#タイムアウトに達したのでエラーにする
+kill $pid
+exit 1
+fi
+else
+exit 0
+fi
+# 1秒待つ
+usleep 1000000
+time=$(( time + 1 ))
+done
+
+else
+
+# 複雑度を判定
+cccc $1/*.* --outdir=$3/cccc
+#排他処理
+_LOCK_FILE=$0.lock
+exec {F_LOCK}>>$_LOCK_FILE
+
+#排他（タイムアウト10秒）
+flock -w 10 ${F_LOCK}
+
+# $?は特殊変数（直前の実行結果が入る）
+if [ $? -ne 1 ]; then
+gcc $1/$2 2>$3/error.txt
+
+cp a.out $1
+cd $1
+
+./a.out $5 $6 $7 $8 $9 > $3/result.txt
+
+echo $4.xml
+#結果ファイル名を変更する
+cd $3/cccc
+mv ./anonymous.xml ./$4.xml
+
+#flock -u ${F_LOCK}
+else
+echo "haita!"
+fi
+
+fiexec {F_LOCK}>>$_LOCK_FILE_LOCK_FILE=$0.lock#排他処理cccc $1/*.* --outdir=$3/cccc# 複雑度を判定elsedonetime=$(( time + 1 ))usleep 1000000# 1秒待つfiexit 0elsefiexit 1kill $pid#タイムアウトに達したのでエラーにするif [ $time = ${10} ]; thenif [ $isAlive = 1 ]; thenecho $timeecho $isAliveisAlive=`ps -ef | grep "$pid" | grep -v grep | grep -v srvchk | wc -l`#生存確認dowhile truetime=0usleep 100000# 100ms待つpid=$!# PIDを取得java $4 $5 $6 $7 $8 $9 > $3/result.txt &cd $1/classes# 実行するjavac -d $1/classes $1/*.java 2>$3/error.txt# コンパイルを行うcccc $1/*.java --outdir=$3/cccc# 複雑度を判定if [ ${FNAME##*.} = "java" ]; thenFNAME=$2########################################### 判定しょり実行シェル##:q[root@azcafe batch]# vi judge.shccccvi judge.shls -lacd /data/batch/opt/apache-tomcat/apache-tomcat-8.5.27sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/sstartup.shhutdown.shcccc
+sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/sshutdown.sh
+sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/ shutdown.sh
+Using CATALINA_BASE:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_HOME:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_TMPDIR: /opt/apache-tomcat/apache-tomcat-8.5.27/temp
+Using JRE_HOME:        /
+Using CLASSPATH:       /opt/apache-tomcat/apache-tomcat-8.5.27/bin/bootstrap.jar:/opt/apache-tomcat/apache-tomcat-8.5.27/bin/tomcat-juli.jar
+[root@azcafe batch]# sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/ startup.sh
+Using CATALINA_BASE:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_HOME:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_TMPDIR: /opt/apache-tomcat/apache-tomcat-8.5.27/temp
+Using JRE_HOME:        /
+Using CLASSPATH:       /opt/apache-tomcat/apache-tomcat-8.5.27/bin/bootstrap.jar:/opt/apache-tomcat/apache-tomcat-8.5.27/bin/tomcat-juli.jar
+Tomcat started.
+[root@azcafe batch]# cd /root/
+[root@azcafe ~]# lsls
+anaconda-ks.cfg              asolearning  cccc-3.1.4.tar.gz
+apache-tomcat-8.5.27.tar.gz  cccc-3.1.4   dbbk
+[root@azcafe ~]# cd cccc-3.1.4
+[root@azcafe cccc-3.1.4]# ls -la
+合計 88
+drwxr-xr-x. 9 root root 4096  2月  8 20:06 .
+dr-xr-x---. 6 root root 4096  2月  8 20:03 ..
+drwxr-xr-x. 2 root root   94  1月  6  2006 bug_reports
+-rwxr-xr-x. 1 root root  250  9月  7  2001 build_posixgcc.sh
+-rw-r--r--. 1 root root  967  9月  6  2001 build_w32bcc.PIF
+-rwxr-xr-x. 1 root root 1088  9月  6  2001 build_w32bcc.bat
+-rw-r--r--. 1 root root  967  9月  6  2001 build_w32vc.PIF
+-rwxr-xr-x. 1 root root  880  8月 12  2003 build_w32vc.bat
+-rw-r--r--. 1 root root 5318  1月  6  2006 build_w32vct2003.bat
+drwxr-xr-x. 2 root root 4096  2月  8 20:14 cccc
+-rw-r--r--. 1 root root 2064  4月 19  2001 ccccdist.dsw
+-rw-r--r--. 1 root root 4514  1月  6  2006 changes.txt
+-rw-r--r--. 1 root root 2492  4月 19  2001 documentation.dsp
+drwxr-xr-x. 2 root root   44  1月  6  2006 install
+-rw-r--r--. 1 root root  511  4月 26  2001 makefile
+drwxr-xr-x. 8 root root 4096  2月  8 20:08 pccts
+-rw-r--r--. 1 root root 7979  1月 26  2005 readme.txt
+drwxr-xr-x. 3 root root 4096  2月  8 20:14 test
+drwxr-xr-x. 3 root root 4096  1月  6  2006 vcaddin
+drwxr-xr-x. 2 root root   99  1月  6  2006 w32installer
+-rw-r--r--. 1 root root  223  1月 14  2005 zip_src.bat
+[root@azcafe cccc-3.1.4]# cchmod c777 cccc
+[root@azcafe cccc-3.1.4]# ls -la
+合計 88
+drwxr-xr-x. 9 root root 4096  2月  8 20:06 .
+dr-xr-x---. 6 root root 4096  2月  8 20:03 ..
+drwxr-xr-x. 2 root root   94  1月  6  2006 bug_reports
+-rwxr-xr-x. 1 root root  250  9月  7  2001 build_posixgcc.sh
+-rw-r--r--. 1 root root  967  9月  6  2001 build_w32bcc.PIF
+-rwxr-xr-x. 1 root root 1088  9月  6  2001 build_w32bcc.bat
+-rw-r--r--. 1 root root  967  9月  6  2001 build_w32vc.PIF
+-rwxr-xr-x. 1 root root  880  8月 12  2003 build_w32vc.bat
+-rw-r--r--. 1 root root 5318  1月  6  2006 build_w32vct2003.bat
+drwxrwxrwx. 2 root root 4096  2月  8 20:14 cccc
+-rw-r--r--. 1 root root 2064  4月 19  2001 ccccdist.dsw
+-rw-r--r--. 1 root root 4514  1月  6  2006 changes.txt
+-rw-r--r--. 1 root root 2492  4月 19  2001 documentation.dsp
+drwxr-xr-x. 2 root root   44  1月  6  2006 install
+-rw-r--r--. 1 root root  511  4月 26  2001 makefile
+drwxr-xr-x. 8 root root 4096  2月  8 20:08 pccts
+-rw-r--r--. 1 root root 7979  1月 26  2005 readme.txt
+drwxr-xr-x. 3 root root 4096  2月  8 20:14 test
+drwxr-xr-x. 3 root root 4096  1月  6  2006 vcaddin
+drwxr-xr-x. 2 root root   99  1月  6  2006 w32installer
+-rw-r--r--. 1 root root  223  1月 14  2005 zip_src.bat
+[root@azcafe cccc-3.1.4]# cd cccc
+[root@azcafe cccc]# ls -la
+合計 4764
+drwxrwxrwx. 2 root root   4096  2月  8 20:14 .
+drwxr-xr-x. 9 root root   4096  2月  8 20:06 ..
+-rw-r--r--. 1 root root  23768  2月  8 20:14 AParser.o
+-rw-r--r--. 1 root root  10072  2月  8 20:14 ATokenBuffer.o
+-rw-r--r--. 1 root root  31651  1月  5  2006 CCCC User Guide.html
+-rw-r--r--. 1 root root 184472  2月  8 20:08 CLexer.cpp
+-rw-r--r--. 1 root root  17939  2月  8 20:08 CLexer.h
+-rw-r--r--. 1 root root 148120  2月  8 20:09 CLexer.o
+-rw-r--r--. 1 root root  17989  1月  6  2006 COPYING
+-rw-r--r--. 1 root root  60360  2月  8 20:08 CParser.cpp
+-rw-r--r--. 1 root root  10172  2月  8 20:08 CParser.h
+-rw-r--r--. 1 root root  41656  2月  8 20:09 CParser.o
+-rw-r--r--. 1 root root   4990  4月 27  2001 Cccc.dsp
+-rw-r--r--. 1 root root   4620  2月  8 20:08 Ctokens.h
+-rw-r--r--. 1 root root  11736  2月  8 20:14 DLexerBase.o
+-rw-r--r--. 1 root root 140645  2月  8 20:09 JLexer.cpp
+-rw-r--r--. 1 root root  14362  2月  8 20:09 JLexer.h
+-rw-r--r--. 1 root root 106968  2月  8 20:09 JLexer.o
+-rw-r--r--. 1 root root  33948  2月  8 20:09 JParser.cpp
+-rw-r--r--. 1 root root   8524  2月  8 20:09 JParser.h
+-rw-r--r--. 1 root root  29208  2月  8 20:09 JParser.o
+-rw-r--r--. 1 root root   3972  2月  8 20:09 Jtokens.h
+-rw-r--r--. 1 root root  31356  1月  6  2006 ada.g
+-rwxr-xr-x. 1 root root 986128  2月  8 20:14 cccc
+-rw-r--r--. 1 root root  89245  1月 31  2017 cccc.cpp
+-rw-r--r--. 1 root root  34166  1月  6  2006 cccc.g
+-rw-r--r--. 1 root root   2332  2月 28  2004 cccc.h
+-rw-r--r--. 1 root root 197864  2月  8 20:09 cccc.o
+-rw-r--r--. 1 root root   4024  1月  6  2006 cccc_db.cc
+-rw-r--r--. 1 root root   2955  1月  6  2006 cccc_db.h
+-rw-r--r--. 1 root root  15624  2月  8 20:09 cccc_db.o
+-rw-r--r--. 1 root root   3794  1月  6  2006 cccc_ext.cc
+-rw-r--r--. 1 root root   1731  1月  6  2006 cccc_ext.h
+-rw-r--r--. 1 root root  11480  2月  8 20:09 cccc_ext.o
+-rw-r--r--. 1 root root  44534  1月  6  2006 cccc_htm.cc
+-rw-r--r--. 1 root root   4607  1月  6  2006 cccc_htm.h
+-rw-r--r--. 1 root root 283352  2月  8 20:14 cccc_htm.o
+-rw-r--r--. 1 root root   2126  1月  6  2006 cccc_itm.cc
+-rw-r--r--. 1 root root   1020  1月  6  2006 cccc_itm.h
+-rw-r--r--. 1 root root   9392  2月  8 20:14 cccc_itm.o
+-rw-r--r--. 1 root root   5855  1月  6  2006 cccc_mem.cc
+-rw-r--r--. 1 root root   1650  1月  6  2006 cccc_mem.h
+-rw-r--r--. 1 root root 113736  2月  8 20:14 cccc_mem.o
+-rw-r--r--. 1 root root   6034  1月  6  2006 cccc_met.cc
+-rw-r--r--. 1 root root   2927  1月  6  2006 cccc_met.h
+-rw-r--r--. 1 root root  17040  2月  8 20:14 cccc_met.o
+-rw-r--r--. 1 root root   6994  1月  6  2006 cccc_mod.cc
+-rw-r--r--. 1 root root   1869  1月  6  2006 cccc_mod.h
+-rw-r--r--. 1 root root 152952  2月  8 20:14 cccc_mod.o
+-rw-r--r--. 1 root root   2006  1月  6  2006 cccc_new.cc
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_new.o
+-rw-r--r--. 1 root root  12477  1月  6  2006 cccc_opt.cc
+-rw-r--r--. 1 root root   2396  1月  6  2006 cccc_opt.h
+-rw-r--r--. 1 root root 148968  2月  8 20:09 cccc_opt.o
+-rw-r--r--. 1 root root  10937  1月  6  2006 cccc_prj.cc
+-rw-r--r--. 1 root root   3193  1月  6  2006 cccc_prj.h
+-rw-r--r--. 1 root root 267216  2月  8 20:14 cccc_prj.o
+-rw-r--r--. 1 root root   2220  1月  6  2006 cccc_rec.cc
+-rw-r--r--. 1 root root   2226  1月  6  2006 cccc_rec.h
+-rw-r--r--. 1 root root  56672  2月  8 20:09 cccc_rec.o
+-rw-r--r--. 1 root root   3203  1月 31  2017 cccc_tbl.cc
+-rw-r--r--. 1 root root   1716  1月  6  2006 cccc_tbl.h
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_tbl.o
+-rw-r--r--. 1 root root   5518  1月  6  2006 cccc_tok.cc
+-rw-r--r--. 1 root root   2886  1月  6  2006 cccc_tok.h
+-rw-r--r--. 1 root root  31704  2月  8 20:14 cccc_tok.o
+-rw-r--r--. 1 root root   1398  1月  6  2006 cccc_tpl.cc
+-rw-r--r--. 1 root root 343008  2月  8 20:14 cccc_tpl.o
+-rw-r--r--. 1 root root   6381  1月  6  2006 cccc_use.cc
+-rw-r--r--. 1 root root   1867  1月  6  2006 cccc_use.h
+-rw-r--r--. 1 root root 113984  2月  8 20:14 cccc_use.o
+-rw-r--r--. 1 root root  16660  1月  6  2006 cccc_utl.cc
+-rw-r--r--. 1 root root  11570  1月  6  2006 cccc_utl.h
+-rw-r--r--. 1 root root 134752  2月  8 20:09 cccc_utl.o
+-rw-r--r--. 1 root root     36  1月  6  2006 cccc_ver.h
+-rw-r--r--. 1 root root  29287  1月  6  2006 cccc_xml.cc
+-rw-r--r--. 1 root root   4298  1月  6  2006 cccc_xml.h
+-rw-r--r--. 1 root root 142224  2月  8 20:14 cccc_xml.o
+-rw-r--r--. 1 root root  18703  1月  6  2006 ccccmain.cc
+-rw-r--r--. 1 root root  85416  2月  8 20:09 ccccmain.o
+-rw-r--r--. 1 root root  65274  2月  8 20:09 java.cpp
+-rw-r--r--. 1 root root  35897  1月 14  2005 java.g
+-rw-r--r--. 1 root root 151464  2月  8 20:09 java.o
+-rw-r--r--. 1 root root   7669  2月  8 20:09 parser.dlg
+-rw-r--r--. 1 root root    988  8月 12  2003 posixgcc.mak
+-rw-r--r--. 1 root root   7572  8月 11  2003 rules.mak
+-rw-r--r--. 1 root root    726  8月 30  2001 w32bcb.mak
+-rw-r--r--. 1 root root    964  9月  6  2001 w32bcc.mak
+-rw-r--r--. 1 root root    785  9月  6  2001 w32bcc55.mak
+-rw-r--r--. 1 root root    557  4月 17  2001 w32cygnus.mak
+-rw-r--r--. 1 root root    739  8月 30  2001 w32cygnus_gmake.mak
+-rw-r--r--. 1 root root    571  8月 30  2001 w32cygnus_nmake.mak
+-rw-r--r--. 1 root root    552  4月 27  2001 w32vc.mak
+[root@azcafe cccc]# cd chmod 7777 cccc
+[root@azcafe cccc]# ls -la
+合計 4764
+drwxrwxrwx. 2 root root   4096  2月  8 20:14 .
+drwxr-xr-x. 9 root root   4096  2月  8 20:06 ..
+-rw-r--r--. 1 root root  23768  2月  8 20:14 AParser.o
+-rw-r--r--. 1 root root  10072  2月  8 20:14 ATokenBuffer.o
+-rw-r--r--. 1 root root  31651  1月  5  2006 CCCC User Guide.html
+-rw-r--r--. 1 root root 184472  2月  8 20:08 CLexer.cpp
+-rw-r--r--. 1 root root  17939  2月  8 20:08 CLexer.h
+-rw-r--r--. 1 root root 148120  2月  8 20:09 CLexer.o
+-rw-r--r--. 1 root root  17989  1月  6  2006 COPYING
+-rw-r--r--. 1 root root  60360  2月  8 20:08 CParser.cpp
+-rw-r--r--. 1 root root  10172  2月  8 20:08 CParser.h
+-rw-r--r--. 1 root root  41656  2月  8 20:09 CParser.o
+-rw-r--r--. 1 root root   4990  4月 27  2001 Cccc.dsp
+-rw-r--r--. 1 root root   4620  2月  8 20:08 Ctokens.h
+-rw-r--r--. 1 root root  11736  2月  8 20:14 DLexerBase.o
+-rw-r--r--. 1 root root 140645  2月  8 20:09 JLexer.cpp
+-rw-r--r--. 1 root root  14362  2月  8 20:09 JLexer.h
+-rw-r--r--. 1 root root 106968  2月  8 20:09 JLexer.o
+-rw-r--r--. 1 root root  33948  2月  8 20:09 JParser.cpp
+-rw-r--r--. 1 root root   8524  2月  8 20:09 JParser.h
+-rw-r--r--. 1 root root  29208  2月  8 20:09 JParser.o
+-rw-r--r--. 1 root root   3972  2月  8 20:09 Jtokens.h
+-rw-r--r--. 1 root root  31356  1月  6  2006 ada.g
+-rwxrwxrwx. 1 root root 986128  2月  8 20:14 cccc
+-rw-r--r--. 1 root root  89245  1月 31  2017 cccc.cpp
+-rw-r--r--. 1 root root  34166  1月  6  2006 cccc.g
+-rw-r--r--. 1 root root   2332  2月 28  2004 cccc.h
+-rw-r--r--. 1 root root 197864  2月  8 20:09 cccc.o
+-rw-r--r--. 1 root root   4024  1月  6  2006 cccc_db.cc
+-rw-r--r--. 1 root root   2955  1月  6  2006 cccc_db.h
+-rw-r--r--. 1 root root  15624  2月  8 20:09 cccc_db.o
+-rw-r--r--. 1 root root   3794  1月  6  2006 cccc_ext.cc
+-rw-r--r--. 1 root root   1731  1月  6  2006 cccc_ext.h
+-rw-r--r--. 1 root root  11480  2月  8 20:09 cccc_ext.o
+-rw-r--r--. 1 root root  44534  1月  6  2006 cccc_htm.cc
+-rw-r--r--. 1 root root   4607  1月  6  2006 cccc_htm.h
+-rw-r--r--. 1 root root 283352  2月  8 20:14 cccc_htm.o
+-rw-r--r--. 1 root root   2126  1月  6  2006 cccc_itm.cc
+-rw-r--r--. 1 root root   1020  1月  6  2006 cccc_itm.h
+-rw-r--r--. 1 root root   9392  2月  8 20:14 cccc_itm.o
+-rw-r--r--. 1 root root   5855  1月  6  2006 cccc_mem.cc
+-rw-r--r--. 1 root root   1650  1月  6  2006 cccc_mem.h
+-rw-r--r--. 1 root root 113736  2月  8 20:14 cccc_mem.o
+-rw-r--r--. 1 root root   6034  1月  6  2006 cccc_met.cc
+-rw-r--r--. 1 root root   2927  1月  6  2006 cccc_met.h
+-rw-r--r--. 1 root root  17040  2月  8 20:14 cccc_met.o
+-rw-r--r--. 1 root root   6994  1月  6  2006 cccc_mod.cc
+-rw-r--r--. 1 root root   1869  1月  6  2006 cccc_mod.h
+-rw-r--r--. 1 root root 152952  2月  8 20:14 cccc_mod.o
+-rw-r--r--. 1 root root   2006  1月  6  2006 cccc_new.cc
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_new.o
+-rw-r--r--. 1 root root  12477  1月  6  2006 cccc_opt.cc
+-rw-r--r--. 1 root root   2396  1月  6  2006 cccc_opt.h
+-rw-r--r--. 1 root root 148968  2月  8 20:09 cccc_opt.o
+-rw-r--r--. 1 root root  10937  1月  6  2006 cccc_prj.cc
+-rw-r--r--. 1 root root   3193  1月  6  2006 cccc_prj.h
+-rw-r--r--. 1 root root 267216  2月  8 20:14 cccc_prj.o
+-rw-r--r--. 1 root root   2220  1月  6  2006 cccc_rec.cc
+-rw-r--r--. 1 root root   2226  1月  6  2006 cccc_rec.h
+-rw-r--r--. 1 root root  56672  2月  8 20:09 cccc_rec.o
+-rw-r--r--. 1 root root   3203  1月 31  2017 cccc_tbl.cc
+-rw-r--r--. 1 root root   1716  1月  6  2006 cccc_tbl.h
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_tbl.o
+-rw-r--r--. 1 root root   5518  1月  6  2006 cccc_tok.cc
+-rw-r--r--. 1 root root   2886  1月  6  2006 cccc_tok.h
+-rw-r--r--. 1 root root  31704  2月  8 20:14 cccc_tok.o
+-rw-r--r--. 1 root root   1398  1月  6  2006 cccc_tpl.cc
+-rw-r--r--. 1 root root 343008  2月  8 20:14 cccc_tpl.o
+-rw-r--r--. 1 root root   6381  1月  6  2006 cccc_use.cc
+-rw-r--r--. 1 root root   1867  1月  6  2006 cccc_use.h
+-rw-r--r--. 1 root root 113984  2月  8 20:14 cccc_use.o
+-rw-r--r--. 1 root root  16660  1月  6  2006 cccc_utl.cc
+-rw-r--r--. 1 root root  11570  1月  6  2006 cccc_utl.h
+-rw-r--r--. 1 root root 134752  2月  8 20:09 cccc_utl.o
+-rw-r--r--. 1 root root     36  1月  6  2006 cccc_ver.h
+-rw-r--r--. 1 root root  29287  1月  6  2006 cccc_xml.cc
+-rw-r--r--. 1 root root   4298  1月  6  2006 cccc_xml.h
+-rw-r--r--. 1 root root 142224  2月  8 20:14 cccc_xml.o
+-rw-r--r--. 1 root root  18703  1月  6  2006 ccccmain.cc
+-rw-r--r--. 1 root root  85416  2月  8 20:09 ccccmain.o
+-rw-r--r--. 1 root root  65274  2月  8 20:09 java.cpp
+-rw-r--r--. 1 root root  35897  1月 14  2005 java.g
+-rw-r--r--. 1 root root 151464  2月  8 20:09 java.o
+-rw-r--r--. 1 root root   7669  2月  8 20:09 parser.dlg
+-rw-r--r--. 1 root root    988  8月 12  2003 posixgcc.mak
+-rw-r--r--. 1 root root   7572  8月 11  2003 rules.mak
+-rw-r--r--. 1 root root    726  8月 30  2001 w32bcb.mak
+-rw-r--r--. 1 root root    964  9月  6  2001 w32bcc.mak
+-rw-r--r--. 1 root root    785  9月  6  2001 w32bcc55.mak
+-rw-r--r--. 1 root root    557  4月 17  2001 w32cygnus.mak
+-rw-r--r--. 1 root root    739  8月 30  2001 w32cygnus_gmake.mak
+-rw-r--r--. 1 root root    571  8月 30  2001 w32cygnus_nmake.mak
+-rw-r--r--. 1 root root    552  4月 27  2001 w32vc.mak
+[root@azcafe cccc]# ls -lachmod 777 ccccls -lacd ccccls -lachmod 777 ccccls -lacd cccc-3.1.4lscd /root/sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/sttartup.shhutdown.sh
+Using CATALINA_BASE:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_HOME:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_TMPDIR: /opt/apache-tomcat/apache-tomcat-8.5.27/temp
+Using JRE_HOME:        /
+Using CLASSPATH:       /opt/apache-tomcat/apache-tomcat-8.5.27/bin/bootstrap.jar:/opt/apache-tomcat/apache-tomcat-8.5.27/bin/tomcat-juli.jar
+[root@azcafe cccc]# sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/shhutdown.shls -la
+chmod 777 ccccls -lacd ccccls -lachmod 777 ccccls -lacd cccc-3.1.4lscd /root/sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/sttartup.shhutdown.shtartup.sh
+Using CATALINA_BASE:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_HOME:   /opt/apache-tomcat/apache-tomcat-8.5.27
+Using CATALINA_TMPDIR: /opt/apache-tomcat/apache-tomcat-8.5.27/temp
+Using JRE_HOME:        /
+Using CLASSPATH:       /opt/apache-tomcat/apache-tomcat-8.5.27/bin/bootstrap.jar:/opt/apache-tomcat/apache-tomcat-8.5.27/bin/tomcat-juli.jar
+Tomcat started.
+[root@azcafe cccc]# cccc
+CCCC - a code counter for C and C++
+===================================
+
+A program to analyse C and C++ source code and report on
+some simple software metrics
+Version 3.1.4
+Copyright Tim Littlefair, 1995, 1996, 1997, 1998, 1999, 2000
+with contributions from Bill McLean, Herman Hueni, Lynn Wilson 
+Peter Bell, Thomas Hieber and Kenneth H. Cox.
+
+The development of this program was heavily dependent on
+the Purdue Compiler Construction Tool Set (PCCTS) 
+by Terence Parr, Will Cohen, Hank Dietz, Russel Quoung,
+Tom Moog and others.
+
+CCCC comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.  See the file COPYING in the source
+code distribution for details.
+Parsing
+
+No files parsed on this run
+
+[root@azcafe cccc]# ls -la
+合計 4764
+drwxrwxrwx. 2 root root   4096  2月  8 20:14 .
+drwxr-xr-x. 9 root root   4096  2月  8 20:06 ..
+-rw-r--r--. 1 root root  23768  2月  8 20:14 AParser.o
+-rw-r--r--. 1 root root  10072  2月  8 20:14 ATokenBuffer.o
+-rw-r--r--. 1 root root  31651  1月  5  2006 CCCC User Guide.html
+-rw-r--r--. 1 root root 184472  2月  8 20:08 CLexer.cpp
+-rw-r--r--. 1 root root  17939  2月  8 20:08 CLexer.h
+-rw-r--r--. 1 root root 148120  2月  8 20:09 CLexer.o
+-rw-r--r--. 1 root root  17989  1月  6  2006 COPYING
+-rw-r--r--. 1 root root  60360  2月  8 20:08 CParser.cpp
+-rw-r--r--. 1 root root  10172  2月  8 20:08 CParser.h
+-rw-r--r--. 1 root root  41656  2月  8 20:09 CParser.o
+-rw-r--r--. 1 root root   4990  4月 27  2001 Cccc.dsp
+-rw-r--r--. 1 root root   4620  2月  8 20:08 Ctokens.h
+-rw-r--r--. 1 root root  11736  2月  8 20:14 DLexerBase.o
+-rw-r--r--. 1 root root 140645  2月  8 20:09 JLexer.cpp
+-rw-r--r--. 1 root root  14362  2月  8 20:09 JLexer.h
+-rw-r--r--. 1 root root 106968  2月  8 20:09 JLexer.o
+-rw-r--r--. 1 root root  33948  2月  8 20:09 JParser.cpp
+-rw-r--r--. 1 root root   8524  2月  8 20:09 JParser.h
+-rw-r--r--. 1 root root  29208  2月  8 20:09 JParser.o
+-rw-r--r--. 1 root root   3972  2月  8 20:09 Jtokens.h
+-rw-r--r--. 1 root root  31356  1月  6  2006 ada.g
+-rwxrwxrwx. 1 root root 986128  2月  8 20:14 cccc
+-rw-r--r--. 1 root root  89245  1月 31  2017 cccc.cpp
+-rw-r--r--. 1 root root  34166  1月  6  2006 cccc.g
+-rw-r--r--. 1 root root   2332  2月 28  2004 cccc.h
+-rw-r--r--. 1 root root 197864  2月  8 20:09 cccc.o
+-rw-r--r--. 1 root root   4024  1月  6  2006 cccc_db.cc
+-rw-r--r--. 1 root root   2955  1月  6  2006 cccc_db.h
+-rw-r--r--. 1 root root  15624  2月  8 20:09 cccc_db.o
+-rw-r--r--. 1 root root   3794  1月  6  2006 cccc_ext.cc
+-rw-r--r--. 1 root root   1731  1月  6  2006 cccc_ext.h
+-rw-r--r--. 1 root root  11480  2月  8 20:09 cccc_ext.o
+-rw-r--r--. 1 root root  44534  1月  6  2006 cccc_htm.cc
+-rw-r--r--. 1 root root   4607  1月  6  2006 cccc_htm.h
+-rw-r--r--. 1 root root 283352  2月  8 20:14 cccc_htm.o
+-rw-r--r--. 1 root root   2126  1月  6  2006 cccc_itm.cc
+-rw-r--r--. 1 root root   1020  1月  6  2006 cccc_itm.h
+-rw-r--r--. 1 root root   9392  2月  8 20:14 cccc_itm.o
+-rw-r--r--. 1 root root   5855  1月  6  2006 cccc_mem.cc
+-rw-r--r--. 1 root root   1650  1月  6  2006 cccc_mem.h
+-rw-r--r--. 1 root root 113736  2月  8 20:14 cccc_mem.o
+-rw-r--r--. 1 root root   6034  1月  6  2006 cccc_met.cc
+-rw-r--r--. 1 root root   2927  1月  6  2006 cccc_met.h
+-rw-r--r--. 1 root root  17040  2月  8 20:14 cccc_met.o
+-rw-r--r--. 1 root root   6994  1月  6  2006 cccc_mod.cc
+-rw-r--r--. 1 root root   1869  1月  6  2006 cccc_mod.h
+-rw-r--r--. 1 root root 152952  2月  8 20:14 cccc_mod.o
+-rw-r--r--. 1 root root   2006  1月  6  2006 cccc_new.cc
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_new.o
+-rw-r--r--. 1 root root  12477  1月  6  2006 cccc_opt.cc
+-rw-r--r--. 1 root root   2396  1月  6  2006 cccc_opt.h
+-rw-r--r--. 1 root root 148968  2月  8 20:09 cccc_opt.o
+-rw-r--r--. 1 root root  10937  1月  6  2006 cccc_prj.cc
+-rw-r--r--. 1 root root   3193  1月  6  2006 cccc_prj.h
+-rw-r--r--. 1 root root 267216  2月  8 20:14 cccc_prj.o
+-rw-r--r--. 1 root root   2220  1月  6  2006 cccc_rec.cc
+-rw-r--r--. 1 root root   2226  1月  6  2006 cccc_rec.h
+-rw-r--r--. 1 root root  56672  2月  8 20:09 cccc_rec.o
+-rw-r--r--. 1 root root   3203  1月 31  2017 cccc_tbl.cc
+-rw-r--r--. 1 root root   1716  1月  6  2006 cccc_tbl.h
+-rw-r--r--. 1 root root   2088  2月  8 20:14 cccc_tbl.o
+-rw-r--r--. 1 root root   5518  1月  6  2006 cccc_tok.cc
+-rw-r--r--. 1 root root   2886  1月  6  2006 cccc_tok.h
+-rw-r--r--. 1 root root  31704  2月  8 20:14 cccc_tok.o
+-rw-r--r--. 1 root root   1398  1月  6  2006 cccc_tpl.cc
+-rw-r--r--. 1 root root 343008  2月  8 20:14 cccc_tpl.o
+-rw-r--r--. 1 root root   6381  1月  6  2006 cccc_use.cc
+-rw-r--r--. 1 root root   1867  1月  6  2006 cccc_use.h
+-rw-r--r--. 1 root root 113984  2月  8 20:14 cccc_use.o
+-rw-r--r--. 1 root root  16660  1月  6  2006 cccc_utl.cc
+-rw-r--r--. 1 root root  11570  1月  6  2006 cccc_utl.h
+-rw-r--r--. 1 root root 134752  2月  8 20:09 cccc_utl.o
+-rw-r--r--. 1 root root     36  1月  6  2006 cccc_ver.h
+-rw-r--r--. 1 root root  29287  1月  6  2006 cccc_xml.cc
+-rw-r--r--. 1 root root   4298  1月  6  2006 cccc_xml.h
+-rw-r--r--. 1 root root 142224  2月  8 20:14 cccc_xml.o
+-rw-r--r--. 1 root root  18703  1月  6  2006 ccccmain.cc
+-rw-r--r--. 1 root root  85416  2月  8 20:09 ccccmain.o
+-rw-r--r--. 1 root root  65274  2月  8 20:09 java.cpp
+-rw-r--r--. 1 root root  35897  1月 14  2005 java.g
+-rw-r--r--. 1 root root 151464  2月  8 20:09 java.o
+-rw-r--r--. 1 root root   7669  2月  8 20:09 parser.dlg
+-rw-r--r--. 1 root root    988  8月 12  2003 posixgcc.mak
+-rw-r--r--. 1 root root   7572  8月 11  2003 rules.mak
+-rw-r--r--. 1 root root    726  8月 30  2001 w32bcb.mak
+-rw-r--r--. 1 root root    964  9月  6  2001 w32bcc.mak
+-rw-r--r--. 1 root root    785  9月  6  2001 w32bcc55.mak
+-rw-r--r--. 1 root root    557  4月 17  2001 w32cygnus.mak
+-rw-r--r--. 1 root root    739  8月 30  2001 w32cygnus_gmake.mak
+-rw-r--r--. 1 root root    571  8月 30  2001 w32cygnus_nmake.mak
+-rw-r--r--. 1 root root    552  4月 27  2001 w32vc.mak
+[root@azcafe cccc]# sudo -u tomart cccc
+sudo: 不明なユーザーです: tomat
+sudo: ポリシープラグインを初期化できません
+[root@azcafe cccc]# sudo -u tomat ccccc
+sudo: cccc: コマンドが見つかりません
+[root@azcafe cccc]# sudo -u tomcat cccc cccc cccc cccc cccc cccc cccccccc cccc cccccccc
+sudo: cccc: コマンドが見つかりません
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# 
+[root@azcafe cccc]# fincd /
+[root@azcafe /]# find -name "*.cccc"
+./root/cccc-3.1.4/cccc
+./root/cccc-3.1.4/cccc/cccc
+./usr/local/bin/cccc
+./data/upload/123456789/20180209194702444/result/cccc
+[root@azcafe /]# cd usr/local/bin
+[root@azcafe bin]# ls -la
+合計 964
+drwxr-xr-x.  2 root root     18  2月  8 20:14 .
+drwxr-xr-x. 12 root root    131  9月 17 11:20 ..
+-rwxr-xr-x.  1 root root 986128  2月  8 20:14 cccc
+[root@azcafe bin]# chmod 755 cccccd cccc
+-bash: cd: cccc: ディレクトリではありません
+[root@azcafe bin]# chmoown tomcat cccc
+[root@azcafe bin]# ls -la
+合計 964
+drwxr-xr-x.  2 root   root     18  2月  8 20:14 .
+drwxr-xr-x. 12 root   root    131  9月 17 11:20 ..
+-rwxr-xr-x.  1 tomcat root 986128  2月  8 20:14 cccc
+[root@azcafe bin]# cccc
+CCCC - a code counter for C and C++
+===================================
+
+A program to analyse C and C++ source code and report on
+some simple software metrics
+Version 3.1.4
+Copyright Tim Littlefair, 1995, 1996, 1997, 1998, 1999, 2000
+with contributions from Bill McLean, Herman Hueni, Lynn Wilson 
+Peter Bell, Thomas Hieber and Kenneth H. Cox.
+
+The development of this program was heavily dependent on
+the Purdue Compiler Construction Tool Set (PCCTS) 
+by Terence Parr, Will Cohen, Hank Dietz, Russel Quoung,
+Tom Moog and others.
+
+CCCC comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions.  See the file COPYING in the source
+code distribution for details.
+Parsing
+
+No files parsed on this run
+
+[root@azcafe bin]# ccccls -lachown tomcat ccccmod 777 cccc
+[root@azcafe bin]# ls -la
+合計 964
+drwxr-xr-x.  2 root   root     18  2月  8 20:14 .
+drwxr-xr-x. 12 root   root    131  9月 17 11:20 ..
+-rwxrwxrwx.  1 tomcat root 986128  2月  8 20:14 cccc
+[root@azcafe bin]# sudo cd /data/batch/
+[root@azcafe batch]# ls -la
+合計 12
+drwxrwxrwx. 3 root root   97  2月  9 20:19 .
+drwxrwxrwx. 9 root root   98  2月  8 18:49 ..
+-rw-r--r--. 1 root root  189  3月 14  2017 csvFileDelete.sh
+-rwxr-xr-x. 1 root root  261  2月  8 18:49 dbbackup.sh
+-rwxr-xr-x. 1 root root 1403  2月  9 20:14 judge.sh
+-rw-r--r--. 1 root root    0  2月  9 20:05 judge.sh.lock
+drwxr-xr-x. 2 root root   36  2月  8 19:39 lib
+[root@azcafe batch]# rm -rf judge.sh.lock 
+[root@azcafe batch]# ls -la
+合計 12
+drwxrwxrwx. 3 root root   76  2月  9 20:33 .
+drwxrwxrwx. 9 root root   98  2月  8 18:49 ..
+-rw-r--r--. 1 root root  189  3月 14  2017 csvFileDelete.sh
+-rwxr-xr-x. 1 root root  261  2月  8 18:49 dbbackup.sh
+-rwxr-xr-x. 1 root root 1403  2月  9 20:14 judge.sh
+drwxr-xr-x. 2 root root   36  2月  8 19:39 lib
+[root@azcafe batch]# sudo -u tomcat sh judge.sh
+judge.sh: 11 行: [: =: 単項演算子が予期されます
+judge.sh: 行 53: cccc: コマンドが見つかりません
+judge.sh: 行 63: /error.txt: 許可がありません
+cp: `a.out' の後に宛先のファイルオペランドがありません
+Try 'cp --help' for more information.
+judge.sh: 行 68: /result.txt: 許可がありません
+.xml
+judge.sh: 72 行: cd: /cccc: そのようなファイルやディレクトリはありません
+mv: `./anonymous.xml' を stat できません: そのようなファイルやディレクトリはありません
+[root@azcafe batch]# echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
+[root@azcafe batch]# sudo -u tomcat echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
+[root@azcafe batch]# sudo -u tomcat cccc
+sudo: cccc: コマンドが見つかりません
+[root@azcafe batch]# reboot

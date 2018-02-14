@@ -17,6 +17,9 @@
 ・起動
 sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/startup.sh
 
+・AsoLearningフォルダ削除
+sudo rm -rf /opt/apache-tomcat/apache-tomcat-8.5.27/webapps/AsoLearning
+
 ・停止
 sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/shutdown.sh
 
@@ -34,4 +37,7 @@ sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/shutdown.sh
 【URL】
 http://azcafe.aso-abcc.com/AsoLearning/login
 
+
+
+tail -f /opt/apache-tomcat/apache-tomcat-8.5.27/logs/catalina.out
 
