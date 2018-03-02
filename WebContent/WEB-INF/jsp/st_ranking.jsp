@@ -126,7 +126,17 @@ if( taskGrpId == null){
 				                     <%} %>
 				                     </select>
 			                	</div>
-			                     <div class="col-lg-4">
+			                   <div class="col-lg-2">
+		                    		学年
+				                     <select id="grade" class="form-control" name="<%=RequestConst.REQUEST_GRADE%>">
+				                         <option value="" >すべて</option>
+				                         <option value="1" >1</option>
+				                         <option value="2" >2</option>
+				                         <option value="3" >3</option>
+				                         <option value="4" >4</option>
+				                     </select>
+			                	</div>
+			                     <div class="col-lg-3">
 			                    	課題グループ
 				                     <select id="tgroup" class="form-control" name="<%=RequestConst.REQUEST_TASKGRP_LIST%>">
 				                         <option value="" >すべて</option>
@@ -135,7 +145,7 @@ if( taskGrpId == null){
 				                     <%} %>
 				                     </select>
 			                	</div>
-			                     <div class="col-lg-4">
+			                     <div class="col-lg-3">
 			                    	課題
 				                     <select id="task" class="form-control" name="<%=RequestConst.REQUEST_TASK_ID%>">
 				                         <option value="" >すべて</option>
@@ -146,7 +156,7 @@ if( taskGrpId == null){
 					                     <%} %>
 				                     </select>
 			                	</div>
-			                     <div class="col-lg-4">
+			                     <div class="col-lg-3">
 			                     	<button type="submit"  class="btn btn-default">表示</button>
 		                        <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>
 			                     	<button id="create_csv" class="btn btn-default">CSV出力</button>

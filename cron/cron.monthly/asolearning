@@ -1,0 +1,6 @@
+#!/bin/sh
+
+#学年更新処理
+sh /data/batch/updateGrade.sh
+
+exit 0

@@ -81,7 +81,7 @@ public class UserTblEntity implements Serializable {
 	/** 結果テーブル 一覧. */
 	private List<ResultTblEntity> resultTblSet;
 
-	/** 学年（SQLで計算） */
+	/** 学年 */
 	private Integer grade;
 
 	/** アバターのIDリスト */

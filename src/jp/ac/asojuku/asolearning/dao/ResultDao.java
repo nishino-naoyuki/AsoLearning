@@ -83,7 +83,7 @@ public class ResultDao extends Dao {
 			//+ "t.NAME taskname,"
 			//+ "t.DIFFICALTY,"
 			+ "cm.COURSE_ID, "
-			+ "(year(now())-u.ADMISSION_YEAR-u.REPEAT_YEAR_COUNT+1) grade,"
+			+ "u.GRADE grade,"
 			+ "COURSE_NAME "
 			+ "FROM "
 			+ "("
@@ -109,6 +109,8 @@ public class ResultDao extends Dao {
 			" t.TASK_ID=?";
 	private static final String RESULT_RANKING_SQL_WHERE_TASKGRP =
 			" t.TASK_GROUP_ID=?";
+	private static final String RESULT_RANKING_SQL_WHERE_GRADE =
+			" grade=?";
 	private static final String RESULT_RANKING_SQL_GROUPBY =
 			" GROUP BY u.USER_ID,u.NAME,u.NICK_NAME,u.MAILADRESS,u.MAILADRESS,u.ADMISSION_YEAR,"
 			+ "u.REPEAT_YEAR_COUNT,u.REMARK,cm.COURSE_ID,grade,COURSE_NAME ";
@@ -468,7 +470,7 @@ public class ResultDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<ResultTblEntity> getRanking(Integer courseId,Integer taskId,Integer taskGrpId,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
+	public List<ResultTblEntity> getRanking(Integer courseId,Integer taskId,Integer taskGrpId,Integer grade,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
 		List<ResultTblEntity> list = new ArrayList<ResultTblEntity>();
 
 
@@ -479,13 +481,13 @@ public class ResultDao extends Dao {
     		// ステートメント生成
         	StringBuffer sql = new StringBuffer(RESULT_RANKING_SQL_SELECT);
 
-        	sql.append(getRankingWhereString(courseId,taskId,taskGrpId));
+        	sql.append(getRankingWhereString(courseId,taskId,taskGrpId,grade));
         	sql.append(RESULT_RANKING_SQL_GROUPBY);
         	sql.append(RESULT_RANKING_SQL_ORDERBY);
 
 			ps = con.prepareStatement(sql.toString());
 
-			ps = setRankingPram(ps,courseId,taskId,taskGrpId,easyOffset,normalOffset,difficalOffset);
+			ps = setRankingPram(ps,courseId,taskId,taskGrpId,grade,easyOffset,normalOffset,difficalOffset);
 
 	        // SQLを実行
 	        rs = ps.executeQuery();
@@ -514,7 +516,7 @@ public class ResultDao extends Dao {
 	 * @param taskId
 	 * @return
 	 */
-	private String getRankingWhereString(Integer courseId,Integer taskId,Integer taskGrpId){
+	private String getRankingWhereString(Integer courseId,Integer taskId,Integer taskGrpId,Integer grade){
 		StringBuffer sb = new StringBuffer();
 
 		if( courseId != null ){
@@ -525,6 +527,9 @@ public class ResultDao extends Dao {
 		}
 		if( taskGrpId != null ){
 			appendWhereWithAnd(sb,RESULT_RANKING_SQL_WHERE_TASKGRP);
+		}
+		if( grade != null ){
+			appendWhereWithAnd(sb,RESULT_RANKING_SQL_WHERE_GRADE);
 		}
 
 		if( sb.length() > 0 ){
@@ -543,7 +548,7 @@ public class ResultDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	private PreparedStatement setRankingPram(PreparedStatement ps,Integer courseId,Integer taskId,Integer taskGrpId,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
+	private PreparedStatement setRankingPram(PreparedStatement ps,Integer courseId,Integer taskId,Integer taskGrpId,Integer grade,float easyOffset,float normalOffset,float difficalOffset) throws SQLException{
 		int index = 1;
 
 		ps.setFloat(index++, easyOffset);
@@ -560,6 +565,10 @@ public class ResultDao extends Dao {
 		}
 		if( taskGrpId != null ){
 			ps.setInt(index, taskGrpId);
+			index++;
+		}
+		if( grade != null ){
+			ps.setInt(index, grade);
 		}
 
 		return ps;
@@ -590,6 +599,7 @@ public class ResultDao extends Dao {
 		userEntity.setAdmissionYear(rs.getInt("ADMISSION_YEAR"));
 		userEntity.setRepeatYearCount(rs.getInt("REPEAT_YEAR_COUNT"));
 		userEntity.setRemark(rs.getString("REMARK"));
+		userEntity.setGrade(rs.getInt("grade"));
 
 
 		//////////////////////////////////

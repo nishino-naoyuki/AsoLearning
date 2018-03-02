@@ -55,6 +55,7 @@ public class RankingServlet extends BaseServlet {
 		Integer courseId = getIntParam(RequestConst.REQUEST_COURSE_ID,req);
 		Integer taskId = getIntParam(RequestConst.REQUEST_TASK_ID,req);
 		Integer taskGrpId = getIntParam(RequestConst.REQUEST_TASKGRP_LIST,req);
+		Integer grade = getIntParam(RequestConst.REQUEST_GRADE,req);
 
 		req.setAttribute(RequestConst.REQUEST_COURSE_ID, courseId);
 		req.setAttribute(RequestConst.REQUEST_TASK_ID, taskId);
@@ -85,7 +86,7 @@ public class RankingServlet extends BaseServlet {
 		//ランキング情報を取得
 		ResultBo retBo = new ResultBoImpl();
 
-		List<RankingDto> rankingList = retBo.getRanking(courseId, taskId,taskGrpId);
+		List<RankingDto> rankingList = retBo.getRanking(courseId, taskId,taskGrpId,grade);
 		req.setAttribute(RequestConst.REQUEST_RANKING_LIST, rankingList);
 
 		//////////////////////////////

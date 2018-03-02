@@ -1,9 +1,10 @@
 #!/bin/bash
 
+
 #######################################
 ##
-## CSVファイル削除処理
+## 学年更新処理
 ##
 #######################################
 
-java -jar /data/batch/lib/BatchCSVFileDelete.jar /data/csv
+java -jar /data/batch/lib/BatchUpdateGrade.jar

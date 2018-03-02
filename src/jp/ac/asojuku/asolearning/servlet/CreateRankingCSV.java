@@ -51,12 +51,13 @@ public class CreateRankingCSV extends BaseServlet {
 			Integer courseId = getIntParam(RequestConst.REQUEST_COURSE_ID,req);
 			Integer taskId = getIntParam(RequestConst.REQUEST_TASK_ID,req);
 			Integer taskGrpId = getIntParam(RequestConst.REQUEST_TASKGRP_ID,req);
+			Integer grade = getIntParam(RequestConst.REQUEST_GRADE,req);
 
 			//////////////////////////////
 			//ランキング情報を取得
 			ResultBo retBo = new ResultBoImpl();
 
-			List<RankingDto> rankingList = retBo.getRanking(courseId, taskId,taskGrpId);
+			List<RankingDto> rankingList = retBo.getRanking(courseId, taskId,taskGrpId,grade);
 
 			if( CollectionUtils.isEmpty(rankingList) ){
 

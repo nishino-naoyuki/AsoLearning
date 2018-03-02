@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+	<error-page>
+	    <error-code>404</error-code>
+	    <location>/WEB-INF/jsp/error/404error.jsp</location>
+	</error-page>
+
+</web-app>
