@@ -24,6 +24,7 @@ import jp.ac.asojuku.asolearning.bo.impl.ResultBoImpl;
 import jp.ac.asojuku.asolearning.bo.impl.TaskBoImpl;
 import jp.ac.asojuku.asolearning.bo.impl.TaskGroupBoImpl;
 import jp.ac.asojuku.asolearning.dto.CourseDto;
+import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.dto.RankingDto;
 import jp.ac.asojuku.asolearning.dto.TaskDto;
 import jp.ac.asojuku.asolearning.dto.TaskGroupDto;
@@ -49,7 +50,7 @@ public class RankingServlet extends BaseServlet {
 	protected void doGetMain(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, AsoLearningSystemErrException {
 
-
+		LogonInfoDTO logonInfo = getUserInfoDtoFromSession(req);
 		//////////////////////////////
 		//パラメータを取得
 		Integer courseId = getIntParam(RequestConst.REQUEST_COURSE_ID,req);
@@ -57,9 +58,14 @@ public class RankingServlet extends BaseServlet {
 		Integer taskGrpId = getIntParam(RequestConst.REQUEST_TASKGRP_LIST,req);
 		Integer grade = getIntParam(RequestConst.REQUEST_GRADE,req);
 
+		//デフォルト値を設定する
+		courseId = (courseId == null ? logonInfo.getCourseId():courseId);
+		grade = (grade == null ? logonInfo.getGrade():grade);
+
 		req.setAttribute(RequestConst.REQUEST_COURSE_ID, courseId);
 		req.setAttribute(RequestConst.REQUEST_TASK_ID, taskId);
 		req.setAttribute(RequestConst.REQUEST_TASKGRP_ID, taskGrpId);
+		req.setAttribute(RequestConst.REQUEST_GRADE, grade);
 
 		//////////////////////////////
 		//学科一覧を取得

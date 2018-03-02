@@ -80,6 +80,9 @@ public class TaskBoImpl implements TaskBo {
 				/////////////////////////////
 				//判定処理呼び出し
 				json = judge.judge(entity,dirName, fileName,user.getUserId(),dao.getConnection());
+				//判定が終わったのログ出力
+				HistoryDao history = new HistoryDao(dao.getConnection());
+				history.insert(user.getUserId(), ActionId.TASK_JUDG.getId(), entity.getName());
 			}
 
 		} catch (IllegalJudgeFileException e) {

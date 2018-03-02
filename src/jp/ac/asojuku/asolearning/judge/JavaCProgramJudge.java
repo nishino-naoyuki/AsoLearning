@@ -145,7 +145,7 @@ public class JavaCProgramJudge implements Judge {
 		} finally {
 			///////////////////////////////////////
 			//すべて終わったら判定ファイルは削除
-			//FileUtils.delete(dirName);
+			FileUtils.delete(dirName);
 
 		}
 

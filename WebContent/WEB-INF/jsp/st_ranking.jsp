@@ -78,6 +78,7 @@ List<TaskGroupDto> taskGrpList = (List<TaskGroupDto>)request.getAttribute(Reques
 Integer courseId = (Integer)request.getAttribute(RequestConst.REQUEST_COURSE_ID);
 Integer taskId = (Integer)request.getAttribute(RequestConst.REQUEST_TASK_ID);
 Integer taskGrpId = (Integer)request.getAttribute(RequestConst.REQUEST_TASKGRP_ID);
+Integer grade = (Integer)request.getAttribute(RequestConst.REQUEST_GRADE);
 LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 
 if( courseId == null){
@@ -88,6 +89,9 @@ if( taskId == null){
 }
 if( taskGrpId == null){
 	taskGrpId = -1;
+}
+if( grade == null){
+	grade = -1;
 }
 %>
         <!-- Page Content -->
@@ -130,10 +134,10 @@ if( taskGrpId == null){
 		                    		学年
 				                     <select id="grade" class="form-control" name="<%=RequestConst.REQUEST_GRADE%>">
 				                         <option value="" >すべて</option>
-				                         <option value="1" >1</option>
-				                         <option value="2" >2</option>
-				                         <option value="3" >3</option>
-				                         <option value="4" >4</option>
+				                         <option value="1" <%= (grade == 1 ? "selected":"" ) %> >1</option>
+				                         <option value="2" <%= (grade == 2 ? "selected":"" ) %> >2</option>
+				                         <option value="3" <%= (grade == 3 ? "selected":"" ) %> >3</option>
+				                         <option value="4" <%= (grade == 4 ? "selected":"" ) %> >4</option>
 				                     </select>
 			                	</div>
 			                     <div class="col-lg-3">

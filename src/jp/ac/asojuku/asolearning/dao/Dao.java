@@ -28,7 +28,7 @@ import jp.ac.asojuku.asolearning.exception.DBConnectException;
  * @author nishino
  *
  */
-public class Dao {
+public abstract class Dao {
 
 	Logger logger = LoggerFactory.getLogger(Dao.class);
 	protected Connection con = null;
@@ -205,6 +205,11 @@ public class Dao {
 
 	}
 
+	/**
+	 * LIKEで使用する文字列を生成する
+	 * @param param
+	 * @return
+	 */
 	protected String getLikeString(String param){
 
 		String[] params = param.split("");
