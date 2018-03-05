@@ -30,8 +30,10 @@ public interface HistoryBo {
 	 * 履歴情報を取得する
 	 *
 	 * @param condition
+	 * @param offset  取得するデータのオフセット
+	 * @param num　　　取得するデータの件数
 	 * @return
 	 * @throws AsoLearningSystemErrException
 	 */
-	List<HistoryDto> getList(SearchHistoryCondition condition)throws AsoLearningSystemErrException;
+	List<HistoryDto> getList(SearchHistoryCondition condition,int offset,int num)throws AsoLearningSystemErrException;
 }

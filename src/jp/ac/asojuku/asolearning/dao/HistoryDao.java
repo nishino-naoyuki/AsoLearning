@@ -42,8 +42,12 @@ public class HistoryDao extends Dao {
 			 + "LEFT JOIN ACTION_MASTER am (h.ACTION_ID=u.ACTION_ID) ";
 	private static final String HISTORY_SEARCH_WHERE1 = " h.USER_ID=? ";
 	private static final String HISTORY_SEARCH_WHERE2 = " h.ACTION_ID=? ";
-	private static final String HISTORY_SEARCH_WHERE3 = " h.ACTION_DATE > ? ";
-	private static final String HISTORY_SEARCH_WHERE4 = " h.ACTION_DATE < ? ";
+	private static final String HISTORY_SEARCH_WHERE3 = " h.ACTION_DATE >= ? ";
+	private static final String HISTORY_SEARCH_WHERE4 = " h.ACTION_DATE <= ? ";
+	private static final String HISTORY_SEARCH_WHERE5 = " u.COURSE_ID = ? ";
+	private static final String HISTORY_SEARCH_WHERE6 = " u.ROLE_ID = ? ";
+	private static final String HISTORY_SEARCH_ORDERBY = " ORDER BY h.ACTION_DATE ";
+	private static final String HISTORY_SEARCH_LIMIT = " LIMIT ? OFFSET ? ";
 
 
 	/**
@@ -81,11 +85,13 @@ public class HistoryDao extends Dao {
 
 	/**
 	 * 履歴の検索
-	 * @param cond
+	 * @param cond　検索条件
+	 * @param offset　オフセット
+	 * @param num　　取得数
 	 * @throws SQLException
 	 * @throws ParseException
 	 */
-	public List<HistoryTblEntity> search(SearchHistoryCondition cond) throws SQLException, ParseException{
+	public List<HistoryTblEntity> search(SearchHistoryCondition cond,int offset,int num) throws SQLException, ParseException{
 
 		List<HistoryTblEntity> list =new ArrayList<HistoryTblEntity>();
 		if( con == null ){
@@ -99,11 +105,12 @@ public class HistoryDao extends Dao {
         	StringBuffer sb = new StringBuffer(HISTORY_SEARCH_SQL);
 
         	sb.append(setWhere(cond));
+        	sb.append(HISTORY_SEARCH_ORDERBY).append(HISTORY_SEARCH_LIMIT);
 
         	ps = con.prepareStatement(sb.toString());
 
         	//パラメータセット
-        	setParams(ps,cond);
+        	setParams(ps,cond,offset,num);
 
 	        // SQLを実行
 	        rs = ps.executeQuery();
@@ -161,6 +168,11 @@ public class HistoryDao extends Dao {
         return list;
 	}
 
+	/**
+	 * WHERE句の作成
+	 * @param cond
+	 * @return
+	 */
 	private String setWhere(SearchHistoryCondition cond){
 		StringBuffer sb = new StringBuffer();
 
@@ -176,6 +188,12 @@ public class HistoryDao extends Dao {
 		if( cond.getToDate() != null){
 			appendWhereWithAnd(sb,HISTORY_SEARCH_WHERE4);
 		}
+		if( cond.getCourseId() != null){
+			appendWhereWithAnd(sb,HISTORY_SEARCH_WHERE5);
+		}
+		if( cond.getRoleId() != null){
+			appendWhereWithAnd(sb,HISTORY_SEARCH_WHERE6);
+		}
 
 		if( sb.length() > 0 ){
 			sb.append(" WHERE ");
@@ -184,14 +202,21 @@ public class HistoryDao extends Dao {
 		return sb.toString();
 	}
 
-	private void setParams(PreparedStatement ps,SearchHistoryCondition cond) throws SQLException, ParseException{
+	/**
+	 * WHERE句に値を入れる
+	 * @param ps
+	 * @param cond
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
+	private void setParams(PreparedStatement ps,SearchHistoryCondition cond,int offset,int num) throws SQLException, ParseException{
 		int index = 1;
 
 		if( cond.getUserId() != null){
 			ps.setInt(index++, cond.getUserId());
 		}
 		if( cond.getActionId() != null){
-			ps.setInt(index++, cond.getActionId());
+			ps.setInt(index++, cond.getActionId().getId());
 		}
 		if( cond.getFromDate() != null){
 			ps.setDate(index++, SqlDateUtil.getDateFrom(cond.getFromDate(), "yyyy/MM/dd"));
@@ -199,5 +224,15 @@ public class HistoryDao extends Dao {
 		if( cond.getToDate() != null){
 			ps.setDate(index++, SqlDateUtil.getDateFrom(cond.getToDate(), "yyyy/MM/dd"));
 		}
+		if( cond.getCourseId() != null){
+			ps.setInt(index++, cond.getCourseId());
+		}
+		if( cond.getRoleId() != null){
+			ps.setInt(index++, cond.getRoleId());
+		}
+
+		//件数とオフセットをセット
+		ps.setInt(index++, num);
+		ps.setInt(index++, offset);
 	}
 }

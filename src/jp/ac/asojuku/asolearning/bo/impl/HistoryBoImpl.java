@@ -63,7 +63,7 @@ public class HistoryBoImpl implements HistoryBo {
 	}
 
 	@Override
-	public List<HistoryDto> getList(SearchHistoryCondition condition) throws AsoLearningSystemErrException {
+	public List<HistoryDto> getList(SearchHistoryCondition condition,int offset,int num) throws AsoLearningSystemErrException {
 
 		List<HistoryDto> list = new ArrayList<HistoryDto> ();
 		HistoryDao dao = new HistoryDao();
@@ -74,7 +74,7 @@ public class HistoryBoImpl implements HistoryBo {
 			dao.connect();
 
 			//履歴リストを取得
-			List<HistoryTblEntity> entityList = dao.search(condition);
+			List<HistoryTblEntity> entityList = dao.search(condition,offset,num);
 
 			//Entity -> Dto
 			for( HistoryTblEntity entiy : entityList ){

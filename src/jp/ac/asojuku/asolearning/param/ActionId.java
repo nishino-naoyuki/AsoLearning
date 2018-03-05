@@ -10,23 +10,31 @@ package jp.ac.asojuku.asolearning.param;
  *
  */
 public enum ActionId {
-	LOGIN(0),//ログイン
-	LOGOUT(1),//ログアウト
-	TASK_JUDG(2),//課題判定
-	TASK_CREATE(3),//課題作成
-	TASK_UPDATE(4),////課題編集
-	USER_CREATE(5),//ユーザー作成
-	USER_UPDATE(6),//ユーザー編集
-	CSV_CREATE(7),//CSV登録（作成）
-	PWD_CHANGE(8),//パスワード変更
-	NICK_NAME(9),//ニックネーム変更
-	GRADUATE(10),//卒業処理
-	REPEAT_YEAR(11),//留年処理
-	GIVEUP(12)//退学処理
+	LOGIN(0,"ログイン"),//ログイン
+	LOGOUT(1,"ログアウト"),//ログアウト
+	TASK_JUDG(2,"課題判定"),//課題判定
+	TASK_CREATE(3,"課題作成"),//課題作成
+	TASK_UPDATE(4,"課題編集"),////課題編集
+	USER_CREATE(5,"ユーザー作成"),//ユーザー作成
+	USER_UPDATE(6,"ユーザー編集"),//ユーザー編集
+	CSV_CREATE(7,"CSV登録（作成）"),//CSV登録（作成）
+	PWD_CHANGE(8,"パスワード変更"),//パスワード変更
+	NICK_NAME(9,"ニックネーム変更"),//ニックネーム変更
+	GRADUATE(10,"卒業処理"),//卒業処理
+	REPEAT_YEAR(11,"留年処理"),//留年処理
+	GIVEUP(12,"退学処理")//退学処理
 	;
 
 	//ステータス
 	private int id;
+	private String name;
+
+	/**
+	 * @return name
+	 */
+	public String getName() {
+		return name;
+	}
 
 	/**
 	 * @return id
@@ -36,8 +44,10 @@ public enum ActionId {
 	}
 
 
-	private ActionId(int id) {
+
+	private ActionId(int id,String name) {
 		this.id = id;
+		this.name= name;
 	}
 
 	public boolean equals(Integer id){

@@ -38,4 +38,5 @@ public class RequestConst {
 	public static final String REQUEST_RESULT_FILE_NAME = "ResultFileName";
 	public static final String REQUEST_RESULT_COMMENT = "comment";
 	public static final String REQUEST_GRADE = "grade";
+	public static final String REQUEST_ACTION_ID = "actionId";
 }

@@ -3,6 +3,8 @@
  */
 package jp.ac.asojuku.asolearning.condition;
 
+import jp.ac.asojuku.asolearning.param.ActionId;
+
 /**
  * @author nishino
  *
@@ -10,7 +12,9 @@ package jp.ac.asojuku.asolearning.condition;
 public class SearchHistoryCondition {
 
 	private Integer userId;
-	private Integer actionId;
+	private Integer courseId;
+	private Integer roleId;
+	private ActionId actionId;
 	private String fromDate;
 	private String toDate;
 	/**
@@ -28,13 +32,13 @@ public class SearchHistoryCondition {
 	/**
 	 * @return actionId
 	 */
-	public Integer getActionId() {
+	public ActionId getActionId() {
 		return actionId;
 	}
 	/**
 	 * @param actionId セットする actionId
 	 */
-	public void setActionId(Integer actionId) {
+	public void setActionId(ActionId actionId) {
 		this.actionId = actionId;
 	}
 	/**
@@ -60,6 +64,30 @@ public class SearchHistoryCondition {
 	 */
 	public void setToDate(String toDate) {
 		this.toDate = toDate;
+	}
+	/**
+	 * @return courseId
+	 */
+	public Integer getCourseId() {
+		return courseId;
+	}
+	/**
+	 * @param courseId セットする courseId
+	 */
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+	/**
+	 * @return roleId
+	 */
+	public Integer getRoleId() {
+		return roleId;
+	}
+	/**
+	 * @param roleId セットする roleId
+	 */
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
 	}
 
 

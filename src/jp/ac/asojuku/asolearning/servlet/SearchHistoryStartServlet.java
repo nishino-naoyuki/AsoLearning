@@ -19,12 +19,12 @@ import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.RequestConst;
 
 /**
- * 課題検索
+ * 履歴検索
  * @author nishino
  *
  */
-@WebServlet(name="SearchTaskStartServlet",urlPatterns={"/tasksearch"})
-public class SearchTaskStartServlet extends BaseServlet {
+@WebServlet(name="SearchHistoryStartServlet",urlPatterns={"/historysearch"})
+public class SearchHistoryStartServlet extends BaseServlet {
 
 	private final String DISPNO = "00604";
 	@Override
@@ -42,10 +42,10 @@ public class SearchTaskStartServlet extends BaseServlet {
 
 		List<CourseDto> list = coursBo.getCourseAllList();
 		req.setAttribute(RequestConst.REQUEST_COURSE_LIST, list);
-		
+
 		///////////////////////////////////////////
 		//画面遷移
-		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_searchTask.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher(getJspDir()+"tc_searchHistory.jsp");
 		rd.forward(req, resp);
 	}
 
