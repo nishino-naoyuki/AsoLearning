@@ -83,9 +83,13 @@ public class HistoryBoImpl implements HistoryBo {
 
 				dto.setActionName(entiy.getActionMaster().getActionName());
 				dto.setMessage(entiy.getMessage());
+				dto.setCourseName(entiy.getUserTbl().getCourseMaster().getCourseName());
+				dto.setMailAddress(entiy.getUserTbl().getMailadress());
 				dto.setUserName(user.getName());
 				dto.setNickName( Digest.decNickName(user.getNickName(), user.getMailadress()) );
 				dto.setActionDate(DateUtil.formattedDate(entiy.getActionDate(), "yyyy/MM/dd HH:mm:ss"));
+
+				list.add(dto);
 			}
 
 		} catch (DBConnectException e) {

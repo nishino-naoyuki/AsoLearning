@@ -4,6 +4,7 @@
 package jp.ac.asojuku.asolearning.condition;
 
 import jp.ac.asojuku.asolearning.param.ActionId;
+import jp.ac.asojuku.asolearning.param.RoleId;
 
 /**
  * @author nishino
@@ -13,10 +14,11 @@ public class SearchHistoryCondition {
 
 	private Integer userId;
 	private Integer courseId;
-	private Integer roleId;
+	private RoleId roleId;
 	private ActionId actionId;
 	private String fromDate;
 	private String toDate;
+	private String mail;
 	/**
 	 * @return userId
 	 */
@@ -80,14 +82,26 @@ public class SearchHistoryCondition {
 	/**
 	 * @return roleId
 	 */
-	public Integer getRoleId() {
+	public RoleId getRoleId() {
 		return roleId;
 	}
 	/**
 	 * @param roleId セットする roleId
 	 */
-	public void setRoleId(Integer roleId) {
+	public void setRoleId(RoleId roleId) {
 		this.roleId = roleId;
+	}
+	/**
+	 * @return mail
+	 */
+	public String getMail() {
+		return mail;
+	}
+	/**
+	 * @param mail セットする mail
+	 */
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 
 

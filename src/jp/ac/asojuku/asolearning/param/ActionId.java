@@ -3,6 +3,8 @@
  */
 package jp.ac.asojuku.asolearning.param;
 
+import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
+
 /**
  * 動作ログのアクションID
  * マスターと一致する必要あり
@@ -56,6 +58,25 @@ public enum ActionId {
 		}
 
 		return (this.id == id);
+	}
+
+	/**
+	 * 引数で受け取った数値からActionIDを取得する
+	 *
+	 * @param id
+	 * @return
+	 */
+	public static ActionId getByInteger(Integer id) throws AsoLearningSystemErrException{
+		ActionId result = null;
+
+		for(ActionId aid : values()){
+			if( aid.equals(id) ){
+				result = aid;
+				break;
+			}
+		}
+
+		return result;
 	}
 
 

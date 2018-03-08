@@ -59,6 +59,11 @@ if( PermissionChecker.check("00201", loginInfo.getRoleId())){
                  <a href="csvEntry"><i class="fa fa-file fa-fw"></i>CSV処理</a>
              </li>
 <% }%>
+<% if( PermissionChecker.check("01401", loginInfo.getRoleId()) ){ %>
+             <li>
+                 <a href="historysearch"><i class="fa fa-search"></i>履歴検索</a>
+             </li>
+<% }%>
 
          </ul>
      </div>

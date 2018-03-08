@@ -7,6 +7,8 @@ public class HistoryDto {
 	private String actionDate;
 	private String actionName;
 	private String message;
+	private String courseName;
+	private String mailAddress;
 
 	/**
 	 * @return userName
@@ -67,5 +69,29 @@ public class HistoryDto {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	/**
+	 * @return courseName
+	 */
+	public String getCourseName() {
+		return courseName;
+	}
+	/**
+	 * @param courseName セットする courseName
+	 */
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+	/**
+	 * @return mailAddress
+	 */
+	public String getMailAddress() {
+		return mailAddress;
+	}
+	/**
+	 * @param mailAddress セットする mailAddress
+	 */
+	public void setMailAddress(String mailAddress) {
+		this.mailAddress = mailAddress;
 	}
 }

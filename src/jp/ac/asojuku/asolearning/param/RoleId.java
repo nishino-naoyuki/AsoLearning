@@ -38,14 +38,17 @@ public enum RoleId {
 		return (this.id == id);
 	}
 
-	public static RoleId search(int id){
+	public static RoleId search(Integer id){
+		RoleId role = null;
 		if( STUDENT.equals(id)){
-			return STUDENT;
+			role = STUDENT;
 		}else if( TEACHER.equals(id)){
-			return TEACHER;
+			role = TEACHER;
+		}else if( MANAGER.equals(id)){
+			role = MANAGER;
 		}
 
-		return MANAGER;
+		return role;
 	}
 
 	public static boolean check(int id){

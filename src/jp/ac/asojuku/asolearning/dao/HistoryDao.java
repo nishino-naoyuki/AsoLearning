@@ -13,6 +13,7 @@ import java.util.List;
 
 import jp.ac.asojuku.asolearning.condition.SearchHistoryCondition;
 import jp.ac.asojuku.asolearning.entity.ActionMasterEntity;
+import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 import jp.ac.asojuku.asolearning.entity.HistoryTblEntity;
 import jp.ac.asojuku.asolearning.entity.UserTblEntity;
 import jp.ac.asojuku.asolearning.util.SqlDateUtil;
@@ -39,13 +40,15 @@ public class HistoryDao extends Dao {
 	private static final String HISTORY_SEARCH_SQL =
 			   "SELECT * FROM HISTORY_TBL h "
 			 + "LEFT JOIN USER_TBL u ON(h.USER_ID=u.USER_ID)"
-			 + "LEFT JOIN ACTION_MASTER am (h.ACTION_ID=u.ACTION_ID) ";
+			 + "LEFT JOIN ACTION_MASTER am ON(h.ACTION_ID=am.ACTION_ID) "
+			 + "LEFT JOIN COURSE_MASTER cm ON(u.COURSE_ID=cm.COURSE_ID) ";
 	private static final String HISTORY_SEARCH_WHERE1 = " h.USER_ID=? ";
 	private static final String HISTORY_SEARCH_WHERE2 = " h.ACTION_ID=? ";
 	private static final String HISTORY_SEARCH_WHERE3 = " h.ACTION_DATE >= ? ";
 	private static final String HISTORY_SEARCH_WHERE4 = " h.ACTION_DATE <= ? ";
 	private static final String HISTORY_SEARCH_WHERE5 = " u.COURSE_ID = ? ";
 	private static final String HISTORY_SEARCH_WHERE6 = " u.ROLE_ID = ? ";
+	private static final String HISTORY_SEARCH_WHERE7 = " u.MAILADRESS like ? ";
 	private static final String HISTORY_SEARCH_ORDERBY = " ORDER BY h.ACTION_DATE ";
 	private static final String HISTORY_SEARCH_LIMIT = " LIMIT ? OFFSET ? ";
 
@@ -87,7 +90,7 @@ public class HistoryDao extends Dao {
 	 * 履歴の検索
 	 * @param cond　検索条件
 	 * @param offset　オフセット
-	 * @param num　　取得数
+	 * @param num　　取得数（取得件数が0以下の場合は全て取得する）
 	 * @throws SQLException
 	 * @throws ParseException
 	 */
@@ -105,7 +108,10 @@ public class HistoryDao extends Dao {
         	StringBuffer sb = new StringBuffer(HISTORY_SEARCH_SQL);
 
         	sb.append(setWhere(cond));
-        	sb.append(HISTORY_SEARCH_ORDERBY).append(HISTORY_SEARCH_LIMIT);
+        	sb.append(HISTORY_SEARCH_ORDERBY);
+        	if( num > 0 ){
+        		sb.append(HISTORY_SEARCH_LIMIT);
+        	}
 
         	ps = con.prepareStatement(sb.toString());
 
@@ -120,6 +126,7 @@ public class HistoryDao extends Dao {
 	        	HistoryTblEntity entity = new HistoryTblEntity();
 	        	UserTblEntity userEntity = new UserTblEntity();
 	        	ActionMasterEntity actionEntity = new ActionMasterEntity();
+	        	CourseMasterEntity courseMaster = new CourseMasterEntity();
 
 	        	userEntity.setUserId(rs.getInt("USER_ID"));
 	        	userEntity.setMailadress(rs.getString("MAILADRESS"));
@@ -142,9 +149,14 @@ public class HistoryDao extends Dao {
 	    		Integer giveupYear = fixInt(rs.getInt("GIVE_UP_YEAR"),rs.wasNull());
 	    		userEntity.setGiveUpYear(giveupYear);
 
+	    		courseMaster.setCourseId(rs.getInt("COURSE_ID"));
+	    		courseMaster.setCourseName(rs.getString("COURSE_NAME"));
+
+
 	    		actionEntity.setActionId(rs.getInt("ACTION_ID"));
 	    		actionEntity.setActionName(rs.getString("ACTION_NAME"));
 
+	    		userEntity.setCourseMaster(courseMaster);
 	    		entity.setUserTbl(userEntity);
 	    		entity.setActionMaster(actionEntity);
 	    		entity.setActionDate(rs.getTimestamp("ACTION_DATE"));
@@ -194,9 +206,12 @@ public class HistoryDao extends Dao {
 		if( cond.getRoleId() != null){
 			appendWhereWithAnd(sb,HISTORY_SEARCH_WHERE6);
 		}
+		if( cond.getMail() != null){
+			appendWhereWithAnd(sb,HISTORY_SEARCH_WHERE7);
+		}
 
 		if( sb.length() > 0 ){
-			sb.append(" WHERE ");
+			sb.insert(0, " WHERE ");
 		}
 
 		return sb.toString();
@@ -228,11 +243,16 @@ public class HistoryDao extends Dao {
 			ps.setInt(index++, cond.getCourseId());
 		}
 		if( cond.getRoleId() != null){
-			ps.setInt(index++, cond.getRoleId());
+			ps.setInt(index++, cond.getRoleId().getId());
+		}
+		if( cond.getMail() != null){
+			ps.setString(index++, getLikeString(cond.getMail()));
 		}
 
-		//件数とオフセットをセット
-		ps.setInt(index++, num);
-		ps.setInt(index++, offset);
+    	if( num > 0 ){
+			//件数とオフセットをセット
+			ps.setInt(index++, num);
+			ps.setInt(index++, offset);
+    	}
 	}
 }

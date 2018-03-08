@@ -118,6 +118,10 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 				                     </select>
 				                </div>
 	                        	<div class="form-group">
+		                    		メールアドレス（部分一致検索）
+				                     <input type="text" name="mail" placeholder="メールアドレスを入力してください（部分一致）" value="">
+				                </div>
+	                        	<div class="form-group">
 		                    		動作内容
 				                     <select id="action" class="form-control" name="<%=RequestConst.REQUEST_ACTION_ID%>">
 				                         <option value="" >指定なし</option>
@@ -158,11 +162,11 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 
 		                                <thead>
 		                                    <tr class="info">
-		                                        <th>タイトル</th>
-		                                        <th>作者メアド</th>
-		                                        <th>ニックネーム</th>
-		                                        <th>対象</th>
-		                                        <th>表示期間</th>
+		                                        <th>時間</th>
+		                                        <th>学科</th>
+		                                        <th>メールアドレス</th>
+		                                        <th>操作</th>
+		                                        <th>備考</th>
 		                                    </tr>
 		                                </thead>
 		                                <tbody id="search_result">
@@ -243,6 +247,10 @@ $('#search').on('click', function() {
 		if(params.length>0){ params += "&";}
 		params += "dispTermTo="+ $("input[name='dispTermTo']").val();
 	}
+	if( $("input[name='mail']").val() != ""){
+		if(params.length>0){ params += "&";}
+		params += "mail="+ $("input[name='mail']").val();
+	}
 
 	if( $("select[name='<%=RequestConst.REQUEST_COURSE_ID%>']").val() != ""){
 		if(params.length>0){ params += "&";}
@@ -254,7 +262,7 @@ $('#search').on('click', function() {
     $.ajax({
     	cache: false,
         type : 'GET',
-        url : "searchInfoAjax",
+        url : "searchHistoryAjax",
         data :params,
         dataType : 'json',
         processData : false,
@@ -263,6 +271,12 @@ $('#search').on('click', function() {
 
     }).done(function(json) {
 
+    	if( json.length > 1000 ){
+    		if(!window.confirm("検索結果が1000件以上あり、表示に時間がかかります。\n表示しますか？")){
+    			return;
+    		}
+    	}
+
     	if( json.length == 0 ){
     		$("#search_result_row").hide();
     		$("#search_nodata").show();
@@ -270,6 +284,7 @@ $('#search').on('click', function() {
     		$("#search_result_row").show();
     		$("#search_nodata").hide();
     	}
+
 
     	$('#dataTables-example').DataTable().destroy();
     	$('#search_result').html("");
@@ -283,13 +298,11 @@ $('#search').on('click', function() {
  			if( handedTask.length ==0 ) handedTask = "&nbsp;";
     		var str  =
     			"<tr>"+
-    			"  <td>"+
-    			"    <a href='userDetail?userId="+element.infoId+"'>"+element.title+"</a>"+
-    			"  </td>"+
-    			"  <td>"+element.maileAddress+"</td>"+
-    			"  <td>"+element.nickName+"</td>"+
-    			"  <td>"+element.publickCourse+"</td>"+
-    			"  <td>"+element.termFrom+"～"+element.termTo+"</td>"+
+    			"  <td>"+element.logDate+"</td>"+
+    			"  <td>"+element.courseName+"</td>"+
+    			"  <td>"+element.mailAddress+"</td>"+
+    			"  <td>"+element.actionName+"</td>"+
+    			"  <td>"+element.message+"</td>"+
     			"</tr>";
     		//alert(str);
     		$('#search_result').append(str);

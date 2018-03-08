@@ -148,7 +148,7 @@ LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION
 
 		                                <thead>
 		                                    <tr class="info">
-		                                        <th>&nbsp;</th>
+		                                        <th><input name="allcheck" id="allcheck" type="checkbox"   ></th>
 		                                        <th>課題名</th>
 		                                        <th>作者</th>
 		                                        <th>対象学科</th>
@@ -363,6 +363,19 @@ $('#update_public').on('click', function() {
 
 	window.open("popupUpdatePublicTask?"+params,"WindowName","width=600,height=700,resizable=yes,scrollbars=yes");
 });
+
+
+$('#allcheck').on('click', function() {
+
+	var items = $('#search_result').find('input');
+	if($(this).is(':checked')) {
+		$(items).prop('checked', true);
+	}else{
+		$(items).prop('checked', false);
+	}
+});
+
+
 </script>
 </body>
 
