@@ -3,6 +3,8 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 import jp.ac.asojuku.asolearning.param.InfoPublicStateId;
 
 /**
@@ -10,7 +12,7 @@ import jp.ac.asojuku.asolearning.param.InfoPublicStateId;
  * @author nishino
  *
  */
-public class InfoPublicDto {
+public class InfoPublicDto implements Serializable{
 
 	private InfoPublicStateId status;
 

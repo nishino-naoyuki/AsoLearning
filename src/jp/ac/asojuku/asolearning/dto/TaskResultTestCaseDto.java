@@ -3,11 +3,13 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * @author nishino
  *
  */
-public class TaskResultTestCaseDto {
+public class TaskResultTestCaseDto implements Serializable{
 
 	/** テストケースID. */
 	private Integer testcaseId;

@@ -55,7 +55,7 @@ public class CreateTaskInputServlet extends BaseServlet {
 	@Override
 	protected void doPostMain(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, AsoLearningSystemErrException {
-		doPostMain(req, resp);
+		doGetMain(req, resp);
 	}
 
 }

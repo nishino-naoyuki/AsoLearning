@@ -3,12 +3,14 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * タスクグループのDTO
  * @author nishino
  *
  */
-public class TaskGroupDto {
+public class TaskGroupDto implements Serializable{
 	private int id;
 	private String name;
 	/**

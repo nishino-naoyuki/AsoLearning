@@ -1,9 +1,10 @@
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserSearchResultDto {
+public class UserSearchResultDto implements Serializable{
 
 	private UserDto userDto;
 	private List<TaskResultDto> resultList = new ArrayList<TaskResultDto>();

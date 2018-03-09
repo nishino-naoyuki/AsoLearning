@@ -218,12 +218,12 @@ if( grade == null){
 		                                <% for(RankingDto ranking : rankingList){ %>
 		                                    <tr>
 		                                        <td><%=ranking.getRank() %></td>
-		                                        <td><%=ranking.getCourseName() %></td>
+		                                        <td><%=HtmlUtil.nl2be( ranking.getCourseName()) %></td>
 		                                        <td><%=ranking.getGrade() %></td>
 		                                        <td>
 		                                        <a href='userDetail?userId=<%=ranking.getUserId()%>' ><%=ranking.getName() %></a>
 		                                        </td>
-		                                        <td><%=ranking.getNickName() %></td>
+		                                        <td><%= HtmlUtil.nl2be( ranking.getNickName() ) %></td>
 		                                        <td><%=ranking.getScore() %></td>
 		                                    </tr>
 		                                <% } %>

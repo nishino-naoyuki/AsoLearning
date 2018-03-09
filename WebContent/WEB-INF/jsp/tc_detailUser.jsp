@@ -10,6 +10,7 @@
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.err.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.util.*" %>
 	<LINK REL="SHORTCUT ICON" HREF="view/ico/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -158,7 +159,7 @@ AvatarSettingDto avDto = userDto.getAvatar();
 	                                		<th>ニックネーム</th>
 	                                		<td>
 	                                		<div class="form-group">
-	                                			<%=(userDto!=null? userDto.getNickName():"") %>
+	                                			<%=(userDto!=null? HtmlUtil.nl2be(userDto.getNickName()):"") %>
 	                                		</div>
 	                                		</td>
 	                                	</tr>

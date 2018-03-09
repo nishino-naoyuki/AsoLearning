@@ -71,26 +71,12 @@ public enum AvatarKind {
 	}
 
 	public static AvatarKind search(int id){
-		if( BACK_HAIR.equals(id)){
-			return BACK_HAIR;
-		}else if( BODY.equals(id)){
-			return BODY;
-		}else if( FACE.equals(id)){
-			return FACE;
-		}else if( EAR.equals(id)){
-			return EAR;
-		}else if( MAYU.equals(id)){
-			return MAYU;
-		}else if( EYE.equals(id)){
-			return EYE;
-		}else if( NOSE.equals(id)){
-			return NOSE;
-		}else if( MOUTH.equals(id)){
-			return MOUTH;
-		}else if( FRONT_HAIR.equals(id)){
-			return FRONT_HAIR;
-		}else if( ACC1.equals(id)){
-			return ACC1;
+
+		for(AvatarKind kind : values()){
+			if( kind.equals(id)){
+				return kind;
+			}
+
 		}
 
 		return ACC2;

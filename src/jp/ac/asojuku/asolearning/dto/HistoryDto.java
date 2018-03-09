@@ -1,6 +1,8 @@
 package jp.ac.asojuku.asolearning.dto;
 
-public class HistoryDto {
+import java.io.Serializable;
+
+public class HistoryDto implements Serializable{
 
 	private String userName;
 	private String nickName;

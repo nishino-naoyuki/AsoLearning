@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,16 +16,19 @@ import jp.ac.asojuku.asolearning.bo.InfomationBo;
 import jp.ac.asojuku.asolearning.condition.SearchInfomationCondition;
 import jp.ac.asojuku.asolearning.config.MessageProperty;
 import jp.ac.asojuku.asolearning.dao.InfomationDao;
+import jp.ac.asojuku.asolearning.dao.TaskDao;
 import jp.ac.asojuku.asolearning.dto.InfomationListDto;
 import jp.ac.asojuku.asolearning.dto.InfomationSearchResultDto;
 import jp.ac.asojuku.asolearning.dto.LogonInfoDTO;
 import jp.ac.asojuku.asolearning.entity.InfoPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.InfomationTblEntity;
 import jp.ac.asojuku.asolearning.entity.ResultTblEntity;
+import jp.ac.asojuku.asolearning.entity.TaskPublicTblEntity;
 import jp.ac.asojuku.asolearning.entity.TaskTblEntity;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.exception.DBConnectException;
 import jp.ac.asojuku.asolearning.param.RoleId;
+import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
 import jp.ac.asojuku.asolearning.util.DateUtil;
 import jp.ac.asojuku.asolearning.util.Digest;
 
@@ -108,9 +112,9 @@ public class InfomationBoImpl implements InfomationBo {
 		InfomationDao dao = new InfomationDao();
 
 		try {
-
 			//DB接続
 			dao.connect();
+			TaskDao taskDao = new TaskDao(dao.getConnection());
 
 			Integer courseId = (RoleId.STUDENT.equals(logon.getRoleId()) ? logon.getCourseId():null);
 			/////////////////////////////
@@ -148,6 +152,13 @@ public class InfomationBoImpl implements InfomationBo {
 					String.format(MessageProperty.getInstance().getProperty(MessageProperty.INFO_RECENT_COMMENT),task.getTaskId(),task.getName())
 					);
 			}
+			////////////////////////////
+			//提出済みの問題を取得
+			List<TaskTblEntity> entityList =
+					taskDao.getTaskList(logon.getUserId(), logon.getCourseId(), logon.getRoleId());
+
+			setTaskInfomation(dto,entityList,logon);
+
 
 
 		} catch (DBConnectException e) {
@@ -165,6 +176,80 @@ public class InfomationBoImpl implements InfomationBo {
 		}
 
 		return dto;
+	}
+
+	/**
+	 * 海内の情報を設定する
+	 * @param dto
+	 * @param entityList
+	 * @param logon
+	 * @throws AsoLearningSystemErrException
+	 */
+	private void setTaskInfomation(InfomationListDto dto,List<TaskTblEntity> entityList,LogonInfoDTO logon) throws AsoLearningSystemErrException{
+
+		int finishCount = 0;
+		int mustCount = 0;
+		boolean isMustTask = false;
+		boolean isAnswered = false;
+		int finishMustCount = 0;
+
+		for( TaskTblEntity entity:entityList){
+			isAnswered = false;
+			//必須問題かどうかのチェック
+			isMustTask = isMustTask(entity.getTaskPublicTblSet(),logon.getCourseId());
+			//回答済みかどうかのチェック
+			if( entity.getResultTblSet().size() >0  ){
+				ResultTblEntity rte = entity.getResultTblSet().iterator().next();
+				if( rte.getHanded() == 1 ){
+					finishCount++;
+					isAnswered=true;
+					if( isMustTask ){
+						//必須問題なら必須問題の解答済みをインクリメント
+						finishMustCount++;
+					}
+				}
+			}
+
+			if( !isAnswered && isMustTask){
+				//必須問題の未解答ならメッセージを追加
+				dto.addUnAnswerList(
+						String.format(MessageProperty.getInstance().getProperty(MessageProperty.INFO_RECENT_UNANSWER),entity.getTaskId(),entity.getName())
+						);
+
+			}
+
+			mustCount += (isMustTask ? 1:0);
+		}
+		//海内の数と終了数をセット
+		dto.setTaskNum(entityList.size());
+		dto.setFinishTaskNum(finishCount);
+		dto.setMustTaskNum(mustCount);
+		dto.setFinishMustTaskNum(finishMustCount);
+	}
+
+	/**
+	 * 必須課題かどうかを返す
+	 * @param publicEntity
+	 * @param courseId
+	 * @return
+	 */
+	private boolean isMustTask(Set<TaskPublicTblEntity> publicEntity,int courseId){
+
+		boolean isMustTask = false;
+		if( publicEntity.size() == 0  ){
+			return false;
+		}
+		for( TaskPublicTblEntity taskPub : publicEntity){
+			if( taskPub.getCourseMaster().getCourseId() == courseId ){
+				//指定された学科が見つかったら、ステータスを見て必須かどうかを確認する
+				if( TaskPublicStateId.PUBLIC_MUST.equals( taskPub.getPublicStatusMaster().getStatusId()) ){
+					isMustTask = true;
+				}
+				break;
+			}
+		}
+
+		return isMustTask;
 	}
 
 }

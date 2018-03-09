@@ -3,6 +3,7 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import jp.ac.asojuku.asolearning.param.AvatarKind;
  * @author nishino
  *
  */
-public class AvatarDto {
+public class AvatarDto implements Serializable{
 	private AvatarKind kind;
 	private List<Element> avatarList = new ArrayList<Element>();
 
@@ -47,7 +48,7 @@ public class AvatarDto {
 	public void addAvatarList(Element element){
 		avatarList.add(element);
 	}
-	public class Element{
+	public class Element implements Serializable{
 		private int id;
 		private String name;
 		/**

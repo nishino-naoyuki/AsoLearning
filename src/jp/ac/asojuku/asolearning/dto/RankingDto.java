@@ -3,13 +3,15 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * ランキング情報
  *
  * @author nishino
  *
  */
-public class RankingDto {
+public class RankingDto implements Serializable{
 
 	private int userId;
 	private int rank;

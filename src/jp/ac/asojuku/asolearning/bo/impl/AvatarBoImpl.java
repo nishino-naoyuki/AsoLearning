@@ -108,7 +108,7 @@ public class AvatarBoImpl implements AvatarBo {
 
 		for(AvatarKind kind : kindList){
 			//設定しようとするアバターIDを取得
-			Integer avatarId = avatarDto.getAvatarId(kind);
+			int avatarId = avatarDto.getAvatarId(kind);
 			if( avatarId == AvatarSettingDto.NODATA){
 				//デフォルトの場合
 				continue;
@@ -118,7 +118,7 @@ public class AvatarBoImpl implements AvatarBo {
 			//設定しようとするIDがリストにあるかをチェックする
 			boolean bFind = false;
 			for( AvatarMasterEntity avatar : list){
-				if( avatar.getAvatarId() == avatarId ){
+				if( avatar.getAvatarId().equals(avatarId) ){
 					bFind = true;
 					break;
 				}

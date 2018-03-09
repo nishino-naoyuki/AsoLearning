@@ -31,6 +31,7 @@ public class MessageProperty extends ConfigBase{
 	public static final String INFO_RECENT_UPDATE = "info.recent.update";
 	public static final String INFO_RECENT_END = "info.recent.end";
 	public static final String INFO_RECENT_COMMENT = "info.recent.comment";
+	public static final String INFO_RECENT_UNANSWER = "info.recent.unanswer";
 	public static final String LOGIN_LOCK = "login.err.lock";
 
 	/**

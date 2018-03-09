@@ -3,6 +3,8 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
 
 /**
@@ -10,7 +12,7 @@ import jp.ac.asojuku.asolearning.entity.CourseMasterEntity;
  * @author nishino
  *
  */
-public class CourseDto {
+public class CourseDto implements Serializable{
 
 	private int id;
 	private String name;

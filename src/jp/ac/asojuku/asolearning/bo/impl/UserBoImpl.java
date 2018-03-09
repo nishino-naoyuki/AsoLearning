@@ -390,10 +390,13 @@ public class UserBoImpl implements UserBo {
 	}
 	public boolean isMatchGrade(SearchUserCondition cond,Integer grade){
 
+		if( cond == null ){
+			return false;
+		}
 		if( grade == null && cond.getGrade() == null){
 			return true;
 		}
-		if( grade ==  cond.getGrade()){
+		if( grade != null && grade.equals(cond.getGrade()) ){
 			return true;
 		}
 

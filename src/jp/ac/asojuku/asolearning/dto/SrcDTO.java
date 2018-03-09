@@ -3,11 +3,13 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * @author nishino
  *
  */
-public class SrcDTO {
+public class SrcDTO implements Serializable{
 	private Integer resultId;
 	private String fileName;
 	private String src;

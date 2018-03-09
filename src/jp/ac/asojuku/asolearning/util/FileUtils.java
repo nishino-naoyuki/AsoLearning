@@ -186,6 +186,8 @@ public class FileUtils {
              */
             File[] files = f.listFiles();
 
+            if( files == null )
+            	return;
             /*
              * ファイルおよびディレクトリをすべて削除
              */

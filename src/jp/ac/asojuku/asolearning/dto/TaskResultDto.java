@@ -3,12 +3,14 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * 課題結果DTO
  * @author nishino
  *
  */
-public class TaskResultDto {
+public class TaskResultDto implements Serializable{
 
 	private Integer taskId;
 	private Float total;

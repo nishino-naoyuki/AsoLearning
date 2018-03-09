@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.util.*" %>
  <link href="view/css/main.css" rel="stylesheet">
 
 <%
@@ -30,9 +31,9 @@ AvatarSettingDto avDto = loginInfo.getAvatar();
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         	<%if( loginInfo.getGrade() == null ){ %>
-        	<i class="fa fa-user fa-fw"></i><%=loginInfo.getNickName()%>（<%=loginInfo.getRoleName()%>）<b class="caret"></b>
+        	<i class="fa fa-user fa-fw"></i><%=HtmlUtil.nl2be( loginInfo.getNickName() )%>（<%=loginInfo.getRoleName()%>）<b class="caret"></b>
         	<%}else{ %>
-            <i class="fa fa-user fa-fw"></i><%=loginInfo.getCourseName()%> <%=loginInfo.getGrade()%>年 <%=loginInfo.getNickName()%>（<%=loginInfo.getRoleName()%>）<b class="caret"></b>
+            <i class="fa fa-user fa-fw"></i><%=HtmlUtil.nl2be( loginInfo.getCourseName() )%> <%=loginInfo.getGrade()%>年 <%= HtmlUtil.nl2be( loginInfo.getNickName() )%>（<%=loginInfo.getRoleName()%>）<b class="caret"></b>
         	<%} %>
         </a>
         <ul class="dropdown-menu dropdown-user">

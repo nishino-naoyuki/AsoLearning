@@ -272,7 +272,7 @@ $('#search').on('click', function() {
     }).done(function(json) {
 
     	if( json.length > 1000 ){
-    		if(!window.confirm("検索結果が1000件以上あり、表示に時間がかかります。\n表示しますか？")){
+    		if(!window.confirm("検索結果が"+json.length+"件あり、表示に時間がかかります。\n表示しますか？")){
     			return;
     		}
     	}

@@ -10,6 +10,7 @@
 <%@ page import="jp.ac.asojuku.asolearning.dto.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.err.*" %>
 <%@ page import="jp.ac.asojuku.asolearning.param.*" %>
+<%@ page import="jp.ac.asojuku.asolearning.util.*" %>
 	<LINK REL="SHORTCUT ICON" HREF="view/ico/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -156,7 +157,7 @@ if( userDto != null ){
 		                                		<th>ニックネーム[必須]</th>
 		                                		<td>
 		                                		<div class="form-group">
-		                                			<input type="text" name="nickname" placeholder="ニックネームを記入してください" value="<%=(userDto!=null? userDto.getNickName():"") %>">
+		                                			<input type="text" name="nickname" placeholder="ニックネームを記入してください" value="<%=(userDto!=null? HtmlUtil.nl2be( userDto.getNickName() ):"") %>">
 		                                		</div>
 		                                		</td>
 		                                	</tr>

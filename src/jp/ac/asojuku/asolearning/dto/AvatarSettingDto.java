@@ -3,6 +3,8 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 import jp.ac.asojuku.asolearning.param.AvatarKind;
 
 /**
@@ -10,7 +12,7 @@ import jp.ac.asojuku.asolearning.param.AvatarKind;
  * @author nishino
  *
  */
-public class AvatarSettingDto {
+public class AvatarSettingDto implements Serializable {
 	public static final Integer NODATA = -1;
 	public static final String NOFILE = "default.png";
 

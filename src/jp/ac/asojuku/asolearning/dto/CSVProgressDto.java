@@ -3,12 +3,14 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * CSV処理の途中経過
  * @author nishino
  *
  */
-public class CSVProgressDto {
+public class CSVProgressDto implements Serializable{
 
 	private int total;	//処理すべき件数
 	private int now;	//現在処理した件数

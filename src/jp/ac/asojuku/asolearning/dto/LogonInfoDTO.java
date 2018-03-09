@@ -3,12 +3,14 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * ログオン情報
  * @author nishino
  *
  */
-public class LogonInfoDTO {
+public class LogonInfoDTO implements Serializable{
 
 	private String name;		//名前
 	private String nickName;	//ニックネーム

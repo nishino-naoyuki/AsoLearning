@@ -83,32 +83,11 @@ public enum ActionId {
 	public static boolean check(int id){
 		boolean ret = false;
 
-		if( LOGIN.equals(id)){
-			ret = true;
-		}else if( LOGOUT.equals(id)){
-			ret = true;
-		}else if( TASK_JUDG.equals(id)){
-			ret = true;
-		}else if( TASK_CREATE.equals(id)){
-			ret = true;
-		}else if( TASK_UPDATE.equals(id)){
-			ret = true;
-		}else if( USER_CREATE.equals(id)){
-			ret = true;
-		}else if( USER_UPDATE.equals(id)){
-			ret = true;
-		}else if( CSV_CREATE.equals(id)){
-			ret = true;
-		}else if( PWD_CHANGE.equals(id)){
-			ret = true;
-		}else if( NICK_NAME.equals(id)){
-			ret = true;
-		}else if( GRADUATE.equals(id)){
-			ret = true;
-		}else if( REPEAT_YEAR.equals(id)){
-			ret = true;
-		}else if( GIVEUP.equals(id)){
-			ret = true;
+		for(ActionId actId : values()){
+			if( actId.equals(id)){
+				ret = true;
+				break;
+			}
 		}
 
 		return ret;

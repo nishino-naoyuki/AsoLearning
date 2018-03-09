@@ -3,12 +3,14 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * お知らせ検索結果
  * @author nishino
  *
  */
-public class InfomationSearchResultDto {
+public class InfomationSearchResultDto implements Serializable{
 
 	private Integer infomationId;
 	private String maileAddress;

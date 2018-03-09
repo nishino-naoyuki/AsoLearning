@@ -3,6 +3,7 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  * @author nishino
  *
  */
-public class UserDto {
+public class UserDto implements Serializable{
 	private Integer userId;
 
 	private String mailAdress;

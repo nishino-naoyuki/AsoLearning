@@ -3,11 +3,13 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * @author nishino
  *
  */
-public class TaskResultMetricsDto {
+public class TaskResultMetricsDto implements Serializable {
 
 	/** 最高複雑度. */
 	private Integer maxMvg;

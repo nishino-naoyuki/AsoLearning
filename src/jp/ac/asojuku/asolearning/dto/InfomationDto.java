@@ -3,6 +3,7 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * @author nishino
  *
  */
-public class InfomationDto {
+public class InfomationDto implements Serializable{
 
 	private int infomationId;
 	private String infomationTitle;

@@ -3,6 +3,8 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
 
 /**
@@ -10,7 +12,7 @@ import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
  * @author nishino
  *
  */
-public class TaskPublicDto {
+public class TaskPublicDto implements Serializable{
 
 	/** COURSE_ID. */
 	private Integer courseId;

@@ -3,6 +3,7 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author nishino
  *
  */
-public class TaskResultDetailDto {
+public class TaskResultDetailDto implements Serializable{
 
 	private int resultId;
 	private int taskId;

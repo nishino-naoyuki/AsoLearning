@@ -3,11 +3,13 @@
  */
 package jp.ac.asojuku.asolearning.dto;
 
+import java.io.Serializable;
+
 /**
  * @author nishino
  *
  */
-public class TaskDetailDto {
+public class TaskDetailDto implements Serializable{
 
 
 	/**
