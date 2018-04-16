@@ -110,6 +110,10 @@
             prefix="WEB-INF/tmp"/>
     		<zipfileset dir="${WebContent}/WEB-INF/jsp"
             prefix="WEB-INF/jsp"/>
+    		<zipfileset dir="${WebContent}/WEB-INF/uploaded"
+            prefix="WEB-INF/uploaded"/>
+    		<zipfileset dir="${WebContent}/WEB-INF" includes="web.xml"
+            prefix="WEB-INF"/>
     	</war>
         <delete dir="war/build"/>
     </target>
@@ -124,6 +128,10 @@
             prefix="WEB-INF/tmp"/>
     		<zipfileset dir="${WebContent}/WEB-INF/jsp"
             prefix="WEB-INF/jsp"/>
+    		<zipfileset dir="${WebContent}/WEB-INF/uploaded"
+            prefix="WEB-INF/uploaded"/>
+    		<zipfileset dir="${WebContent}/WEB-INF/web."
+            prefix="WEB-INF"/>
     	</war>
         <delete dir="war/build"/>
     </target>
@@ -138,6 +146,10 @@
             prefix="/WEB-INF/tmp"/>
     		<zipfileset dir="${WebContent}/WEB-INF/jsp"
             prefix="WEB-INF/jsp"/>
+    		<zipfileset dir="${WebContent}/WEB-INF/uploaded"
+            prefix="WEB-INF/uploaded"/>
+    		<zipfileset dir="${WebContent}/WEB-INF" includes="web.xml"
+            prefix="WEB-INF"/>
     	</war>
         <delete dir="war/build"/>
     </target>

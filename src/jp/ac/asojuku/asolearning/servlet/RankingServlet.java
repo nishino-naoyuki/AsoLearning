@@ -85,7 +85,7 @@ public class RankingServlet extends BaseServlet {
 		//課題一覧を取得
 		TaskBo taskBo = new TaskBoImpl();
 
-		List<TaskDto> taskList = taskBo.getTaskListByCouseId(courseId);
+		List<TaskDto> taskList = taskBo.getTaskListByCouseId(courseId,grade);
 		req.setAttribute(RequestConst.REQUEST_TASK_LIST, taskList);
 
 		//////////////////////////////

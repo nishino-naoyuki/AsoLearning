@@ -69,6 +69,12 @@ public class TaskDao extends Dao {
 			+ "LEFT JOIN TASK_GROUP_TBL tg ON(t.TASK_GROUP_ID = tg.TASK_GROUP_ID) "
 			+ "WHERE tp.COURSE_ID=? ";
 	private static final String TASK_LIST_WHERE = " AND tp.STATUS_ID IN(1,2) ";
+	private static final String TASK_LIST_GRADE1 = " AND tp.GRADE1 = 1 ";
+	private static final String TASK_LIST_GRADE2 = " AND tp.GRADE2 = 2 ";
+	private static final String TASK_LIST_GRADE3 = " AND tp.GRADE3 = 3 ";
+	private static final String TASK_LIST_GRADE4 = " AND tp.GRADE4 = 4 ";
+	private static final String TASK_LIST_GRADE5 = " AND tp.GRADE5 = 5 ";
+	private static final String TASK_LIST_GRADE6 = " AND tp.GRADE6 = 6 ";
 	private static final String TASK_LIST_ORDERBY2 = " ORDER BY t.NAME,t.TASK_ID ";
 	private static final int TASK_LIST_SQL_USER_IDX = 1;
 	private static final int TASK_LIST_SQL_COURCE_IDX = 2;
@@ -112,7 +118,7 @@ public class TaskDao extends Dao {
 			+ "WHERE TASK_ID=? AND TESTCASE_ID=?";
 	private static final String TASKPUBLIC_UPDATE_SQL =
 			"UPDATE TASK_PUBLIC_TBL SET "
-			+ "STATUS_ID=?,PUBLIC_DATETIME=?,END_DATETIME=? "
+			+ "STATUS_ID=?,PUBLIC_DATETIME=?,END_DATETIME=?,GRADE1=?,GRADE2=?,GRADE3=?,GRADE4=? "
 			+ "WHERE TASK_ID=? AND COURSE_ID=?";
 	private static final String TASKTESTCASE_SELECT_SQL =
 			"SELECT COUNT(TASK_ID) as c "
@@ -181,8 +187,13 @@ public class TaskDao extends Dao {
 				}else{
 					ps.setNull(3, java.sql.Types.DATE);
 				}
-				ps.setInt(4, taskId);
-				ps.setInt(5, pub.getCourseMaster().getCourseId());
+				ps.setInt(4, pub.getGrade1());
+				ps.setInt(5, pub.getGrade2());
+				ps.setInt(6, pub.getGrade3());
+				ps.setInt(7, pub.getGrade4());
+				//where
+				ps.setInt(8, taskId);
+				ps.setInt(9, pub.getCourseMaster().getCourseId());
 
 				ps.addBatch();
 			}
@@ -388,7 +399,7 @@ public class TaskDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<TaskTblEntity> getTaskListByCouseId(Integer courseId) throws SQLException{
+	public List<TaskTblEntity> getTaskListByCouseId(Integer courseId,Integer grade) throws SQLException{
 
 		if( con == null ){
 			return null;
@@ -406,6 +417,9 @@ public class TaskDao extends Dao {
         	if( courseId != null ){
         		sb.append(" AND ");
         		sb.append(TASK_COURSE_LIST_WHERE);
+        	}
+        	if( grade != null ){
+        		sb.append(addTargetGrade(grade));
         	}
         	sb.append(TASK_COURSE_LIST_ORDERBY);
 
@@ -640,7 +654,7 @@ public class TaskDao extends Dao {
 		}
 	}
 
-	public List<TaskTblEntity> getTaskList(Integer studentId,Integer courseId,Integer roleId) throws SQLException{
+	public List<TaskTblEntity> getTaskList(Integer studentId,Integer courseId,Integer roleId,Integer grade) throws SQLException{
 
 		if( con == null ){
 			return null;
@@ -657,6 +671,7 @@ public class TaskDao extends Dao {
 
 			if( RoleId.STUDENT.equals(roleId)){
 				sb.append(TASK_LIST_WHERE);
+				sb.append(addTargetGrade(grade));
 			}
 			sb.append(TASK_LIST_ORDERBY2);
 
@@ -705,6 +720,24 @@ public class TaskDao extends Dao {
 
 
 		return list;
+	}
+
+	/**
+	 * 学年の絞り込み条件をセットする
+	 * @param grade
+	 */
+	private String addTargetGrade(Integer grade){
+		String[] targetGrade = {TASK_LIST_GRADE1,TASK_LIST_GRADE2,TASK_LIST_GRADE3,TASK_LIST_GRADE4};
+		String str = "";
+
+		for( int i = 0; i < targetGrade.length; i++ ){
+			if( grade == (i+1) ){
+				str = targetGrade[i];
+				break;
+			}
+		}
+
+		return str;
 	}
 
 	/**
@@ -831,7 +864,6 @@ public class TaskDao extends Dao {
 		PreparedStatement ps1 = null;
 		PreparedStatement ps2 = null;
 		PreparedStatement ps3 = null;
-		PreparedStatement ps4 = null;
 
         try {
         	this.beginTranzaction();
@@ -871,8 +903,13 @@ public class TaskDao extends Dao {
 				}else{
 					ps3.setNull(3, java.sql.Types.DATE);
 				}
-				ps3.setInt(4, entity.getTaskId());
-				ps3.setInt(5, pub.getCourseMaster().getCourseId());
+				ps3.setInt(4, pub.getGrade1());
+				ps3.setInt(5, pub.getGrade2());
+				ps3.setInt(6, pub.getGrade3());
+				ps3.setInt(7, pub.getGrade4());
+				//where
+				ps3.setInt(8, entity.getTaskId());
+				ps3.setInt(9, pub.getCourseMaster().getCourseId());
 
 				ps3.addBatch();
 			}

@@ -88,7 +88,7 @@
                 <!-- /.row -->
 <%
 List<CourseDto> courseList = (List<CourseDto>)request.getAttribute(RequestConst.REQUEST_COURSE_LIST);
-List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUEST_TASK_LIST);
+//List<TaskDto> taskList = (List<TaskDto>)request.getAttribute(RequestConst.REQUEST_TASK_LIST);
 LogonInfoDTO loginInfo = (LogonInfoDTO)session.getAttribute(SessionConst.SESSION_LOGININFO);
 Integer courseId = (Integer)request.getAttribute(RequestConst.REQUEST_COURSE_ID);
 Integer taskId = (Integer)request.getAttribute(RequestConst.REQUEST_TASK_ID);
@@ -133,26 +133,6 @@ if( taskId == null){
 				                     <%} %>
 				                     </select>
 				                </div>
-				                <!--
-	                        	<div class="form-group">
-	                        		<p>※課題名を指定する場合は提出状況も設定してください</p>
-		                    		課題名
-		                    		<select id="task" class="form-control" name="<%=RequestConst.REQUEST_TASK_ID%>">
-				                         <option value="" >指定なし</option>
-					                     <% for(TaskDto taskDto : taskList ){ %>
-				                         	 <% if( taskDto != null){ %>
-					                         <option value="<%=taskDto.getTaskId() %>" <%= (taskId == taskDto.getTaskId() ? "selected":"" ) %> ><%=taskDto.getTaskName() %></option>
-					                         <%} %>
-					                     <%} %>
-				                     </select>
-		                    		提出状況
-		                    		<select id="couse" class="form-control" name="<%=RequestConst.REQUEST_STATUS%>">
-				                         <option value="" >すべて</option>
-				                         <option value="0" >未提出</option>
-				                         <option value="1" >提出済み</option>
-				                     </select>
-				                </div>
-				                -->
 			                     <div class="col-lg-12">
 			                     	<button id="search"  class="btn btn-default">検索</button>
 		                        <% if( !RoleId.STUDENT.equals(loginInfo.getRoleId())){ %>

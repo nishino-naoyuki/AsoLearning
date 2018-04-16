@@ -4,6 +4,7 @@
 package jp.ac.asojuku.asolearning.dto;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
 
@@ -13,6 +14,7 @@ import jp.ac.asojuku.asolearning.param.TaskPublicStateId;
  *
  */
 public class TaskPublicDto implements Serializable{
+	public static int GRADENUM = 4;
 
 	/** COURSE_ID. */
 	private Integer courseId;
@@ -27,6 +29,9 @@ public class TaskPublicDto implements Serializable{
 
 	/** 締切日. */
 	private String endDatetime;
+
+	/** GRADE（学年、対象かどうか) */
+	private HashMap<Integer,Boolean> grade = new HashMap<>();
 
 	/**
 	 * @return courseId
@@ -96,6 +101,28 @@ public class TaskPublicDto implements Serializable{
 	 */
 	public void setEndDatetime(String endDatetime) {
 		this.endDatetime = endDatetime;
+	}
+
+	public void setGradeMap(Integer key,Boolean value){
+		grade.put(key, value);
+	}
+
+	public Boolean getGradeMap(Integer key){
+		return grade.get(key);
+	}
+
+	/**
+	 * @return grade
+	 */
+	public HashMap<Integer, Boolean> getGrade() {
+		return grade;
+	}
+
+	/**
+	 * @param grade セットする grade
+	 */
+	public void setGrade(HashMap<Integer, Boolean> grade) {
+		this.grade = grade;
 	}
 
 

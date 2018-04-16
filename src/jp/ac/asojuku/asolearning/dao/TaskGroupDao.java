@@ -36,12 +36,12 @@ public class TaskGroupDao extends Dao {
 
 	//学科を指定して課題一覧を取得する（指定した学科に対して公開しているものだけ）
 	private static final String TASK_GRP_LIST_BYCID_SQL =
-			"SELECT * FROM TASK_GROUP_TBL tg "
+			"SELECT tg.TASK_GROUP_ID,tg.TASK_GROUP_NAME,tg.ENTRY_DATE,tg.UPDATE_DATE FROM TASK_GROUP_TBL tg "
 			+ "LEFT JOIN TASK_TBL t ON(t.TASK_GROUP_ID = tg.TASK_GROUP_ID) "
 			+ "LEFT JOIN TASK_PUBLIC_TBL tp ON(tp.TASK_ID = t.TASK_ID) "
 			+ "WHERE tp.STATUS_ID IN(1,2) ";
 	private static final String TASK_GRP_LIST_BYCID_WHERE = " tp.COURSE_ID = ?";
-	private static final String TASK_GRP_LIST_BYCID_GROUPBY = " GROUP BY t.TASK_GROUP_ID ";
+	private static final String TASK_GRP_LIST_BYCID_GROUPBY = " GROUP BY tg.TASK_GROUP_ID,tg.TASK_GROUP_NAME,tg.ENTRY_DATE,tg.UPDATE_DATE ";
 	private static final String TASK_GRP_LIST_BYCID_ORDERBY = " ORDER BY tg.TASK_GROUP_NAME ";
 
 	//グループを登録する

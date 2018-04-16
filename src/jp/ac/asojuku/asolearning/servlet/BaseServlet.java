@@ -256,6 +256,31 @@ public abstract class BaseServlet extends HttpServlet {
 
 		return intParam;
 	}
+
+
+	/**
+	 * Booleanに変換する
+	 *
+	 * @param pramName
+	 * @param req
+	 * @return
+	 */
+	protected boolean getBooleanParam(String pramName,HttpServletRequest req){
+		boolean result = false;
+
+		String intString = req.getParameter(pramName);
+
+		try{
+			result = Boolean.parseBoolean(intString);
+		}catch(NumberFormatException e){
+			Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+			logger.trace("数値パラメータの取得に失敗:name["+pramName+"] value:"+intString);
+			result = false;
+		}
+
+		return result;
+	}
+
 	protected abstract String getDisplayNo();
 
 	/**

@@ -80,9 +80,9 @@ public class TaskBoImpl implements TaskBo {
 				/////////////////////////////
 				//判定処理呼び出し
 				json = judge.judge(entity,dirName, fileName,user.getUserId(),dao.getConnection());
-				//判定が終わったのログ出力
-				HistoryDao history = new HistoryDao(dao.getConnection());
-				history.insert(user.getUserId(), ActionId.TASK_JUDG.getId(), entity.getName());
+				//判定が終わったのログ出力　※出過ぎる為、削除　2018.4.16
+				//HistoryDao history = new HistoryDao(dao.getConnection());
+				//history.insert(user.getUserId(), ActionId.TASK_JUDG.getId(), entity.getName());
 			}
 
 		} catch (IllegalJudgeFileException e) {
@@ -127,7 +127,7 @@ public class TaskBoImpl implements TaskBo {
 
 			//課題リスト情報を取得
 			List<TaskTblEntity> entityList =
-					dao.getTaskList(user.getUserId(), user.getCourseId(), user.getRoleId());
+					dao.getTaskList(user.getUserId(), user.getCourseId(), user.getRoleId(), user.getGrade());
 
 
 			//会員テーブル→ログイン情報
@@ -190,6 +190,11 @@ public class TaskBoImpl implements TaskBo {
 			pdto.setStatus(TaskPublicStateId.valueOf(publicEntity.getPublicStatusMaster().getStatusId()));
 			pdto.setEndDatetime( DateUtil.formattedDate(publicEntity.getEndDatetime(), "yyyy/MM/dd") );
 			pdto.setPublicDatetime(  DateUtil.formattedDate(publicEntity.getPublicDatetime(), "yyyy/MM/dd"));
+			//学年
+			pdto.setGradeMap(1, (publicEntity.getGrade1() == 1 ? true:false));
+			pdto.setGradeMap(2, (publicEntity.getGrade2() == 1 ? true:false));
+			pdto.setGradeMap(3, (publicEntity.getGrade3() == 1 ? true:false));
+			pdto.setGradeMap(4, (publicEntity.getGrade4() == 1 ? true:false));
 
 			dto.addTaskPublicList(pdto);
 		}
@@ -466,6 +471,12 @@ public class TaskBoImpl implements TaskBo {
 		testPublic.setPublicDatetime(SqlDateUtil.getDateFrom(publicDto.getPublicDatetime(), "yyyy/MM/dd"));
 		testPublic.setEndDatetime(SqlDateUtil.getDateFrom(publicDto.getEndDatetime(), "yyyy/MM/dd"));
 
+		//学年
+		testPublic.setGrade1( ( publicDto.getGradeMap(1) == true ? 1:0 ));
+		testPublic.setGrade2( ( publicDto.getGradeMap(2) == true ? 1:0 ));
+		testPublic.setGrade3( ( publicDto.getGradeMap(3) == true ? 1:0 ));
+		testPublic.setGrade4( ( publicDto.getGradeMap(4) == true ? 1:0 ));
+
 		return testPublic;
 	}
 
@@ -548,7 +559,7 @@ public class TaskBoImpl implements TaskBo {
 
 
 	@Override
-	public List<TaskDto> getTaskListByCouseId(Integer couseId) throws AsoLearningSystemErrException {
+	public List<TaskDto> getTaskListByCouseId(Integer couseId,Integer grade) throws AsoLearningSystemErrException {
 
 		List<TaskDto> dtoList = new ArrayList<TaskDto>();
 
@@ -561,7 +572,7 @@ public class TaskBoImpl implements TaskBo {
 
 			//課題リスト情報を取得
 			List<TaskTblEntity> entityList =
-					dao.getTaskListByCouseId(couseId);
+					dao.getTaskListByCouseId(couseId,grade);
 
 
 			//会員テーブル→ログイン情報

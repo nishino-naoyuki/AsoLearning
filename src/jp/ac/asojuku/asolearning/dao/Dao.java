@@ -270,6 +270,12 @@ public abstract class Dao {
 		psm.setStatusId(rs.getInt("STATUS_ID"));
 		psm.setStatusName(rs.getString("STATUS_NAME"));
 		p.setPublicStatusMaster(psm);
+		//公開学年
+		p.setGrade1(rs.getInt("GRADE1"));
+		p.setGrade2(rs.getInt("GRADE2"));
+		p.setGrade3(rs.getInt("GRADE3"));
+		p.setGrade4(rs.getInt("GRADE4"));
+
 
 		return p;
 	}

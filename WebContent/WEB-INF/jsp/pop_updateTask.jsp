@@ -70,7 +70,9 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                            <table class="table table-bordered table-hover" id="form">
 	                                <thead>
 	                                    <tr>
+	                                        <th>対象</th>
 	                                        <th>学科</th>
+	                                        <th>学年</th>
 	                                        <th>公開設定</th>
 	                                        <!--
 	                                        <th>公開時間設定</th>
@@ -95,6 +97,9 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                 %>
 	                                	<tr>
 	                                		<td>
+	                                			<input type="checkbox" name="<%=dto.getId()%>-chk" value="1">
+	                                		</td>
+	                                		<td>
 	                                			<%=dto.getName()%>
 	                                		</td>
 	                                		<td>
@@ -103,6 +108,12 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                                <option value="<%=TaskPublicStateId.PUBLIC_MUST.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC_MUST? "selected":""))%>><%=TaskPublicStateId.PUBLIC_MUST.getMsg1()%></option>
 	                                                <option value="<%=TaskPublicStateId.PUBLIC.getId()%>" <%=(pubDto==null? "":(pubDto.getStatus()==TaskPublicStateId.PUBLIC? "selected":""))%>><%=TaskPublicStateId.PUBLIC.getMsg1()%></option>
 	                                            </select>
+	                                		</td>
+	                                		<td>
+	                                			<input type="checkbox" name="<%=dto.getId()%>-chkGrd1" value="1">1年
+	                                			<input type="checkbox" name="<%=dto.getId()%>-chkGrd2" value="1">2年<br>
+	                                			<input type="checkbox" name="<%=dto.getId()%>-chkGrd3" value="1">3年
+	                                			<input type="checkbox" name="<%=dto.getId()%>-chkGrd4" value="1">4年
 	                                		</td>
 	                                		<!--
 	                                		<td>
@@ -165,15 +176,41 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 
 		$('#updateTaskGroup').on('click', function() {
 
+			//エラーチェック
+			<% for(CourseDto dto : list ){ %>
+				if( $("input[name='<%=dto.getId()%>-chk']").prop("checked") == true ){
+					var findflg = false;
+					<%
+					//学年文ループ
+					for(int i = 1 ; i <= 4; i ++){ %>
+						if( $("input[name='<%=dto.getId()%>-chkGrd<%=i%>']").prop("checked") == true ){
+							findflg = true;
+						}
+					<%}%>
+					//更新のチェックがあるのに、対象学年が選ばれていない場合はエラー
+					if( findflg != true ){
+						alert("更新対象学科の学年が選択されていません");
+						return;
+					}
+				}
+			<%}%>
+
 
 			var param = "";
 			if( $("input[name='<%=RequestConst.REQUEST_TASKGRP_ID %>']").val() != ""){
 				param += "<%=RequestConst.REQUEST_TASKGRP_ID %>="+ $("input[name='<%=RequestConst.REQUEST_TASKGRP_ID %>']").val();
 			}
 			<% for(CourseDto dto : list ){ %>
-			if(param.length>0){ param += "&";}
-			param += "<%=dto.getId()%>-course=" + $("[name='<%=dto.getId()%>-course']").val();
-			param += "&<%=dto.getId()%>-endterm=" + $("input[name='<%=dto.getId()%>-endterm']").val();
+				if(param.length>0){ param += "&";}
+				param += "<%=dto.getId()%>-course=" + $("[name='<%=dto.getId()%>-course']").val();
+				param += "&<%=dto.getId()%>-endterm=" + $("input[name='<%=dto.getId()%>-endterm']").val();
+				param += "&<%=dto.getId()%>-chk=" + $("input[name='<%=dto.getId()%>-chk']").prop("checked");
+				<%
+				//学年文ループ
+				for(int i = 1 ; i <= 4; i ++){ %>
+					if(param.length>0){ param += "&";}
+					param += "&<%=dto.getId()%>-chkGrd<%=i%>=" + $("input[name='<%=dto.getId()%>-chkGrd<%=i%>']").prop("checked");
+				<%}%>
 			<%}%>
 
 			//alert(param);

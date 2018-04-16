@@ -39,5 +39,6 @@ http://azcafe.aso-abcc.com/AsoLearning/login
 
 
 
+【ログ確認】
 tail -f /opt/apache-tomcat/apache-tomcat-8.5.27/logs/catalina.out
 

@@ -103,6 +103,7 @@ public class UpdateTaskGroupUpdateServlet extends BaseServlet {
 
 	/**
 	 * 公開情報をセット
+	 * チェックボックスの状況を取得して、チェックがあるモノだけを取得
 	 * @param req
 	 * @return
 	 * @throws AsoLearningSystemErrException
@@ -118,14 +119,25 @@ public class UpdateTaskGroupUpdateServlet extends BaseServlet {
 
 			int courseId = course.getId();
 			Integer status = getIntParam(courseId+"-course",req);
+			boolean chkStatus = getBooleanParam(courseId+"-chk",req);
 
-			dto.setCourseId(courseId);
-			dto.setCourseName(course.getName());
-			dto.setStatus(TaskPublicStateId.valueOf(status));
-			//dto.setPublicDatetime(getStringParamFromPart(req,courseId+"-startterm")); //TODO:未対応
-			dto.setEndDatetime(req.getParameter(courseId+"-endterm"));
+			if( chkStatus ){
+				//チェックがある場合はリストに加える
+				dto.setCourseId(courseId);
+				dto.setCourseName(course.getName());
+				dto.setStatus(TaskPublicStateId.valueOf(status));
+				//dto.setPublicDatetime(getStringParamFromPart(req,courseId+"-startterm")); //TODO:未対応
+				dto.setEndDatetime(req.getParameter(courseId+"-endterm"));
 
-			taskpublicList.add(dto);
+				//対象学年をセット
+				for( int i = 1; i <= TaskPublicDto.GRADENUM; i++ ){
+					String key = courseId+"-chkGrd"+i;
+					Boolean grade = getBooleanParam(key,req);
+					dto.setGradeMap(i, grade);
+				}
+
+				taskpublicList.add(dto);
+			}
 		}
 
 		return taskpublicList;

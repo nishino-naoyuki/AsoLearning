@@ -13,11 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import jp.ac.asojuku.asolearning.bo.CourseBo;
-import jp.ac.asojuku.asolearning.bo.TaskBo;
 import jp.ac.asojuku.asolearning.bo.impl.CourseBoImpl;
-import jp.ac.asojuku.asolearning.bo.impl.TaskBoImpl;
 import jp.ac.asojuku.asolearning.dto.CourseDto;
-import jp.ac.asojuku.asolearning.dto.TaskDto;
 import jp.ac.asojuku.asolearning.exception.AsoLearningSystemErrException;
 import jp.ac.asojuku.asolearning.param.RequestConst;
 
@@ -54,10 +51,10 @@ public class SearchUserStartServlet extends BaseServlet {
 
 		//////////////////////////////
 		//課題一覧を取得
-		TaskBo taskBo = new TaskBoImpl();
+//		TaskBo taskBo = new TaskBoImpl();
 
-		List<TaskDto> taskList = taskBo.getTaskListByCouseId(courseId);
-		req.setAttribute(RequestConst.REQUEST_TASK_LIST, taskList);
+//		List<TaskDto> taskList = taskBo.getTaskListByCouseId(courseId);
+//		req.setAttribute(RequestConst.REQUEST_TASK_LIST, taskList);
 
 		///////////////////////////////////////////
 		//画面遷移

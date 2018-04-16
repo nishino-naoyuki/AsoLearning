@@ -155,7 +155,7 @@ public class InfomationBoImpl implements InfomationBo {
 			////////////////////////////
 			//提出済みの問題を取得
 			List<TaskTblEntity> entityList =
-					taskDao.getTaskList(logon.getUserId(), logon.getCourseId(), logon.getRoleId());
+					taskDao.getTaskList(logon.getUserId(), logon.getCourseId(), logon.getRoleId(),logon.getGrade());
 
 			setTaskInfomation(dto,entityList,logon);
 
