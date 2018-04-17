@@ -70,11 +70,11 @@ public class TaskDao extends Dao {
 			+ "WHERE tp.COURSE_ID=? ";
 	private static final String TASK_LIST_WHERE = " AND tp.STATUS_ID IN(1,2) ";
 	private static final String TASK_LIST_GRADE1 = " AND tp.GRADE1 = 1 ";
-	private static final String TASK_LIST_GRADE2 = " AND tp.GRADE2 = 2 ";
-	private static final String TASK_LIST_GRADE3 = " AND tp.GRADE3 = 3 ";
-	private static final String TASK_LIST_GRADE4 = " AND tp.GRADE4 = 4 ";
-	private static final String TASK_LIST_GRADE5 = " AND tp.GRADE5 = 5 ";
-	private static final String TASK_LIST_GRADE6 = " AND tp.GRADE6 = 6 ";
+	private static final String TASK_LIST_GRADE2 = " AND tp.GRADE2 = 1 ";
+	private static final String TASK_LIST_GRADE3 = " AND tp.GRADE3 = 1 ";
+	private static final String TASK_LIST_GRADE4 = " AND tp.GRADE4 = 1 ";
+	private static final String TASK_LIST_GRADE5 = " AND tp.GRADE5 = 1 ";
+	private static final String TASK_LIST_GRADE6 = " AND tp.GRADE6 = 1 ";
 	private static final String TASK_LIST_ORDERBY2 = " ORDER BY t.NAME,t.TASK_ID ";
 	private static final int TASK_LIST_SQL_USER_IDX = 1;
 	private static final int TASK_LIST_SQL_COURCE_IDX = 2;
@@ -104,8 +104,8 @@ public class TaskDao extends Dao {
 			+ "VALUES(?,?,?,?,?) ";
 	private static final String TASKPUBLIC_INSERT_SQL =
 			"INSERT INTO TASK_PUBLIC_TBL "
-			+ "(TASK_ID,COURSE_ID,STATUS_ID,PUBLIC_DATETIME,END_DATETIME) "
-			+ "VALUES(?,?,?,?,?) ";
+			+ "(TASK_ID,COURSE_ID,STATUS_ID,PUBLIC_DATETIME,END_DATETIME,GRADE1,GRADE2,GRADE3,GRADE4) "
+			+ "VALUES(?,?,?,?,?,?,?,?,?) ";
 
 	//更新SQL
 	private static final String TASK_UPDATE_SQL =
@@ -1090,6 +1090,10 @@ public class TaskDao extends Dao {
 				}else{
 					ps3.setNull(5, java.sql.Types.DATE);
 				}
+				ps3.setInt(6, pub.getGrade1());
+				ps3.setInt(7, pub.getGrade2());
+				ps3.setInt(8, pub.getGrade3());
+				ps3.setInt(9, pub.getGrade4());
 
 				ps3.addBatch();
 			}

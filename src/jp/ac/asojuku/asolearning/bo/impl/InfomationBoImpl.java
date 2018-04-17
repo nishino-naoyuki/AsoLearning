@@ -119,7 +119,7 @@ public class InfomationBoImpl implements InfomationBo {
 			Integer courseId = (RoleId.STUDENT.equals(logon.getRoleId()) ? logon.getCourseId():null);
 			/////////////////////////////
 			//最近作った課題
-			List<TaskTblEntity> createList = dao.getCreateRecentList(courseId);
+			List<TaskTblEntity> createList = dao.getCreateRecentList(courseId,logon.getGrade());
 			for( TaskTblEntity task : createList){
 				dto.addInfoList(
 					String.format(MessageProperty.getInstance().getProperty(MessageProperty.INFO_RECENT_CREATE),task.getName())
@@ -127,7 +127,7 @@ public class InfomationBoImpl implements InfomationBo {
 			}
 			/////////////////////////////
 			//最近更新した課題
-			List<TaskTblEntity> updateList = dao.getUpdateRecentList(courseId);
+			List<TaskTblEntity> updateList = dao.getUpdateRecentList(courseId,logon.getGrade());
 			for( TaskTblEntity task : updateList){
 				dto.addInfoList(
 					String.format(MessageProperty.getInstance().getProperty(MessageProperty.INFO_RECENT_UPDATE),task.getName())
@@ -136,7 +136,7 @@ public class InfomationBoImpl implements InfomationBo {
 			if( RoleId.STUDENT.equals(logon.getRoleId()) ){
 				/////////////////////////////
 				//未提出課題
-				List<TaskTblEntity> notHandedTaskList = dao.getNearEndDateList(logon.getUserId(),logon.getCourseId());
+				List<TaskTblEntity> notHandedTaskList = dao.getNearEndDateList(logon.getUserId(),logon.getCourseId(),logon.getGrade());
 				for( TaskTblEntity task : notHandedTaskList){
 					dto.addInfoList(
 						String.format(MessageProperty.getInstance().getProperty(MessageProperty.INFO_RECENT_END),task.getName())

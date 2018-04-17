@@ -265,6 +265,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                <thead>
 	                                    <tr>
 	                                        <th>学科</th>
+	                                      	<th>学年</th>
 	                                        <th>公開設定</th>
 	                                        <!--
 	                                        <th>公開時間設定</th>
@@ -290,6 +291,12 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                	<tr>
 	                                		<td>
 	                                			<%=dto.getName()%>
+	                                		</td>
+	                                		<td>
+	                                			<input type="checkbox" name="<%=dto.getId()%>-chkGrd1" value="true" <%= (pubDto==null ? "": (pubDto.getGradeMap(1)==true ? "checked":"")) %>>1年
+	                                			<input type="checkbox" name="<%=dto.getId()%>-chkGrd2" value="true" <%= (pubDto==null ? "": (pubDto.getGradeMap(2)==true ? "checked":"")) %>>2年<br>
+	                                			<input type="checkbox" name="<%=dto.getId()%>-chkGrd3" value="true" <%= (pubDto==null ? "": (pubDto.getGradeMap(3)==true ? "checked":"")) %>>3年
+	                                			<input type="checkbox" name="<%=dto.getId()%>-chkGrd4" value="true" <%= (pubDto==null ? "": (pubDto.getGradeMap(4)==true ? "checked":"")) %>>4年
 	                                		</td>
 	                                		<td>
 	                                            <select class="form-control" name="<%=dto.getId()%>-course">

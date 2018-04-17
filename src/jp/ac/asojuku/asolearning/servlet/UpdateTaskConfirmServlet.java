@@ -261,6 +261,13 @@ public class UpdateTaskConfirmServlet extends BaseServlet {
 			//dto.setPublicDatetime(getStringParamFromPart(req,courseId+"-startterm")); //TODO:未対応
 			dto.setEndDatetime(getStringParamFromPart(req,courseId+"-endterm"));
 
+			//対象学年をセット
+			for( int i = 1; i <= TaskPublicDto.GRADENUM; i++ ){
+				String key = courseId+"-chkGrd"+i;
+				Boolean grade = getBooleanParam(key,req);
+				dto.setGradeMap(i, grade);
+			}
+
 			taskpublicList.add(dto);
 		}
 

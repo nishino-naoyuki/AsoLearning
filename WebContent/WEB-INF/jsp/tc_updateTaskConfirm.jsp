@@ -210,6 +210,7 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                <thead>
 	                                    <tr>
 	                                        <th>学科</th>
+		                                    <th>学年</th>
 	                                        <th>公開設定</th>
 	                                        <!--
 	                                        <th>公開時間設定</th>
@@ -222,6 +223,12 @@ var testcase_cnt = 0;	//テストケースの数。初期値は0
 	                                	<tr>
 	                                		<td>
 	                                			<%=pdto.getCourseName()%>
+	                                		</td>
+	                                		<td>
+	                                			<%= (pdto==null ? "": (pdto.getGradeMap(1)==true ? "1年":"")) %>
+	                                			<%= (pdto==null ? "": (pdto.getGradeMap(2)==true ? "2年":"")) %>
+	                                			<%= (pdto==null ? "": (pdto.getGradeMap(3)==true ? "3年":"")) %>
+	                                			<%= (pdto==null ? "": (pdto.getGradeMap(4)==true ? "4年":"")) %>
 	                                		</td>
 	                                		<td>
 	                                           <%=pdto.getStatus().getMsg1()%>

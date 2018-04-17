@@ -63,16 +63,26 @@ public class InfomationDao extends Dao {
 			  + "    t.DIFFICALTY,"
 			  + "    tp.COURSE_ID, "
 			  + "    tp.STATUS_ID,"
+			  + "    tp.GRADE1,"
+			  + "    tp.GRADE2,"
+			  + "    tp.GRADE3,"
+			  + "    tp.GRADE4,"
 			  + "    DATEDIFF(tp.END_DATETIME,CURRENT_DATE()) diff "
 			  + "  FROM TASK_TBL t "
 			  + "        LEFT JOIN TASK_PUBLIC_TBL tp ON(t.TASK_ID = tp.TASK_ID)"
 			  + "  WHERE tp.END_DATETIME is not null"
 			  + ") dd "
 			+ "WHERE (dd.diff BETWEEN 0 AND 4) AND dd.STATUS_ID IN(1,2) AND "
-			+ "COURSE_ID = ? AND "
-			+ "not exists(SELECT USER_ID FROM RESULT_TBL r WHERE r.USER_ID=? AND r.HANDED=1 AND r.TASK_ID=dd.TASK_ID)";
+			+ "COURSE_ID = ? ";
+
+	private static final String TASK_NOT_EXISTS =
+			 " AND not exists(SELECT USER_ID FROM RESULT_TBL r WHERE r.USER_ID=? AND r.HANDED=1 AND r.TASK_ID=dd.TASK_ID)";
 
 	private static final String WHERE_COURSEID = "tp.COURSE_ID = ?";
+	private static final String TASK_LIST_GRADE1 = " AND GRADE1 = 1 ";
+	private static final String TASK_LIST_GRADE2 = " AND GRADE2 = 1 ";
+	private static final String TASK_LIST_GRADE3 = " AND GRADE3 = 1 ";
+	private static final String TASK_LIST_GRADE4 = " AND GRADE4 = 1 ";
 
 	private static final String INFO_SEARCH =
 			"SELECT * FROM INFOMATION_TBL i "
@@ -350,7 +360,7 @@ public class InfomationDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<TaskTblEntity> getNearEndDateList(Integer userId,Integer courseId) throws SQLException{
+	public List<TaskTblEntity> getNearEndDateList(Integer userId,Integer courseId,Integer grade) throws SQLException{
 
 		if( con == null ){
 			return null;
@@ -363,6 +373,8 @@ public class InfomationDao extends Dao {
         try {
     		// ステートメント生成
         	StringBuffer sb = new StringBuffer(TASK_ENDDATE_RECNET);
+    		sb.append(addTargetGrade(grade));
+    		sb.append(TASK_NOT_EXISTS);
 			ps = con.prepareStatement(sb.toString());
 
 			//値をセット
@@ -411,7 +423,7 @@ public class InfomationDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<TaskTblEntity> getUpdateRecentList(Integer courseId) throws SQLException{
+	public List<TaskTblEntity> getUpdateRecentList(Integer courseId,Integer grade) throws SQLException{
 
 		if( con == null ){
 			return null;
@@ -428,6 +440,7 @@ public class InfomationDao extends Dao {
         	if( courseId != null ){
         		sb.append(" AND ");
         		sb.append(WHERE_COURSEID);
+        		sb.append(addTargetGrade(grade));
         	}
 
 			ps = con.prepareStatement(sb.toString());
@@ -480,7 +493,7 @@ public class InfomationDao extends Dao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<TaskTblEntity> getCreateRecentList(Integer courseId) throws SQLException{
+	public List<TaskTblEntity> getCreateRecentList(Integer courseId,Integer grade) throws SQLException{
 
 		if( con == null ){
 			return null;
@@ -497,6 +510,7 @@ public class InfomationDao extends Dao {
         	if( courseId != null ){
         		sb.append(" AND ");
         		sb.append(WHERE_COURSEID);
+        		sb.append(addTargetGrade(grade));
         	}
 
 			ps = con.prepareStatement(sb.toString());
@@ -560,4 +574,21 @@ public class InfomationDao extends Dao {
 		return entity;
 	}
 
+	/**
+	 * 学年の絞り込み条件をセットする
+	 * @param grade
+	 */
+	private String addTargetGrade(Integer grade){
+		String[] targetGrade = {TASK_LIST_GRADE1,TASK_LIST_GRADE2,TASK_LIST_GRADE3,TASK_LIST_GRADE4};
+		String str = "";
+
+		for( int i = 0; i < targetGrade.length; i++ ){
+			if( grade == (i+1) ){
+				str = targetGrade[i];
+				break;
+			}
+		}
+
+		return str;
+	}
 }
