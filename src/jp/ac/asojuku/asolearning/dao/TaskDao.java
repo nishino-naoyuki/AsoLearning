@@ -573,7 +573,6 @@ public class TaskDao extends Dao {
 	        // SQLを実行
 	        rs = ps1.executeQuery();
 
-
 	        //値を取り出す
 	        while(rs.next()){
 	        	if( entity == null ){

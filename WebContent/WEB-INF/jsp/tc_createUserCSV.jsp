@@ -243,6 +243,7 @@ ActionErrors errors = (ActionErrors)request.getAttribute(RequestConst.REQUEST_ER
 	    	finishFlg = true;
             $("#startCSV").attr('disabled', false);
 			//エラーメッセージがある場合はエラーを表示する
+			alert(json);
     		if( json.errorMsg != null){
 	    		$("#errorMsg").text(json.errorMsg);
     		}else if(json.now > 0){
