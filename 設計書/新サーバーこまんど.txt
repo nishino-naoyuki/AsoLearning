@@ -15,13 +15,13 @@
 　/var/tomcat
 
 ・起動
-sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/startup.sh
+sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.37/bin/startup.sh
 
 ・AsoLearningフォルダ削除
-sudo rm -rf /opt/apache-tomcat/apache-tomcat-8.5.27/webapps/AsoLearning
+sudo rm -rf /opt/apache-tomcat/apache-tomcat-8.5.37/webapps/AsoLearning
 
 ・停止
-sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.27/bin/shutdown.sh
+sudo -u tomcat /opt/apache-tomcat/apache-tomcat-8.5.37/bin/shutdown.sh
 
 
 【apache】

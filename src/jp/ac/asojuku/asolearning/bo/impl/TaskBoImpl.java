@@ -772,7 +772,8 @@ public class TaskBoImpl implements TaskBo {
 			for( String taskId : taskIdList){
 				Integer itaskId = Integer.parseInt(taskId);
 				//更新！
-				dao.updatePublicState(itaskId, publicEntityList);
+				//dao.updatePublicState(itaskId, publicEntityList);
+				dao.deleteInsertPublicState(itaskId, publicEntityList);
 			}
 
 		} catch (DBConnectException e) {

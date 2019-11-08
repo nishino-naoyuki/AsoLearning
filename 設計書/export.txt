@@ -1,4 +1,5 @@
 mysqldump -uroot -r /home/ec2-user/staslearning.bakcup --single-transaction stasolearning
+mysqldump -uroot -pCentosadmin1! -r /root/dbbk/aslearning.bakcup --single-transaction asolearning
 
 Å¶éQçl
 http://qiita.com/rato303/items/2e614f23e5feee150ffc

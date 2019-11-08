@@ -116,10 +116,14 @@ public class TaskDao extends Dao {
 			"UPDATE TESTCASE_TABLE SET "
 			+ "ALLMOST_OF_MARKS=?,OUTPUT_FILE_NAME=?,INPUT_FILE_NAME=? "
 			+ "WHERE TASK_ID=? AND TESTCASE_ID=?";
+	private static final String TASKPUBLIC_DELETE_SQL =
+			"DELETE FROM TASK_PUBLIC_TBL "
+			+ "WHERE TASK_ID=? AND COURSE_ID=?";
 	private static final String TASKPUBLIC_UPDATE_SQL =
 			"UPDATE TASK_PUBLIC_TBL SET "
 			+ "STATUS_ID=?,PUBLIC_DATETIME=?,END_DATETIME=?,GRADE1=?,GRADE2=?,GRADE3=?,GRADE4=? "
 			+ "WHERE TASK_ID=? AND COURSE_ID=?";
+
 	private static final String TASKTESTCASE_SELECT_SQL =
 			"SELECT COUNT(TASK_ID) as c "
 			+ "FROM TESTCASE_TABLE tc "
@@ -154,6 +158,133 @@ public class TaskDao extends Dao {
 	}
 	public TaskDao(Connection con) {
 		super(con);
+	}
+
+	/**
+	 * 公開情報をいったん削除し、挿入しなおす
+	 *
+	 * 2019/11/8 不具合修正で追加
+	 *
+	 * @param taskId
+	 * @param taskPublicSet
+	 * @throws SQLException
+	 */
+	public void deleteInsertPublicState(Integer taskId,List<TaskPublicTblEntity> taskPublicSet)
+			throws SQLException{
+
+		PreparedStatement ps1 = null;
+		PreparedStatement ps2 = null;
+        try {
+	    	this.beginTranzaction();
+
+    		//いったんDELETEして作り直し
+
+    		//////
+    		//DELETE
+    		//////
+    		ps1 = con.prepareStatement(TASKPUBLIC_DELETE_SQL);
+	    	for( TaskPublicTblEntity taskPublic : taskPublicSet){
+	    		ps1.setInt(1, taskId);
+	    		ps1.setInt(2, taskPublic.getCourseMaster().getCourseId());
+	    		ps1.addBatch();
+	    	}
+	    	int[] ret1 = ps1.executeBatch();
+
+    		//////
+    		//INSERT
+    		//////
+    		ps2 = con.prepareStatement(TASKPUBLIC_INSERT_SQL);
+	    	for( TaskPublicTblEntity taskPublic : taskPublicSet){
+
+	    		ps2.setInt(1, taskId);
+	    		ps2.setInt(2, taskPublic.getCourseMaster().getCourseId());
+	    		ps2.setInt(3, taskPublic.getPublicStatusMaster().getStatusId());
+				if( taskPublic.getPublicDatetime() != null){
+					ps2.setDate(4, parseSQLLDateFromUtilData(taskPublic.getPublicDatetime()) );
+				}else{
+					ps2.setNull(4, java.sql.Types.DATE);
+				}
+				if( taskPublic.getEndDatetime() != null){
+					ps2.setDate(5, parseSQLLDateFromUtilData(taskPublic.getEndDatetime()) );
+				}else{
+					ps2.setNull(5, java.sql.Types.DATE);
+				}
+				ps2.setInt(6, taskPublic.getGrade1());
+				ps2.setInt(7, taskPublic.getGrade2());
+				ps2.setInt(8, taskPublic.getGrade3());
+				ps2.setInt(9, taskPublic.getGrade4());
+
+				ps2.addBatch();
+	    	}
+
+	    	int[] ret2 = ps2.executeBatch();
+
+	    	System.out.println("ret1="+ret1.length);
+	    	System.out.println("ret2="+ret2.length);
+	        //コミット
+	        this.commit();
+        } catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			this.rollback();
+			throw e;
+		} finally {
+			safeClose(ps1,null);
+			safeClose(ps2,null);
+		}
+	}
+	/**
+	 * 公開状況追加する
+	 * @param taskId
+	 * @param taskPublicSet
+	 * @throws SQLException
+	 */
+	public void insertPublicState(Integer taskId,List<TaskPublicTblEntity> taskPublicSet) throws SQLException{
+
+		if( con == null ){
+			return;
+		}
+
+		PreparedStatement ps = null;
+
+        try {
+        	this.beginTranzaction();
+			ps = con.prepareStatement(TASKPUBLIC_INSERT_SQL);
+
+			for(TaskPublicTblEntity pub : taskPublicSet){
+
+				ps.setInt(1, taskId);
+				ps.setInt(2, pub.getCourseMaster().getCourseId());
+				ps.setInt(3, pub.getPublicStatusMaster().getStatusId());
+				if( pub.getPublicDatetime() != null){
+					ps.setDate(4, parseSQLLDateFromUtilData(pub.getPublicDatetime()) );
+				}else{
+					ps.setNull(4, java.sql.Types.DATE);
+				}
+				if( pub.getEndDatetime() != null){
+					ps.setDate(5, parseSQLLDateFromUtilData(pub.getEndDatetime()) );
+				}else{
+					ps.setNull(5, java.sql.Types.DATE);
+				}
+				ps.setInt(6, pub.getGrade1());
+				ps.setInt(7, pub.getGrade2());
+				ps.setInt(8, pub.getGrade3());
+				ps.setInt(9, pub.getGrade4());
+
+				ps.addBatch();
+
+			}
+			ps.executeBatch();
+			//System.out.println("ret3"+ret3.length);
+
+	        //コミット
+	        this.commit();
+        } catch (SQLException e) {
+			//例外発生時はログを出力し、上位へそのままスロー
+			this.rollback();
+			throw e;
+		} finally {
+			safeClose(ps,null);
+		}
 	}
 
 	/**
