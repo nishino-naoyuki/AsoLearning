@@ -1,2 +1,2 @@
 http://ec2-54-213-192-102.us-west-2.compute.amazonaws.com/AsoLearning/login
-https://www.sunnyglad.net/AsoLearning/login
+https://www.sunnyglad.net/AsoLearning/login　

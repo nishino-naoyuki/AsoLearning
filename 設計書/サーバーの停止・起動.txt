@@ -1,11 +1,11 @@
-y’â~z
-‚PDApache/Tomcat‚Ì’â~
+ï¿½yï¿½ï¿½~ï¿½z
+ï¿½Pï¿½DApache/Tomcatï¿½Ì’ï¿½~
 # sudo service httpd stop
 # sudo /opt/tomcat7/bin/shutdown.sh
 
-‚QDApache/Tomcat‚Ì‹N“®
+ï¿½Qï¿½DApache/Tomcatï¿½Ì‹Nï¿½ï¿½
 # sudo /opt/tomcat7/bin/startup.sh
 # sudo service httpd start
 
-itailƒƒOj
+ï¿½itailï¿½ï¿½ï¿½Oï¿½j
 sudo tail -f /opt/tomcat7/logs/catalina.out
